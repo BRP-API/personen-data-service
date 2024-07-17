@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gezag
+  labels:
+    app: gezag
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: gezag
+  template:
+    metadata:
+      labels:
+        name: gezag
+    spec:
+      containers:
+        - name: gezag-app
+          image: ghcr.io/brp-api/gezag-mock:1.0.0-latest
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Release
+            - name: ASPNETCORE_URLS
+              value: http://+:5020
+          ports:
+            - containerPort: 5020
+        - name: gezag-proxy
+          image: ghcr.io/brp-api/gezag-proxy-mock:1.0.0-latest
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Release
+            - name: ASPNETCORE_URLS
+              value: http://+:5130
+            - name: Routes__0__DownstreamScheme
+              value: http
+            - name: Routes__0__DownstreamHostAndPorts__0__Host
+              value: localhost
+            - name: Routes__0__DownstreamHostAndPorts__0__Port
+              value: "5020"
+          ports:
+            - name: http-gezag
+              containerPort: 5130
