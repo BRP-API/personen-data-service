@@ -110,6 +110,7 @@ jobs:
           docker tag ${{ env.APP_CONTAINER_IMAGE }}:latest ${{ env.APP_CONTAINER_IMAGE }}:${{ steps.app-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
           docker push ${{ env.APP_CONTAINER_IMAGE }}:${{ steps.app-version.outputs.version }}-latest
           docker push ${{ env.APP_CONTAINER_IMAGE }}:${{ steps.app-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
+          docker push ${{ env.APP_CONTAINER_IMAGE }}:latest
       - name: Tag & push gezag proxy mock container images naar registry
         if: always() && inputs.publishType == 'gezag-proxy-mock'
         run: |
@@ -117,3 +118,4 @@ jobs:
           docker tag ${{ env.MOCK_CONTAINER_IMAGE }}:latest ${{ env.MOCK_CONTAINER_IMAGE }}:${{ steps.mock-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
           docker push ${{ env.MOCK_CONTAINER_IMAGE }}:${{ steps.mock-version.outputs.version }}-latest
           docker push ${{ env.MOCK_CONTAINER_IMAGE }}:${{ steps.mock-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
+          docker push ${{ env.MOCK_CONTAINER_IMAGE }}:latest
