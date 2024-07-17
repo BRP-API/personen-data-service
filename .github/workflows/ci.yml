@@ -29,7 +29,7 @@ env:
   MOCK_CONTAINER_IMAGE: ghcr.io/brp-api/gezag-proxy-mock
 
 jobs:
-  validate:
+  continuous-integration:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
