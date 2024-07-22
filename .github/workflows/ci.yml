@@ -87,35 +87,29 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
           driver: docker-container
-      - name: Build container images
-        run: |
-          ./scripts/containers-build.sh ci
 
-      - name: Start containers
-        run: |
-          ./scripts/containers-start.sh ci
-      - name: Wait for DB restart
-        run: sleep 5s
-        shell: bash
-
-      - name: Stop containers
-        if: always()
-        run: |
-          ./scripts/containers-stop.sh ci
-
-      - name: Tag & push gezag mock container images naar registry
+      - name: Build en push gezag mock container images naar registry
         if: always() && inputs.publishType == 'gezag-mock'
-        run: |
-          docker tag ${{ env.APP_CONTAINER_IMAGE }}:latest ${{ env.APP_CONTAINER_IMAGE }}:${{ steps.app-version.outputs.version }}-latest
-          docker tag ${{ env.APP_CONTAINER_IMAGE }}:latest ${{ env.APP_CONTAINER_IMAGE }}:${{ steps.app-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
-          docker push ${{ env.APP_CONTAINER_IMAGE }}:${{ steps.app-version.outputs.version }}-latest
-          docker push ${{ env.APP_CONTAINER_IMAGE }}:${{ steps.app-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
-          docker push ${{ env.APP_CONTAINER_IMAGE }}:latest
-      - name: Tag & push gezag proxy mock container images naar registry
+        uses: docker/build-push-action@v6
+        with:
+          file: src/GezagMock/Dockerfile
+          context: src
+          push: true
+          platforms: linux/arm64,linux/amd64
+          tags: |
+            ${{ env.APP_CONTAINER_IMAGE }}:latest
+            ${{ env.APP_CONTAINER_IMAGE }}:${{ steps.app-version.outputs.version }}-latest
+            ${{ env.APP_CONTAINER_IMAGE }}:${{ steps.app-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
+
+      - name: Build en push gezag proxy mock container images naar registry
         if: always() && inputs.publishType == 'gezag-proxy-mock'
-        run: |
-          docker tag ${{ env.MOCK_CONTAINER_IMAGE }}:latest ${{ env.MOCK_CONTAINER_IMAGE }}:${{ steps.mock-version.outputs.version }}-latest
-          docker tag ${{ env.MOCK_CONTAINER_IMAGE }}:latest ${{ env.MOCK_CONTAINER_IMAGE }}:${{ steps.mock-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
-          docker push ${{ env.MOCK_CONTAINER_IMAGE }}:${{ steps.mock-version.outputs.version }}-latest
-          docker push ${{ env.MOCK_CONTAINER_IMAGE }}:${{ steps.mock-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
-          docker push ${{ env.MOCK_CONTAINER_IMAGE }}:latest
+        uses: docker/build-push-action@v6
+        with:
+          file: src/GezagProxyMock/Dockerfile
+          context: src
+          push: true
+          platforms: linux/arm64,linux/amd64
+          tags: |
+            ${{ env.MOCK_CONTAINER_IMAGE }}:latest
+            ${{ env.MOCK_CONTAINER_IMAGE }}:${{ steps.mock-version.outputs.version }}-latest
+            ${{ env.MOCK_CONTAINER_IMAGE }}:${{ steps.mock-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
