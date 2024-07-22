@@ -87,9 +87,6 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
           driver: docker-container
-      - name: Build container images
-        run: |
-          ./scripts/containers-build.sh ci
 
       - name: Build en push gezag mock container images naar registry
         if: always() && inputs.publishType == 'gezag-mock'
