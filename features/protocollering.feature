@@ -1,6 +1,6 @@
 #language: nl
 
-@protocollering
+@api
 Functionaliteit: geef geleverde persoonslijsten door aan protocollerings-API
 
     Achtergrond:
