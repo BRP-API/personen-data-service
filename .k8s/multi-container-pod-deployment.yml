@@ -16,14 +16,18 @@ spec:
     spec:
       containers:
         - name: gezag-app
-          image: ghcr.io/brp-api/gezag-mock:1.0.0-latest
+          image: ghcr.io/brp-api/brp-api-gezag:latest
           env:
-            - name: ASPNETCORE_ENVIRONMENT
-              value: Release
-            - name: ASPNETCORE_URLS
-              value: http://+:5020
+            - name: SERVER_PORT
+              value: "5020"
+            - name: APP_FEATURES_BRP_DATASETPATH
+              value: "/data"
           ports:
             - containerPort: 5020
+          volumeMounts:
+          - mountPath: /data
+            name: gezag-data
+            readOnly: true
         - name: gezag-proxy
           image: ghcr.io/brp-api/gezag-proxy-mock:1.0.0-latest
           env:
@@ -40,3 +44,8 @@ spec:
           ports:
             - name: http-gezag
               containerPort: 5130
+      volumes:
+      - name: gezag-data
+        hostPath:
+          path: .../personen-data-service/.k8s/CGR_testbestand-20230525 # directory location on host
+          type: Directory # this field is optional
