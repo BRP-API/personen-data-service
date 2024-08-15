@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PARAMS="{ \
-    \"logFileToAssert\": \"./test-data/logs/historie-data-service.json\", \
+    \"logFileToAssert\": \"./test-data/logs/personen-data-service.json\", \
     \"oAuth\": { \
         \"enable\": false \
     } \
