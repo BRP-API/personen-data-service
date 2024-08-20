@@ -8,8 +8,8 @@ services:
       - ASPNETCORE_URLS=http://+:5020
     ports:
       - "5020:5020"
-    # volumes:
-    #   - ../test-data/GezagMock/test-data.json:/app/Data/test-data.json
+    volumes:
+      - ../test-data/GezagMock/test-data.json:/app/Data/test-data.json
     networks:
       - brp-api-network
 

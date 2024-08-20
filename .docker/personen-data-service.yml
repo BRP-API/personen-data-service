@@ -1,6 +1,6 @@
 services:
   haalcentraal_api:
-    image: ghcr.io/brp-api/personen-data-service:2.2.1-2024051501
+    image: ghcr.io/brp-api/personen-data-service:2.2.1-202408071600
     environment:
       - Database__Host=postgres
       - Database__Username=root
@@ -12,7 +12,7 @@ services:
       - WebApi__Url=http://gezagmock:5020/api/v1
       - ProtocolleringAuthorization__UseAuthorizationChecks=false
       - ProtocolleringAuthorization__UseProtocollering=false
-      - Ecs__Path=/var/log/brp-api.json
+      - Ecs__Path=/var/log/personen-data-service.json
       - Ecs__FileSizeLimitBytes=10240
       - Ecs__RetainedFileCountLimit=5
     ports:
