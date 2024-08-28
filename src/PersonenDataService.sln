@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{77840799-C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rvig.Data.Personen", "Rvig.Data.Personen\Rvig.Data.Personen.csproj", "{5E598A08-6995-4630-9843-6C8AB47BC782}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Personen.Data.Service", "Rvig.Personen.App\Personen.Data.Service.csproj", "{55A71E2D-BB38-4066-91DC-C5AA1B836DF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Personen.Data.Service", "Personen.Data.Service\Personen.Data.Service.csproj", "{55A71E2D-BB38-4066-91DC-C5AA1B836DF4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rvig.Base.App", "Rvig.Base.App\Rvig.Base.App.csproj", "{8EA7DB47-6784-4C68-9056-3AC6F08A17BF}"
 EndProject
