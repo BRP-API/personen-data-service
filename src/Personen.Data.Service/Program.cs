@@ -3,12 +3,10 @@ using Rvig.Data.Personen.Mappers;
 using Rvig.Data.Personen.Repositories;
 using Rvig.Data.Personen.Services;
 using Rvig.HaalCentraalApi.Personen.Interfaces;
-using System.Collections.Generic;
-using System;
 using Rvig.HaalCentraalApi.Personen.Services;
 using Rvig.HaalCentraalApi.Personen.Validation.RequestModelValidators;
-using Rvig.Data.Base.Gezag.Repositories;
 using Microsoft.AspNetCore.Builder;
+using Rvig.HaalCentraalApi.Personen.Repositories;
 
 var servicesDictionary = new Dictionary<Type, Type>
 {
@@ -20,7 +18,6 @@ var servicesDictionary = new Dictionary<Type, Type>
 
 	// BRP API
 	{ typeof(IGbaPersonenApiService), typeof(GbaPersonenApiService) },
-	{ typeof(IGezagTransformer), typeof(GezagTransformer) },
 
 	// Gezag Data
 	{ typeof(IRepoGezagsrelatie), typeof(RepoGezagsrelatie) }

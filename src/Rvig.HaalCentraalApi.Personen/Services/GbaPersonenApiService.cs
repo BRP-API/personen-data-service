@@ -1,17 +1,13 @@
-﻿using Microsoft.AspNetCore.JsonPatch.Internal;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Rvig.Api.Gezag.ResponseModels;
-using Rvig.Data.Base.Gezag.Repositories;
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Personen.Fields;
 using Rvig.HaalCentraalApi.Personen.Helpers;
 using Rvig.HaalCentraalApi.Personen.Interfaces;
+using Rvig.HaalCentraalApi.Personen.Repositories;
 using Rvig.HaalCentraalApi.Personen.RequestModels.BRP;
 using Rvig.HaalCentraalApi.Personen.ResponseModels.BRP;
 using Rvig.HaalCentraalApi.Personen.Validation;
-using Rvig.HaalCentraalApi.Shared.ApiModels.PersonenHistorieBase;
-using Rvig.HaalCentraalApi.Shared.ApiModels.Universal;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
 using Rvig.HaalCentraalApi.Shared.Fields;
 using Rvig.HaalCentraalApi.Shared.Helpers;
@@ -30,7 +26,6 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 {
 	protected IGetAndMapGbaPersonenService _getAndMapPersoonService;
 	private readonly IRepoGezagsrelatie _gezagsrelatieRepo;
-	private readonly IGezagTransformer _gezagTransformer;
 	private readonly GbaPersonenApiHelper _gbaPersonenApiHelper;
 	private readonly GbaPersonenBeperktApiHelper _gbaPersonenBeperktApiHelper;
 
@@ -42,12 +37,11 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 	private static PersonenBeperktFieldsSettings _persoonBeperktFieldsSettings => new();
 
 	public GbaPersonenApiService(IGetAndMapGbaPersonenService getAndMapPersoonService, IDomeinTabellenRepo domeinTabellenRepo, IProtocolleringService protocolleringService
-		, ILoggingHelper loggingHelper, IRepoGezagsrelatie gezagsrelatieRepo, IGezagTransformer gezagTransformer, IOptions<ProtocolleringAuthorizationOptions> protocolleringAuthorizationOptions)
+		, ILoggingHelper loggingHelper, IRepoGezagsrelatie gezagsrelatieRepo, IOptions<ProtocolleringAuthorizationOptions> protocolleringAuthorizationOptions)
 		: base(domeinTabellenRepo, protocolleringService, loggingHelper, protocolleringAuthorizationOptions)
 	{
 		_getAndMapPersoonService = getAndMapPersoonService;
 		_gezagsrelatieRepo = gezagsrelatieRepo;
-		_gezagTransformer = gezagTransformer;
 		_gbaPersonenApiHelper = new GbaPersonenApiHelper(_fieldsExpandFilterService, _persoonFieldsSettings);
 		_gbaPersonenBeperktApiHelper = new GbaPersonenBeperktApiHelper(_persoonBeperktFieldsSettings);
 	}
@@ -99,46 +93,40 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 		{
 			_gbaPersonenApiHelper.HackLogicKinderenPartnersOuders(model.fields, personenPlIds?.ToList()?.ConvertAll(gbaPersoon => gbaPersoon.persoon));
 
-			if (model.fields.Any(field => field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) && !field.StartsWith("indicatieGezagMinderjarige")))
+			if (model.fields.Any(field => field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) 
+				&& !field.StartsWith("indicatieGezagMinderjarige"))
+				&& personenPlIds != null)
             {
-                var bsns = personenPlIds!.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
+                var bsns = personenPlIds.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
 
-                var gezagsrelaties = (await _gezagsrelatieRepo.GetGezag(bsns!))?.ToList() ?? new List<Gezagsrelatie>();
-                bool? underage = gezagsrelaties.Count > 0 ? gezagsrelaties.Any(gezagsrelatie => gezagsrelatie.BsnMinderjarige == x.persoon.Burgerservicenummer) : null;
-				int? leeftijd = 0;
-				if (x.persoon.Geboorte != null)
-				{
-					leeftijd = CalculateAge(new DatumOnvolledig(x.persoon.Geboorte.Datum));
-				}
+                IEnumerable<GbaPersoon> persoonGezagsrelaties = (await _gezagsrelatieRepo.GetGezag(bsns!))?.ToList() ?? new List<GbaPersoon>();
+                foreach (var x in personenPlIds.Where(x => x.persoon != null)) {
+					var persoonGezagsrelatie = persoonGezagsrelaties
+						.Where(pgr => pgr.Burgerservicenummer == x.persoon.Burgerservicenummer)
+						.FirstOrDefault();
 
-				x.persoon.Gezag = new List<AbstractGezagsrelatie>();
-				if (leeftijd < 18 && (underage == true || !underage.HasValue))
-				{
-					x.persoon.Gezag = await MapGezagMinderjarige(x.persoon.Burgerservicenummer, x.persoon.Partners, x.persoon.HistorischePartners, x.persoon.Kinderen, x.persoon.Ouders, gezagsrelaties, model.gemeenteVanInschrijving);
-				}
-				else
-				{
-					x.persoon.Gezag = await MapGezagMeerderjarige(x.persoon.Burgerservicenummer, x.persoon.GemeenteVanInschrijving, x.persoon.Partners, x.persoon.HistorischePartners, x.persoon.Kinderen, x.persoon.Ouders, gezagsrelaties, model.gemeenteVanInschrijving);
-				}
+					if (persoonGezagsrelatie != null)
+					{
+						x.persoon.Gezag = persoonGezagsrelatie.Gezag;
+					}
+				
+					x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.fields, x.persoon.Rni, _persoonFieldsSettings.GbaFieldsSettings);
+					if (x.persoon.Verblijfplaats != null)
+					{
+						GbaPersonenApiHelper.AddVerblijfplaatsInOnderzoek(model.fields, x.persoon.Verblijfplaats);
+					}
+					if (x.persoon.Immigratie != null)
+					{
+						GbaPersonenApiHelper.AddLandVanwaarIngeschreven(model.fields, x.persoon.Immigratie);
+					}
 
-				x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.fields, x.persoon.Rni, _persoonFieldsSettings.GbaFieldsSettings);
-				if (x.persoon.Verblijfplaats != null)
-				{
-					GbaPersonenApiHelper.AddVerblijfplaatsInOnderzoek(model.fields, x.persoon.Verblijfplaats);
-				}
-				if (x.persoon.Immigratie != null)
-				{
-					GbaPersonenApiHelper.AddLandVanwaarIngeschreven(model.fields, x.persoon.Immigratie);
-				}
+					model.fields = GbaPersonenApiHelper.OpschortingBijhoudingLogicRaadplegen(model.fields, x.persoon.OpschortingBijhouding);
 
-				model.fields = GbaPersonenApiHelper.OpschortingBijhoudingLogicRaadplegen(model.fields, x.persoon.OpschortingBijhouding);
-
-				x.persoon = _fieldsExpandFilterService.ApplyScope(x.persoon, string.Join(",", model.fields), _persoonFieldsSettings.GbaFieldsSettings);
-				_gbaPersonenApiHelper.RemoveInOnderzoekFromPersonCategoryIfNoFieldsAreRequested(model.fields, x.persoon);
-				_gbaPersonenApiHelper.RemoveInOnderzoekFromGezagsverhoudingCategoryIfNoFieldsAreRequested(model.fields, x.persoon);
-
-				return x;
-			}
+					x.persoon = _fieldsExpandFilterService.ApplyScope(x.persoon, string.Join(",", model.fields), _persoonFieldsSettings.GbaFieldsSettings);
+					_gbaPersonenApiHelper.RemoveInOnderzoekFromPersonCategoryIfNoFieldsAreRequested(model.fields, x.persoon);
+					_gbaPersonenApiHelper.RemoveInOnderzoekFromGezagsverhoudingCategoryIfNoFieldsAreRequested(model.fields, x.persoon);
+                }
+            }
 
 			if (_protocolleringAuthorizationOptions.Value.UseProtocollering)
 			{
@@ -156,109 +144,6 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 		}
 
 		return (new RaadpleegMetBurgerservicenummerResponse { Personen = personenPlIds?.ToList()?.ConvertAll(gbaPersoon => gbaPersoon.persoon) ?? new List<GbaPersoon>() }, personenPlIds?.Select(x => x.pl_id).ToList());
-	}
-
-	private async Task<List<AbstractGezagsrelatie>?> MapGezagBase(string? persoonBurgerservicenummer, List<GbaPartner>? partners, List<GbaPartner>? historischePartners, List<GbaKind>? kinderen, List<GbaOuder>? ouders, List<Gezagsrelatie> gezagsrelaties, string? gemeenteVanInschrijving)
-	{
-		IEnumerable<Gezagsrelatie> gezagsrelatiesFromPartners = new List<Gezagsrelatie>();
-		var hasPartners = partners?.Any(partner => !string.IsNullOrWhiteSpace(partner.Burgerservicenummer)) == true || historischePartners?.Any(partner => !string.IsNullOrWhiteSpace(partner.Burgerservicenummer)) == true;
-		if (hasPartners && (!gezagsrelaties.Any() || gezagsrelaties.Any(gezagsrelatie => gezagsrelatie.SoortGezag != Gezagsrelatie.SoortGezagEnum.OG1Enum)))
-		{
-			var allPartners = partners!.Concat(historischePartners ?? new List<GbaPartner>()).Where(partner => !string.IsNullOrWhiteSpace(partner.Burgerservicenummer));
-			(IEnumerable<(GbaPersoon persoon, long pl_id)>? partnersPlIds, int _) = await _getAndMapPersoonService.GetPersonenMapByBsns(allPartners.Select(partner => partner.Burgerservicenummer).Where(bsn => !string.IsNullOrWhiteSpace(bsn))!, gemeenteVanInschrijving, new List<string> { "kinderen.burgerservicenummer" }, _protocolleringAuthorizationOptions.Value.UseAuthorizationChecks);
-
-			IEnumerable<string?>? partnerChildrenBsns = null;
-			if (partnersPlIds?.Any() == true)
-			{
-				partnerChildrenBsns = partnersPlIds
-												.Where(partner => partner.persoon.Kinderen?.Any() == true)
-												.SelectMany(partner => partner.persoon.Kinderen!
-																									.Select(kind => kind.Burgerservicenummer)
-																									.Where(bsn => !string.IsNullOrWhiteSpace(bsn)));
-			}
-
-			if (partnerChildrenBsns?.Any() == true)
-			{
-				gezagsrelatiesFromPartners = (await Task.WhenAll(partnerChildrenBsns!.Select(async bsn => await _gezagsrelatieRepo.GetGezag(bsn)))).SelectMany(x => x!).Where(x => x != null);
-			}
-			if (gezagsrelatiesFromPartners.Any())
-			{
-				gezagsrelaties.AddRange(gezagsrelatiesFromPartners);
-			}
-
-			// To ensure that there are no duplicates after getting gezag from partners.
-			gezagsrelaties = gezagsrelaties.GroupBy(x => new { x.SoortGezag, x.BsnMinderjarige, x.BsnMeerderjarige }).Select(x => x.First()).ToList();
-		}
-
-		if ((!hasPartners || !gezagsrelatiesFromPartners.Any() || gezagsrelatiesFromPartners.Count() != gezagsrelaties.Count) && (!gezagsrelaties.Any() || gezagsrelaties.Any(gezagsrelatie => gezagsrelatie.SoortGezag != Gezagsrelatie.SoortGezagEnum.OG1Enum)))
-		{
-			var filteredGezagsrelaties = gezagsrelaties.Except(gezagsrelatiesFromPartners ?? Enumerable.Empty<Gezagsrelatie>());
-
-			if (filteredGezagsrelaties.Any() && filteredGezagsrelaties.All(gezagsrelatie => gezagsrelatie.BsnMinderjarige != persoonBurgerservicenummer))
-			{
-				var childGezagsrelaties = (
-					await Task.WhenAll(filteredGezagsrelaties.Select(async gezagsrelatie => await _gezagsrelatieRepo.GetGezag(gezagsrelatie.BsnMinderjarige)))
-				).SelectMany(x => x!).Where(x => x != null);
-                if (childGezagsrelaties.Any())
-				{
-					gezagsrelaties.AddRange(childGezagsrelaties);
-				}
-			}
-
-			// To ensure that there are no duplicates after getting gezag from kinderen.
-			gezagsrelaties = gezagsrelaties.GroupBy(x => new { x.SoortGezag, x.BsnMinderjarige, x.BsnMeerderjarige }).Select(x => x.First()).ToList();
-		}
-
-		if (gezagsrelaties.Any())
-		{
-			return  _gezagTransformer.TransformGezagsrelaties(gezagsrelaties, persoonBurgerservicenummer, partners, kinderen, ouders).ToList();
-		}
-
-		return new List<AbstractGezagsrelatie>();
-	}
-
-	private Task<List<AbstractGezagsrelatie>?> MapGezagMeerderjarige(string? persoonBurgerservicenummer, Waardetabel? persoonGemeenteVanInschrijving, List<GbaPartner>? partners, List<GbaPartner>? historischePartners, List<GbaKind>? kinderen, List<GbaOuder>? ouders, List<Gezagsrelatie> gezagsrelaties, string? gemeenteVanInschrijving)
-	{
-		if (persoonGemeenteVanInschrijving?.Code != "1999")
-		{
-			return MapGezagBase(persoonBurgerservicenummer, partners, historischePartners, kinderen, ouders, gezagsrelaties, gemeenteVanInschrijving);
-		}
-
-		return Task.FromResult<List<AbstractGezagsrelatie>?>(new List<AbstractGezagsrelatie>());
-	}
-
-	private Task<List<AbstractGezagsrelatie>?> MapGezagMinderjarige(string? persoonBurgerservicenummer, List<GbaPartner>? partners, List<GbaPartner>? historischePartners, List<GbaKind>? kinderen, List<GbaOuder>? ouders, List<Gezagsrelatie> gezagsrelaties, string? gemeenteVanInschrijving)
-	{
-		return MapGezagBase(persoonBurgerservicenummer, partners, historischePartners, kinderen, ouders, gezagsrelaties, gemeenteVanInschrijving);
-	}
-
-	private static int? CalculateAge(DatumOnvolledig geboorteDatum)
-	{
-		// If birth year is unknown then it is impossible to know if person is younger than 27.
-		// Because of this Leerlingen requires us to add such a person anyway. Because of logic like that, person's age will be considered to be new born.
-		if (geboorteDatum == null || (!geboorteDatum.Jaar.HasValue || geboorteDatum.Jaar.Value == 0))
-		{
-			return 0;
-		}
-
-		// If birth month or birth day is unknown, force these to be the last of that month/day.
-		// That will just mean that they will be followed for a few more days or months.
-		geboorteDatum.Maand ??= 12;
-		geboorteDatum.Dag ??= DateTime.DaysInMonth(geboorteDatum.Jaar!.Value, geboorteDatum.Maand.Value);
-
-		var birthdate = new DateTime(geboorteDatum.Jaar!.Value, geboorteDatum.Maand.Value, geboorteDatum.Dag.Value);
-
-		var currentDate = DateTime.Now;
-		int age = currentDate.Year - birthdate.Year;
-
-		// Check if the birthday has occurred this year
-		if (currentDate.Month < birthdate.Month ||
-			(currentDate.Month == birthdate.Month && currentDate.Day < birthdate.Day))
-		{
-			age--;
-		}
-
-		return age;
 	}
 
 	/// <summary>
@@ -294,22 +179,10 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 						&& model.fields.Any(field => field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) && !field.StartsWith("indicatieGezagMinderjarige"))
 					&& !string.IsNullOrWhiteSpace(x.persoon.Burgerservicenummer))
 				{
-					var gezagsrelaties = (await _gezagsrelatieRepo.GetGezag(persoonGezagBeperkt.Burgerservicenummer))?.ToList() ?? new List<Gezagsrelatie>();
-					bool? underage = gezagsrelaties.Count > 0 ? gezagsrelaties.Any(gezagsrelatie => gezagsrelatie.BsnMinderjarige == persoonGezagBeperkt.Burgerservicenummer) : null;
-					int? leeftijd = 0;
-					if (persoonGezagBeperkt.Geboorte != null)
+                    IEnumerable<GbaPersoon> persoonGezagsrelatie = (await _gezagsrelatieRepo.GetGezag(new[] { x.persoon.Burgerservicenummer }!))?.ToList() ?? new List<GbaPersoon>();
+                    if(persoonGezagsrelatie != null)
 					{
-						leeftijd = CalculateAge(new DatumOnvolledig(persoonGezagBeperkt.Geboorte.Datum));
-					}
-
-					persoonGezagBeperkt.Gezag = new List<AbstractGezagsrelatie>();
-					if (leeftijd < 18 && (underage == true || !underage.HasValue))
-					{
-						persoonGezagBeperkt.Gezag = await MapGezagMinderjarige(x.persoon.Burgerservicenummer, x.persoon.Partners, x.persoon.HistorischePartners, x.persoon.Kinderen, x.persoon.Ouders, gezagsrelaties, model.gemeenteVanInschrijving);
-					}
-					else
-					{
-						persoonGezagBeperkt.Gezag = await MapGezagMeerderjarige(x.persoon.Burgerservicenummer, x.persoon.GemeenteVanInschrijving, x.persoon.Partners, x.persoon.HistorischePartners, x.persoon.Kinderen, x.persoon.Ouders, gezagsrelaties, model.gemeenteVanInschrijving);
+						persoonGezagBeperkt.Gezag = persoonGezagsrelatie.FirstOrDefault()?.Gezag;
 					}
 				}
 

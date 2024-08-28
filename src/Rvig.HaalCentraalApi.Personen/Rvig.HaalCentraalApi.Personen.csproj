@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Rvig.Data.Base.Gezag\Rvig.Data.Base.Gezag.csproj" />
+    <ProjectReference Include="..\Rvig.Data.Base.WebApi\Rvig.Data.Base.WebApi.csproj" />
     <ProjectReference Include="..\Rvig.HaalCentraalApi.Shared\Rvig.HaalCentraalApi.Shared.csproj" />
   </ItemGroup>
 
