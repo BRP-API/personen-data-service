@@ -74,10 +74,10 @@ public class RvIGDataMapperBase
 					verblijfplaats.Regel3 = dbVerblijfplaats?.vertrek_land_adres_3;
 					break;
 				case nameof(GbaVerblijfplaats.Land):
-					if (dbVerblijfplaats?.vertrek_land_code != null && dbVerblijfplaats.vertrek_land_code != 6030)
+					if (dbVerblijfplaats?.vertrek_land_code != null)
 					{
 						verblijfplaats.Land = new Waardetabel {
-							Code = dbVerblijfplaats.vertrek_land_code?.ToString().PadLeft(4, '0'),
+							Code = (dbVerblijfplaats.vertrek_land_code ?? 0).ToString("0000"),
 							Omschrijving = dbVerblijfplaats.vertrek_land_naam ?? await _domeinTabellenHelper.GetLandOmschrijving(dbVerblijfplaats.vertrek_land_code)
 						};
 					}
