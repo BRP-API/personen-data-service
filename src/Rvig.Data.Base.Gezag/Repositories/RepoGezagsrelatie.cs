@@ -4,12 +4,13 @@ using Microsoft.Extensions.Options;
 using Rvig.Data.Base.WebApi.Options;
 using Rvig.HaalCentraalApi.Shared.Helpers;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Rvig.Data.Base.Gezag.Repositories;
 
 public interface IRepoGezagsrelatie
 {
-	Task<IEnumerable<Gezagsrelatie>?> GetGezagsrelaties(string? burgerservicenummer);
+	Task<IEnumerable<AbstractGezagsrelatie>?> GetGezag(IEnumerable<string> burgerservicenummer);
 }
 public class RepoGezagsrelatie : RepoWebApiBase, IRepoGezagsrelatie
 {
@@ -17,18 +18,18 @@ public class RepoGezagsrelatie : RepoWebApiBase, IRepoGezagsrelatie
 	{
 	}
 
-	public Task<IEnumerable<Gezagsrelatie>?> GetGezagsrelaties(string? burgerservicenummer)
+	public Task<IEnumerable<AbstractGezagsrelatie>?> GetGezag(IEnumerable<string> burgerservicenummer)
 	{
-		if (string.IsNullOrWhiteSpace(burgerservicenummer))
+		if (burgerservicenummer.IsNullOrEmpty())
 		{
-			return Task.FromResult(Enumerable.Empty<Gezagsrelatie>());
+			return Task.FromResult(Enumerable.Empty<AbstractGezagsrelatie>());
 		}
 		var requestBody = new GezagRequest
 		{
-			Bsn = burgerservicenummer
+			Bsns = burgerservicenummer
 		};
 
 		var url = _webApiOptions.Value.Url + "/opvragenBevoegdheidTotGezag";
-		return GetResultFromHttpRequest<IEnumerable<Gezagsrelatie>>(url, null, HttpMethod.Post, null, requestBody);
+		return GetResultFromHttpRequest<IEnumerable<AbstractGezagsrelatie>>(url, null, HttpMethod.Post, null, requestBody);
 	}
 }

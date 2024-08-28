@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.JsonPatch.Internal;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Rvig.Api.Gezag.ResponseModels;
 using Rvig.Data.Base.Gezag.Repositories;
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
@@ -98,28 +99,26 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 		{
 			_gbaPersonenApiHelper.HackLogicKinderenPartnersOuders(model.fields, personenPlIds?.ToList()?.ConvertAll(gbaPersoon => gbaPersoon.persoon));
 
-			personenPlIds = (await Task.WhenAll(personenPlIds!.Select(async x =>
-			{
-				if (model.fields.Any(field => field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) && !field.StartsWith("indicatieGezagMinderjarige"))
-				&& !string.IsNullOrWhiteSpace(x.persoon.Burgerservicenummer))
-                {
-                    var gezagsrelaties = (await _gezagsrelatieRepo.GetGezagsrelaties(x.persoon.Burgerservicenummer))?.ToList() ?? new List<Gezagsrelatie>();
-                    bool? underage = gezagsrelaties.Count > 0 ? gezagsrelaties.Any(gezagsrelatie => gezagsrelatie.BsnMinderjarige == x.persoon.Burgerservicenummer) : null;
-					int? leeftijd = 0;
-					if (x.persoon.Geboorte != null)
-					{
-						leeftijd = CalculateAge(new DatumOnvolledig(x.persoon.Geboorte.Datum));
-					}
+			if (model.fields.Any(field => field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) && !field.StartsWith("indicatieGezagMinderjarige")))
+            {
+                var bsns = personenPlIds!.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
 
-					x.persoon.Gezag = new List<AbstractGezagsrelatie>();
-					if (leeftijd < 18 && (underage == true || !underage.HasValue))
-					{
-						x.persoon.Gezag = await MapGezagMinderjarige(x.persoon.Burgerservicenummer, x.persoon.Partners, x.persoon.HistorischePartners, x.persoon.Kinderen, x.persoon.Ouders, gezagsrelaties, model.gemeenteVanInschrijving);
-					}
-					else
-					{
-						x.persoon.Gezag = await MapGezagMeerderjarige(x.persoon.Burgerservicenummer, x.persoon.GemeenteVanInschrijving, x.persoon.Partners, x.persoon.HistorischePartners, x.persoon.Kinderen, x.persoon.Ouders, gezagsrelaties, model.gemeenteVanInschrijving);
-					}
+                var gezagsrelaties = (await _gezagsrelatieRepo.GetGezag(bsns!))?.ToList() ?? new List<Gezagsrelatie>();
+                bool? underage = gezagsrelaties.Count > 0 ? gezagsrelaties.Any(gezagsrelatie => gezagsrelatie.BsnMinderjarige == x.persoon.Burgerservicenummer) : null;
+				int? leeftijd = 0;
+				if (x.persoon.Geboorte != null)
+				{
+					leeftijd = CalculateAge(new DatumOnvolledig(x.persoon.Geboorte.Datum));
+				}
+
+				x.persoon.Gezag = new List<AbstractGezagsrelatie>();
+				if (leeftijd < 18 && (underage == true || !underage.HasValue))
+				{
+					x.persoon.Gezag = await MapGezagMinderjarige(x.persoon.Burgerservicenummer, x.persoon.Partners, x.persoon.HistorischePartners, x.persoon.Kinderen, x.persoon.Ouders, gezagsrelaties, model.gemeenteVanInschrijving);
+				}
+				else
+				{
+					x.persoon.Gezag = await MapGezagMeerderjarige(x.persoon.Burgerservicenummer, x.persoon.GemeenteVanInschrijving, x.persoon.Partners, x.persoon.HistorischePartners, x.persoon.Kinderen, x.persoon.Ouders, gezagsrelaties, model.gemeenteVanInschrijving);
 				}
 
 				x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.fields, x.persoon.Rni, _persoonFieldsSettings.GbaFieldsSettings);
@@ -139,7 +138,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 				_gbaPersonenApiHelper.RemoveInOnderzoekFromGezagsverhoudingCategoryIfNoFieldsAreRequested(model.fields, x.persoon);
 
 				return x;
-			}))).ToList();
+			}
 
 			if (_protocolleringAuthorizationOptions.Value.UseProtocollering)
 			{
@@ -180,7 +179,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 
 			if (partnerChildrenBsns?.Any() == true)
 			{
-				gezagsrelatiesFromPartners = (await Task.WhenAll(partnerChildrenBsns!.Select(async bsn => await _gezagsrelatieRepo.GetGezagsrelaties(bsn)))).SelectMany(x => x!).Where(x => x != null);
+				gezagsrelatiesFromPartners = (await Task.WhenAll(partnerChildrenBsns!.Select(async bsn => await _gezagsrelatieRepo.GetGezag(bsn)))).SelectMany(x => x!).Where(x => x != null);
 			}
 			if (gezagsrelatiesFromPartners.Any())
 			{
@@ -198,7 +197,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 			if (filteredGezagsrelaties.Any() && filteredGezagsrelaties.All(gezagsrelatie => gezagsrelatie.BsnMinderjarige != persoonBurgerservicenummer))
 			{
 				var childGezagsrelaties = (
-					await Task.WhenAll(filteredGezagsrelaties.Select(async gezagsrelatie => await _gezagsrelatieRepo.GetGezagsrelaties(gezagsrelatie.BsnMinderjarige)))
+					await Task.WhenAll(filteredGezagsrelaties.Select(async gezagsrelatie => await _gezagsrelatieRepo.GetGezag(gezagsrelatie.BsnMinderjarige)))
 				).SelectMany(x => x!).Where(x => x != null);
                 if (childGezagsrelaties.Any())
 				{
@@ -295,7 +294,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 						&& model.fields.Any(field => field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) && !field.StartsWith("indicatieGezagMinderjarige"))
 					&& !string.IsNullOrWhiteSpace(x.persoon.Burgerservicenummer))
 				{
-					var gezagsrelaties = (await _gezagsrelatieRepo.GetGezagsrelaties(persoonGezagBeperkt.Burgerservicenummer))?.ToList() ?? new List<Gezagsrelatie>();
+					var gezagsrelaties = (await _gezagsrelatieRepo.GetGezag(persoonGezagBeperkt.Burgerservicenummer))?.ToList() ?? new List<Gezagsrelatie>();
 					bool? underage = gezagsrelaties.Count > 0 ? gezagsrelaties.Any(gezagsrelatie => gezagsrelatie.BsnMinderjarige == persoonGezagBeperkt.Burgerservicenummer) : null;
 					int? leeftijd = 0;
 					if (persoonGezagBeperkt.Geboorte != null)
