@@ -42,7 +42,7 @@ namespace Rvig.HaalCentraalApi.Shared.Util
 
 		public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
 		{
-			throw new CustomNotImplementedException();
+			serializer.Serialize(writer, value);
 		}
 	}
 }

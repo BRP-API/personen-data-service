@@ -100,7 +100,8 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
             {
                 var bsns = personenPlIds.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
 
-                IEnumerable<GbaPersoon> persoonGezagsrelaties = (await _gezagsrelatieRepo.GetGezag(bsns!))?.ToList() ?? new List<GbaPersoon>();
+                GezagResponse response = (await _gezagsrelatieRepo.GetGezag(bsns!)) ?? new GezagResponse();
+				IEnumerable<GbaPersoon> persoonGezagsrelaties = response.personen;
                 foreach (var x in personenPlIds.Where(x => x.persoon != null)) {
 					var persoonGezagsrelatie = persoonGezagsrelaties
 						.Where(pgr => pgr.Burgerservicenummer == x.persoon.Burgerservicenummer)
@@ -184,7 +185,9 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
                 && !string.IsNullOrWhiteSpace(x.persoon.Burgerservicenummer));
 
             var bsns = personenPlIds.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
-            IEnumerable<GbaPersoon> persoonGezagsrelaties = (await _gezagsrelatieRepo.GetGezag(bsns!))?.ToList() ?? new List<GbaPersoon>();
+
+            GezagResponse response = (await _gezagsrelatieRepo.GetGezag(bsns!)) ?? new GezagResponse();
+            IEnumerable<GbaPersoon> persoonGezagsrelaties = response.personen;
 
             foreach (var x in personenPlIds.Where(x => x.persoon != null))
 			{
