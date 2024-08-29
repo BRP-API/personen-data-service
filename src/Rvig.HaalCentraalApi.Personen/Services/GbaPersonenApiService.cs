@@ -86,7 +86,8 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 			? _persoonFieldsSettings.GbaFieldsSettings.ShortHandMappings[field]
 			: field);
 
-		(IEnumerable<(GbaPersoon persoon, long pl_id)>? personenPlIds, int afnemerCode) = await _getAndMapPersoonService.GetPersonenMapByBsns(model.burgerservicenummer, model.gemeenteVanInschrijving, fieldsToUseForAuthorisations, _protocolleringAuthorizationOptions.Value.UseAuthorizationChecks);
+        List<(GbaPersoon persoon, long pl_id)> result = new List<(GbaPersoon persoon, long pl_id)>();
+        (IEnumerable<(GbaPersoon persoon, long pl_id)>? personenPlIds, int afnemerCode) = await _getAndMapPersoonService.GetPersonenMapByBsns(model.burgerservicenummer, model.gemeenteVanInschrijving, fieldsToUseForAuthorisations, _protocolleringAuthorizationOptions.Value.UseAuthorizationChecks);
 
 		// Filter response by fields
 		if (model?.fields?.Any() == true && personenPlIds != null)
@@ -122,15 +123,16 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 
 					model.fields = GbaPersonenApiHelper.OpschortingBijhoudingLogicRaadplegen(model.fields, x.persoon.OpschortingBijhouding);
 
-					x.persoon = _fieldsExpandFilterService.ApplyScope(x.persoon, string.Join(",", model.fields), _persoonFieldsSettings.GbaFieldsSettings);
-					_gbaPersonenApiHelper.RemoveInOnderzoekFromPersonCategoryIfNoFieldsAreRequested(model.fields, x.persoon);
-					_gbaPersonenApiHelper.RemoveInOnderzoekFromGezagsverhoudingCategoryIfNoFieldsAreRequested(model.fields, x.persoon);
+                    GbaPersoon target = _fieldsExpandFilterService.ApplyScope(x.persoon, string.Join(",", model.fields), _persoonFieldsSettings.GbaFieldsSettings);
+					_gbaPersonenApiHelper.RemoveInOnderzoekFromPersonCategoryIfNoFieldsAreRequested(model.fields, target);
+					_gbaPersonenApiHelper.RemoveInOnderzoekFromGezagsverhoudingCategoryIfNoFieldsAreRequested(model.fields, target);
+					result.Add((target, x.pl_id));
                 }
             }
 
 			if (_protocolleringAuthorizationOptions.Value.UseProtocollering)
 			{
-				await LogProtocolleringInDb(afnemerCode, personenPlIds?.Select(x => x.pl_id).ToList(),
+				await LogProtocolleringInDb(afnemerCode, result.Select(x => x.pl_id).ToList(),
 								PersonenApiToRubriekCategoryHelper.ConvertModelParamsToRubrieken(model)
 									.Where(x => !string.IsNullOrWhiteSpace(x))
 									.OrderBy(rubriek => rubriek.Substring(0))
@@ -143,7 +145,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 			}
 		}
 
-		return (new RaadpleegMetBurgerservicenummerResponse { Personen = personenPlIds?.ToList()?.ConvertAll(gbaPersoon => gbaPersoon.persoon) ?? new List<GbaPersoon>() }, personenPlIds?.Select(x => x.pl_id).ToList());
+		return (new RaadpleegMetBurgerservicenummerResponse { Personen = result.ConvertAll(gbaPersoon => gbaPersoon.persoon) ?? new List<GbaPersoon>() }, result.Select(x => x.pl_id).ToList());
 	}
 
 	/// <summary>
@@ -162,47 +164,57 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 			: field);
 		(IEnumerable<(T persoon, long pl_id)>? personenPlIds, int afnemerCode) = await _getAndMapPersoonService.GetMapZoekPersonen<T>(model, fieldsToUseForAuthorisations, _protocolleringAuthorizationOptions.Value.UseAuthorizationChecks);
 
-		// Filter response by fields
-		if (model?.fields?.Any() == true && personenPlIds != null)
-		{
-			// Only opschortingBijhouding with code F must be ignored. If the value F is present then the entire PL must be ignored.
-			personenPlIds = (await Task.WhenAll(
-				personenPlIds
-				.Where(x => x.persoon.OpschortingBijhouding == null
+
+        List<(T persoon, long pl_id)> result = new List<(T persoon, long pl_id)>();
+
+        // Filter response by fields
+        if (model?.fields?.Any() == true && personenPlIds != null 
+			&& model.fields.Any(field => field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) 
+			&& !field.StartsWith("indicatieGezagMinderjarige")))
+        {
+            // OpschortingBijhouding with code F must be ignored. If the value F is present then the entire PL must be ignored.
+            // and opschortingBijhouding with code O must be ignored if the result should not included deceased personen
+            personenPlIds = personenPlIds.Where(x => x.persoon.OpschortingBijhouding == null
 				|| x.persoon.OpschortingBijhouding?.Reden?.Code?.Equals("F") == false
 				&& x.persoon.OpschortingBijhouding?.Reden?.Code?.Equals("O") == false
 				|| x.persoon.OpschortingBijhouding?.Reden?.Code?.Equals("O") == true
-							&& inclusiefOverledenPersonen == true)
-				.Select(async x =>
+							&& inclusiefOverledenPersonen == true);
+
+            personenPlIds = personenPlIds.Where(x => x.persoon is GbaGezagPersoonBeperkt persoonGezagBeperkt
+                && !string.IsNullOrWhiteSpace(x.persoon.Burgerservicenummer));
+
+            var bsns = personenPlIds.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
+            IEnumerable<GbaPersoon> persoonGezagsrelaties = (await _gezagsrelatieRepo.GetGezag(bsns!))?.ToList() ?? new List<GbaPersoon>();
+
+            foreach (var x in personenPlIds.Where(x => x.persoon != null))
 			{
-				if (x.persoon is GbaGezagPersoonBeperkt persoonGezagBeperkt
-						&& model.fields.Any(field => field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) && !field.StartsWith("indicatieGezagMinderjarige"))
-					&& !string.IsNullOrWhiteSpace(x.persoon.Burgerservicenummer))
+				if (x.persoon is GbaGezagPersoonBeperkt persoonBeperkt)
 				{
-                    IEnumerable<GbaPersoon> persoonGezagsrelatie = (await _gezagsrelatieRepo.GetGezag(new[] { x.persoon.Burgerservicenummer }!))?.ToList() ?? new List<GbaPersoon>();
-                    if(persoonGezagsrelatie != null)
+					var persoonGezagsrelatie = persoonGezagsrelaties
+						.Where(pgr => pgr.Burgerservicenummer == x.persoon.Burgerservicenummer)
+						.FirstOrDefault();
+
+					if (persoonGezagsrelatie != null)
 					{
-						persoonGezagBeperkt.Gezag = persoonGezagsrelatie.FirstOrDefault()?.Gezag;
+                        persoonBeperkt.Gezag = persoonGezagsrelatie.Gezag;
 					}
-				}
 
-				x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.fields, x.persoon.Rni, _persoonBeperktFieldsSettings.GbaFieldsSettings);
-				if (x.persoon.Verblijfplaats != null)
-				{
-					_gbaPersonenBeperktApiHelper.AddVerblijfplaatsBeperktInOnderzoek(model.fields, x.persoon.Verblijfplaats);
-				}
+					x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.fields, x.persoon.Rni, _persoonBeperktFieldsSettings.GbaFieldsSettings);
+					if (x.persoon.Verblijfplaats != null)
+					{
+						_gbaPersonenBeperktApiHelper.AddVerblijfplaatsBeperktInOnderzoek(model.fields, x.persoon.Verblijfplaats);
+					}
 
-				x.persoon = ApplyGbaPersoonBeperktScope(x.persoon, model.fields);
-				_gbaPersonenBeperktApiHelper.RemoveBeperktInOnderzoekFromPersonCategoryIfNoFieldsAreRequested(model.fields, x.persoon);
 
-				return x;
-			})
-			))
-			.ToList();
+					T target = ApplyGbaPersoonBeperktScope(x.persoon, model.fields);
+					_gbaPersonenBeperktApiHelper.RemoveBeperktInOnderzoekFromPersonCategoryIfNoFieldsAreRequested(model.fields, target);
+					result.Add((target, x.pl_id));
+                }
+			}
 
 			if (_protocolleringAuthorizationOptions.Value.UseProtocollering)
 			{
-				await LogProtocolleringInDb(afnemerCode, personenPlIds?.Select(x => x.pl_id).ToList(),
+				await LogProtocolleringInDb(afnemerCode, result.Select(x => x.pl_id).ToList(),
 								PersonenApiToRubriekCategoryHelper.ConvertModelParamsToRubrieken(model)
 									.Where(x => !string.IsNullOrWhiteSpace(x))
 									.OrderBy(rubriek => rubriek.Substring(0))
@@ -215,7 +227,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 			}
 		}
 
-		return (personenPlIds?.ToList()?.ConvertAll(gbaPersoon => gbaPersoon.persoon) ?? new List<T>(), personenPlIds?.Select(x => x.pl_id).ToList());
+		return (result.ConvertAll(gbaPersoon => gbaPersoon.persoon) ?? new List<T>(), result.Select(x => x.pl_id).ToList());
 	}
 
 	/// <summary>
