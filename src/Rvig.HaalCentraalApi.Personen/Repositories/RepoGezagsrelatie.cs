@@ -3,7 +3,6 @@ using Rvig.Data.Base.WebApi.Options;
 using Rvig.HaalCentraalApi.Shared.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
-using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Personen.RequestModels.BRP;
 using System.Net.Http;
 using Rvig.Data.Base.Gezag.Repositories;
