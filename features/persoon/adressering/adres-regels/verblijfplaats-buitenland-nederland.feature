@@ -1,7 +1,7 @@
 # language: nl
 
 @api
-Functionaliteit: verblijfplaats categorie 13 met adres in Nederland
+Functionaliteit: verblijfplaats categorie 13 met adres in Nederland en vragen om adressering
 
     Scenario: verblijfplaats in Nederland voor persoon ingeschreven in RNI
       Gegeven de persoon met burgerservicenummer '000000012' is ingeschreven op een buitenlands adres met de volgende gegevens

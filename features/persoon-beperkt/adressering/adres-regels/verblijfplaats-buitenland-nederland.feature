@@ -1,7 +1,7 @@
 # language: nl
 
 @api
-Functionaliteit: verblijfplaats categorie 13 met adres in Nederland
+Functionaliteit: verblijfplaats categorie 13 met adres in Nederland en vragen om adressering
 
     Scenario: verblijfplaats in Nederland voor persoon ingeschreven in RNI
       Gegeven de persoon met burgerservicenummer '000000012' heeft de volgende gegevens
@@ -19,6 +19,6 @@ Functionaliteit: verblijfplaats categorie 13 met adres in Nederland
       | geboortedatum | 1983-05-26                                                                               |
       | fields        | adressering.adresregel1,adressering.adresregel2,adressering.adresregel3,adressering.land |
       Dan heeft de response een persoon met de volgende 'verblijfplaats' gegevens
-      | naam                        | waarde          |
-      | regel1                      | Laantje 2       |
-      | regel2                      | 2222CD Ons Dorp |
+      | naam   | waarde          |
+      | regel1 | Laantje 2       |
+      | regel2 | 2222CD Ons Dorp |
