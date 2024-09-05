@@ -9,7 +9,7 @@ Functionaliteit: verblijfplaats categorie 13 met adres in Nederland en vragen om
       | Maassen               | 19830526              |
       En de persoon is ingeschreven op een buitenlands adres met de volgende gegevens
       | naam                             | waarde          |
-      | land adres buitenland (13.10)    | 5010            |
+      | land adres buitenland (13.10)    | 6030            |
       | regel 1 adres buitenland (13.30) | Laantje 2       |
       | regel 2 adres buitenland (13.40) | 2222CD Ons Dorp |
       Als personen wordt gezocht met de volgende parameters
