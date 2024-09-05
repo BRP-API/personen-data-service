@@ -9,7 +9,7 @@ Functionaliteit: verblijfplaats categorie 13 met adres in Nederland en vragen om
       | Maassen               | 19830526              |
       En de persoon is ingeschreven op een buitenlands adres met de volgende gegevens
       | naam                             | waarde          |
-      | land adres buitenland (13.10)    | 6030            |
+      | land adres buitenland (13.10)    | 5010            |
       | regel 1 adres buitenland (13.30) | Laantje 2       |
       | regel 2 adres buitenland (13.40) | 2222CD Ons Dorp |
       Als personen wordt gezocht met de volgende parameters
@@ -19,6 +19,8 @@ Functionaliteit: verblijfplaats categorie 13 met adres in Nederland en vragen om
       | geboortedatum | 1983-05-26                                                                               |
       | fields        | adressering.adresregel1,adressering.adresregel2,adressering.adresregel3,adressering.land |
       Dan heeft de response een persoon met de volgende 'verblijfplaats' gegevens
-      | naam   | waarde          |
-      | regel1 | Laantje 2       |
-      | regel2 | 2222CD Ons Dorp |
+      | naam              | waarde          |
+      | land.code         | 6030            |
+      | land.omschrijving | Nederland       |
+      | regel1            | Laantje 2       |
+      | regel2            | 2222CD Ons Dorp |
