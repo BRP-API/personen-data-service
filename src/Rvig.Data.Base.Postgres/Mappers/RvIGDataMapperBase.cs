@@ -74,14 +74,15 @@ public class RvIGDataMapperBase
 					verblijfplaats.Regel3 = dbVerblijfplaats?.vertrek_land_adres_3;
 					break;
 				case nameof(GbaVerblijfplaats.Land):
-					if (dbVerblijfplaats?.vertrek_land_code != null)
-					{
-						verblijfplaats.Land = new Waardetabel {
-							Code = (dbVerblijfplaats.vertrek_land_code ?? 0).ToString("0000"),
-							Omschrijving = dbVerblijfplaats.vertrek_land_naam ?? await _domeinTabellenHelper.GetLandOmschrijving(dbVerblijfplaats.vertrek_land_code)
-						};
-					}
-					break;
+                    if (dbVerblijfplaats?.vertrek_land_code != null)
+                    {
+                        verblijfplaats.Land = new Waardetabel
+                        {
+                            Code = (dbVerblijfplaats.vertrek_land_code ?? 0).ToString("0000"),
+                            Omschrijving = dbVerblijfplaats.vertrek_land_naam ?? await _domeinTabellenHelper.GetLandOmschrijving(dbVerblijfplaats.vertrek_land_code)
+                        };
+                    }
+                    break;
 				case nameof(GbaVerblijfplaats.NaamOpenbareRuimte):
 					verblijfplaats.NaamOpenbareRuimte = dbAdres?.diak_open_ruimte_naam ?? dbAdres?.open_ruimte_naam;
 					break;
