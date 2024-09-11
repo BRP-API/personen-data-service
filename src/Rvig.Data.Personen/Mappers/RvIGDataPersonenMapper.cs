@@ -655,15 +655,16 @@ public class RvIGDataPersonenMapper : RvIGDataMapperBase, IRvIGDataPersonenMappe
 					verblijfplaats.Regel3 = dbVerblijfplaats?.vertrek_land_adres_3;
 					break;
 				case nameof(GbaVerblijfplaatsBeperkt.Land):
-					if (dbVerblijfplaats?.vertrek_land_code != null && dbVerblijfplaats.vertrek_land_code != 6030)
-					{
-						verblijfplaats.Land = new Waardetabel {
-							Code = dbVerblijfplaats.vertrek_land_code?.ToString().PadLeft(4, '0'),
-							Omschrijving = dbVerblijfplaats.vertrek_land_naam ?? await _domeinTabellenHelper.GetLandOmschrijving(dbVerblijfplaats?.vertrek_land_code)
-						};
-					}
-					break;
-				case nameof(GbaVerblijfplaatsBeperkt.Huisnummer):
+                    if (dbVerblijfplaats?.vertrek_land_code != null)
+                    {
+                        verblijfplaats.Land = new Waardetabel
+                        {
+                            Code = (dbVerblijfplaats.vertrek_land_code ?? 0).ToString("0000"),
+                            Omschrijving = dbVerblijfplaats.vertrek_land_naam ?? await _domeinTabellenHelper.GetLandOmschrijving(dbVerblijfplaats.vertrek_land_code)
+                        };
+                    }
+                    break;
+                case nameof(GbaVerblijfplaatsBeperkt.Huisnummer):
 					verblijfplaats.Huisnummer = dbAdres?.huis_nr;
 					break;
 				case nameof(GbaVerblijfplaatsBeperkt.Huisletter):
