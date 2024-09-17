@@ -21,7 +21,7 @@ on:
 
 env:
   NODE_VERSION: '20'
-  DOTNET_SOLUTION_FILE_PATH: src/data-service.sln
+  DOTNET_SOLUTION_FILE_PATH: src/PersonenDataService.sln
   GEZAG_MOCK_PROJECT_PATH: ./src/GezagMock
   GEZAG_MOCK_CSPROJ_FILE_PATH: ./src/GezagMock/GezagMock.csproj
   GEZAG_MOCK_CONTAINER_IMAGE: ghcr.io/brp-api/gezag-mock
