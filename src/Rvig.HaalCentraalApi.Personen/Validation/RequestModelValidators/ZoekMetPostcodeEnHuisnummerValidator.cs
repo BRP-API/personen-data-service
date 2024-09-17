@@ -27,5 +27,8 @@ public class ZoekMetPostcodeEnHuisnummerValidator : HuisnummerValidatorBase<Zoek
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage(_requiredErrorMessage)
             .Matches(_postcodePattern).WithMessage(GetPatternErrorMessage(_postcodePattern));
+
+		RuleFor(x => x.geboortedatum)
+			.Matches(_datePattern).WithMessage(_dateErrorMessage);
 	}
 }

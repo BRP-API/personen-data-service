@@ -1,6 +1,6 @@
 services:
   haalcentraal_api:
-    image: ghcr.io/brp-api/personen-data-service:latest
+    image: ghcr.io/brp-api/personen-data-service:2.3.0-202408281540
     environment:
       - Database__Host=postgres
       - Database__Username=root
@@ -8,7 +8,6 @@ services:
       - Database__Database=rvig_haalcentraal_testdata
       - HaalcentraalApi__MaxSearchResults=10
       - ASPNETCORE_URLS=http://+;
-      - Serilog__MinimumLevel__Default=Information
       - WebApi__Url=http://gezagmock:5020/api/v1
       - ProtocolleringAuthorization__UseAuthorizationChecks=false
       - ProtocolleringAuthorization__UseProtocollering=false
