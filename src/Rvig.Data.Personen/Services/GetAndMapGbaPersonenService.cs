@@ -307,6 +307,12 @@ public class GetAndMapGbaPersonenService : GetAndMapGbaServiceBase, IGetAndMapGb
 					invalidParams.Add(nameof(ZoekMetPostcodeEnHuisnummer.postcode));
 					isParamAuthorized = false;
 				}
+				if (!string.IsNullOrWhiteSpace(zoekMetPostcodeEnHuisnummerModel.geboortedatum)
+					&& !adHocRubrieken.Any(rubriek => rubriek.Contains("10310")))
+				{
+					invalidParams.Add(nameof(ZoekMetGeslachtsnaamEnGeboortedatum.geboortedatum));
+					isParamAuthorized = false;
+				}
 				break;
 			case ZoekMetStraatHuisnummerEnGemeenteVanInschrijving zoekMetStraatHuisnummerEnGemeenteVanInschrijvingModel:
 				if (!string.IsNullOrWhiteSpace(zoekMetStraatHuisnummerEnGemeenteVanInschrijvingModel.gemeenteVanInschrijving)

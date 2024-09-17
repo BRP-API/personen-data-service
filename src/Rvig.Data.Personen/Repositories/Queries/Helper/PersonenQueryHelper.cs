@@ -153,6 +153,13 @@ namespace Rvig.Data.Personen.Repositories.Queries.Helper
 			whereParts.Add(huisnummerToevoegingPart.where);
 			parameters.Add(huisnummerToevoegingPart.pgsqlParam);
 
+			if (!string.IsNullOrWhiteSpace(model.geboortedatum))
+			{
+				(string where, NpgsqlParameter pgsqlParam) geboorteDatumPart = CreateGeboorteDatumPart(int.Parse(model.geboortedatum.Replace("-", "")));
+				whereParts.Add(geboorteDatumPart.where);
+				parameters.Add(geboorteDatumPart.pgsqlParam);
+			}
+
 			whereParts = whereParts.Where(x => x != null).ToList();
 			parameters = parameters.Where(x => x != null).ToList();
 
