@@ -149,7 +149,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           driver: docker-container
 
-      - name: Build & push authz & protocollering container images naar registry
+      - name: Build & push personen data service container images naar registry
         if: always() && (steps.changed-project.outputs.app == 'true' || inputs.publishType == 'app')
         uses: docker/build-push-action@v6
         with:
