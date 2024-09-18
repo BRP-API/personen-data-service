@@ -6,22 +6,25 @@ on:
       - src/**
       - features/**
       - .github/workflows/ci.yml
-      - .docker/personen-data-service.yml
   workflow_dispatch:
     inputs:
       publishType:
         description: wat moet worden gereleased?
         required: true
-        default: ''
+        default: 'ci-only'
         type: choice
         options:
           - ci-only
+          - app
           - gezag-proxy-mock
           - gezag-mock
 
 env:
   NODE_VERSION: '20'
   DOTNET_SOLUTION_FILE_PATH: src/PersonenDataService.sln
+  APP_PROJECT_PATH: ./src/Personen.Data.Service
+  APP_CSPROJ_FILE_PATH: ./src/Personen.Data.Service/Personen.Data.Service.csproj
+  APP_CONTAINER_IMAGE: ghcr.io/brp-api/personen-data-service
   GEZAG_MOCK_PROJECT_PATH: ./src/GezagMock
   GEZAG_MOCK_CSPROJ_FILE_PATH: ./src/GezagMock/GezagMock.csproj
   GEZAG_MOCK_CONTAINER_IMAGE: ghcr.io/brp-api/gezag-mock
@@ -41,30 +44,37 @@ jobs:
         id: build-run-id
         uses: ./.github/actions/genereer-build-run-identifier
 
-      - name: Zet versie met build run in Gezag mock csproj
+      - name: Zet versie met build run in App csproj
         uses: ./.github/actions/zet-versie-met-build-run-in-csproj
         id: app-version
+        with:
+          path-csproj-file: ${{ env.APP_CSPROJ_FILE_PATH }}
+          build-run: ${{ steps.build-run-id.outputs.build-run }}
+      - name: Zet versie met build run in Gezag mock csproj
+        uses: ./.github/actions/zet-versie-met-build-run-in-csproj
+        id: mock-version
         with:
           path-csproj-file: ${{ env.GEZAG_MOCK_CSPROJ_FILE_PATH }}
           build-run: ${{ steps.build-run-id.outputs.build-run }}
       - name: Zet versie met build run in Gezag Proxy mock csproj
         uses: ./.github/actions/zet-versie-met-build-run-in-csproj
-        id: mock-version
+        id: proxy-mock-version
         with:
           path-csproj-file: ${{ env.GEZAG_PROXY_MOCK_CSPROJ_FILE_PATH }}
           build-run: ${{ steps.build-run-id.outputs.build-run }}
 
-      - name: Haal data service build run identifier uit Docker manifest
-        id: data-service-build-run-id
-        uses: ./.github/actions/haal-build-run-identifier-uit-docker-manifest
+      - name: Bepaal de gewijzigde applicatie(s)
+        uses: dorny/paths-filter@v3
+        id: changed-project
         with:
-          path-docker-manifest: ${{ env.DATA_SERVICE_DOCKER_FILE_PATH }}
-      - name: Haal data service versie uit Docker manifest
-        id: data-service-version
-        uses: ./.github/actions/haal-versie-uit-docker-manifest
-        with:
-          path-docker-manifest: ${{ env.DATA_SERVICE_DOCKER_FILE_PATH }}
-
+          filters: |
+            app:
+              - '${{ env.APP_PROJECT_PATH }}/**'
+            mock:
+              - '${{ env.GEZAG_MOCK_PROJECT_PATH }}/**'
+            proxy-mock:
+              - '${{ env.GEZAG_PROXY_MOCK_PROJECT_PATH }}/**'
+  
       - name: Valideer .NET solution
         uses: ./.github/actions/valideer-dotnet-solution
         with:
@@ -82,15 +92,21 @@ jobs:
         with:
           path-bash-file-or-folder: ./scripts/*
 
+      - name: Build container images
+        run: |
+          ./scripts/containers-build.sh
+
       - name: Start containers
         run: |
           ./scripts/containers-start.sh ci
       - name: Wait for DB restart
         run: sleep 5s
         shell: bash
+
       - name: Valideer functionele specs
         run: |
           ./scripts/specs-verify.sh
+
       - name: Stop containers
         if: always()
         run: |
@@ -99,7 +115,7 @@ jobs:
       - name: Genereer test rapportage
         if: always()
         run: |
-          node ./scripts/generate-cucumber-reports.js ${{ steps.data-service-version.outputs.version }} ${{ steps.data-service-build-run-id.outputs.build-run }} ${{ github.ref_name }}
+          node ./scripts/generate-cucumber-reports.js ${{ steps.app-version.outputs.version }} ${{ steps.build-run-id.outputs.build-run }} ${{ github.ref_name }}
       - name: Upload test rapportage
         if: always()
         uses: actions/upload-artifact@v4
@@ -118,7 +134,7 @@ jobs:
           destination-repository-name: brp-api.github.io
           destination-github-username: BRP-API
           target-branch: test-reports/personen
-          commit-message: "test rapporten van build: ${{ steps.data-service-build-run-id.outputs.build-run }}"
+          commit-message: "test rapporten van build: ${{ steps.build-run-id.outputs.build-run }}"
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3.1.0
@@ -133,6 +149,19 @@ jobs:
           platforms: linux/amd64,linux/arm64
           driver: docker-container
 
+      - name: Build & push authz & protocollering container images naar registry
+        if: always() && (steps.changed-project.outputs.app == 'true' || inputs.publishType == 'app')
+        uses: docker/build-push-action@v6
+        with:
+          file: ${{ env.APP_PROJECT_PATH }}/Dockerfile
+          context: src
+          push: true
+          platforms: linux/arm64,linux/amd64
+          tags: |
+            ${{ env.APP_CONTAINER_IMAGE }}:latest
+            ${{ env.APP_CONTAINER_IMAGE }}:${{ steps.app-version.outputs.version }}-latest
+            ${{ env.APP_CONTAINER_IMAGE }}:${{ steps.app-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
+
       - name: Build en push gezag mock container images naar registry
         if: always() && inputs.publishType == 'gezag-mock'
         uses: docker/build-push-action@v6
@@ -143,8 +172,8 @@ jobs:
           platforms: linux/arm64,linux/amd64
           tags: |
             ${{ env.GEZAG_MOCK_CONTAINER_IMAGE }}:latest
-            ${{ env.GEZAG_MOCK_CONTAINER_IMAGE }}:${{ steps.app-version.outputs.version }}-latest
-            ${{ env.GEZAG_MOCK_CONTAINER_IMAGE }}:${{ steps.app-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
+            ${{ env.GEZAG_MOCK_CONTAINER_IMAGE }}:${{ steps.mock-version.outputs.version }}-latest
+            ${{ env.GEZAG_MOCK_CONTAINER_IMAGE }}:${{ steps.mock-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
 
       - name: Build en push gezag proxy mock container images naar registry
         if: always() && inputs.publishType == 'gezag-proxy-mock'
@@ -156,5 +185,5 @@ jobs:
           platforms: linux/arm64,linux/amd64
           tags: |
             ${{ env.GEZAG_PROXY_MOCK_CONTAINER_IMAGE }}:latest
-            ${{ env.GEZAG_PROXY_MOCK_CONTAINER_IMAGE }}:${{ steps.mock-version.outputs.version }}-latest
-            ${{ env.GEZAG_PROXY_MOCK_CONTAINER_IMAGE }}:${{ steps.mock-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
+            ${{ env.GEZAG_PROXY_MOCK_CONTAINER_IMAGE }}:${{ steps.proxy-mock-version.outputs.version }}-latest
+            ${{ env.GEZAG_PROXY_MOCK_CONTAINER_IMAGE }}:${{ steps.proxy-mock-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
