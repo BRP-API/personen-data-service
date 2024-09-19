@@ -1,6 +1,6 @@
 services:
   haalcentraal_api:
-    image: ghcr.io/brp-api/personen-data-service:2.3.0-202408281540
+    image: ghcr.io/brp-api/personen-data-service:latest
     environment:
       - Database__Host=postgres
       - Database__Username=root
@@ -12,6 +12,7 @@ services:
       - ProtocolleringAuthorization__UseAuthorizationChecks=false
       - ProtocolleringAuthorization__UseProtocollering=false
       - Ecs__Path=/var/log/personen-data-service.json
+      - Ecs__SecuredPath=/var/log/personen-data-service-secured.json
       - Ecs__FileSizeLimitBytes=1048576
       # - Ecs__RetainedFileCountLimit=5
     ports:
