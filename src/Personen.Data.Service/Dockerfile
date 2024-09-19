@@ -17,7 +17,6 @@ COPY ["Rvig.Data.Base.WebApi/Rvig.Data.Base.WebApi.csproj", "Rvig.Data.Base.WebA
 COPY ["Rvig.Data.Base/Rvig.Data.Base.csproj", "Rvig.Data.Base/"]
 COPY ["Rvig.HaalCentraalApi.Shared/Rvig.HaalCentraalApi.Shared.csproj", "Rvig.HaalCentraalApi.Shared/"]
 COPY ["Rvig.Data.Base.Postgres/Rvig.Data.Base.Postgres.csproj", "Rvig.Data.Base.Postgres/"]
-COPY ["Rvig.Data.Base.Gezag/Rvig.Data.Base.Gezag.csproj", "Rvig.Data.Base.Gezag/"]
 COPY ["Rvig.Data.Personen/Rvig.Data.Personen.csproj", "Rvig.Data.Personen/"]
 COPY ["Rvig.HaalCentraalApi.Personen/Rvig.HaalCentraalApi.Personen.csproj", "Rvig.HaalCentraalApi.Personen/"]
 RUN dotnet restore "./Personen.Data.Service/Personen.Data.Service.csproj"
