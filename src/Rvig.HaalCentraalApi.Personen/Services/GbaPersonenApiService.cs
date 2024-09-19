@@ -67,6 +67,19 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 		};
 	}
 
+	private static bool GezagIsRequested(List<string> fields) =>
+		fields.Any(field => field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) &&
+						  	!field.StartsWith("indicatieGezagMinderjarige"));
+
+	private async Task<List<GbaPersoon>> GetGezagIfRequested(List<string> fields, List<string?> bsns){
+		if(GezagIsRequested(fields))
+		{
+			GezagResponse response = (await _gezagsrelatieRepo.GetGezag(bsns!)) ?? new GezagResponse();
+			return response.personen;
+		}
+		return new List<GbaPersoon>();
+	}
+
 	/// <summary>
 	/// Get personen via bsn(s).
 	/// </summary>
@@ -94,15 +107,13 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 		{
 			_gbaPersonenApiHelper.HackLogicKinderenPartnersOuders(model.fields, personenPlIds?.ToList()?.ConvertAll(gbaPersoon => gbaPersoon.persoon));
 
-			if (model.fields.Any(field => field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) 
-				&& !field.StartsWith("indicatieGezagMinderjarige"))
-				&& personenPlIds != null)
-            {
-                var bsns = personenPlIds.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
+			var bsns = personenPlIds!.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
 
-                GezagResponse response = (await _gezagsrelatieRepo.GetGezag(bsns!)) ?? new GezagResponse();
-				IEnumerable<GbaPersoon> persoonGezagsrelaties = response.personen;
-                foreach (var x in personenPlIds.Where(x => x.persoon != null)) {
+			IEnumerable<GbaPersoon> persoonGezagsrelaties = await GetGezagIfRequested(model.fields, bsns);
+			foreach (var x in personenPlIds!.Where(x => x.persoon != null))
+			{
+				if(GezagIsRequested(model.fields))
+				{
 					var persoonGezagsrelatie = persoonGezagsrelaties
 						.Where(pgr => pgr.Burgerservicenummer == x.persoon.Burgerservicenummer)
 						.FirstOrDefault();
@@ -111,25 +122,25 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 					{
 						x.persoon.Gezag = persoonGezagsrelatie.Gezag;
 					}
-				
-					x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.fields, x.persoon.Rni, _persoonFieldsSettings.GbaFieldsSettings);
-					if (x.persoon.Verblijfplaats != null)
-					{
-						GbaPersonenApiHelper.AddVerblijfplaatsInOnderzoek(model.fields, x.persoon.Verblijfplaats);
-					}
-					if (x.persoon.Immigratie != null)
-					{
-						GbaPersonenApiHelper.AddLandVanwaarIngeschreven(model.fields, x.persoon.Immigratie);
-					}
+				}
+			
+				x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.fields, x.persoon.Rni, _persoonFieldsSettings.GbaFieldsSettings);
+				if (x.persoon.Verblijfplaats != null)
+				{
+					GbaPersonenApiHelper.AddVerblijfplaatsInOnderzoek(model.fields, x.persoon.Verblijfplaats);
+				}
+				if (x.persoon.Immigratie != null)
+				{
+					GbaPersonenApiHelper.AddLandVanwaarIngeschreven(model.fields, x.persoon.Immigratie);
+				}
 
-					model.fields = GbaPersonenApiHelper.OpschortingBijhoudingLogicRaadplegen(model.fields, x.persoon.OpschortingBijhouding);
+				model.fields = GbaPersonenApiHelper.OpschortingBijhoudingLogicRaadplegen(model.fields, x.persoon.OpschortingBijhouding);
 
-                    GbaPersoon target = _fieldsExpandFilterService.ApplyScope(x.persoon, string.Join(",", model.fields), _persoonFieldsSettings.GbaFieldsSettings);
-					_gbaPersonenApiHelper.RemoveInOnderzoekFromPersonCategoryIfNoFieldsAreRequested(model.fields, target);
-					_gbaPersonenApiHelper.RemoveInOnderzoekFromGezagsverhoudingCategoryIfNoFieldsAreRequested(model.fields, target);
-					result.Add((target, x.pl_id));
-                }
-            }
+				GbaPersoon target = _fieldsExpandFilterService.ApplyScope(x.persoon, string.Join(",", model.fields), _persoonFieldsSettings.GbaFieldsSettings);
+				_gbaPersonenApiHelper.RemoveInOnderzoekFromPersonCategoryIfNoFieldsAreRequested(model.fields, target);
+				_gbaPersonenApiHelper.RemoveInOnderzoekFromGezagsverhoudingCategoryIfNoFieldsAreRequested(model.fields, target);
+				result.Add((target, x.pl_id));
+			}
 
 			if (_protocolleringAuthorizationOptions.Value.UseProtocollering)
 			{
@@ -163,15 +174,12 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 		var fieldsToUseForAuthorisations = model.fields.ConvertAll(field => _persoonBeperktFieldsSettings.GbaFieldsSettings.ShortHandMappings.ContainsKey(field)
 			? _persoonBeperktFieldsSettings.GbaFieldsSettings.ShortHandMappings[field]
 			: field);
+
 		(IEnumerable<(T persoon, long pl_id)>? personenPlIds, int afnemerCode) = await _getAndMapPersoonService.GetMapZoekPersonen<T>(model, fieldsToUseForAuthorisations, _protocolleringAuthorizationOptions.Value.UseAuthorizationChecks);
-
-
         List<(T persoon, long pl_id)> result = new List<(T persoon, long pl_id)>();
 
         // Filter response by fields
-        if (model?.fields?.Any() == true && personenPlIds != null 
-			&& model.fields.Any(field => field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) 
-			&& !field.StartsWith("indicatieGezagMinderjarige")))
+        if (model?.fields?.Any() == true && personenPlIds != null)
         {
             // OpschortingBijhouding with code F must be ignored. If the value F is present then the entire PL must be ignored.
             // and opschortingBijhouding with code O must be ignored if the result should not included deceased personen
@@ -181,17 +189,17 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 				|| x.persoon.OpschortingBijhouding?.Reden?.Code?.Equals("O") == true
 							&& inclusiefOverledenPersonen == true);
 
-            personenPlIds = personenPlIds.Where(x => x.persoon is GbaGezagPersoonBeperkt persoonGezagBeperkt
-                && !string.IsNullOrWhiteSpace(x.persoon.Burgerservicenummer));
-
             var bsns = personenPlIds.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
 
-            GezagResponse response = (await _gezagsrelatieRepo.GetGezag(bsns!)) ?? new GezagResponse();
-            IEnumerable<GbaPersoon> persoonGezagsrelaties = response.personen;
+            IEnumerable<GbaPersoon> persoonGezagsrelaties = personenPlIds.FirstOrDefault().persoon is GbaGezagPersoonBeperkt
+				? await GetGezagIfRequested(model.fields, bsns)
+				: new List<GbaPersoon>();
 
             foreach (var x in personenPlIds.Where(x => x.persoon != null))
 			{
-				if (x.persoon is GbaGezagPersoonBeperkt persoonBeperkt)
+				if (x.persoon is GbaGezagPersoonBeperkt persoonBeperkt &&
+					GezagIsRequested(model.fields) &&
+					!string.IsNullOrWhiteSpace(x.persoon.Burgerservicenummer))
 				{
 					var persoonGezagsrelatie = persoonGezagsrelaties
 						.Where(pgr => pgr.Burgerservicenummer == x.persoon.Burgerservicenummer)
@@ -199,20 +207,20 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 
 					if (persoonGezagsrelatie != null)
 					{
-                        persoonBeperkt.Gezag = persoonGezagsrelatie.Gezag;
+						persoonBeperkt.Gezag = persoonGezagsrelatie.Gezag;
 					}
-
-					x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.fields, x.persoon.Rni, _persoonBeperktFieldsSettings.GbaFieldsSettings);
-					if (x.persoon.Verblijfplaats != null)
-					{
-						_gbaPersonenBeperktApiHelper.AddVerblijfplaatsBeperktInOnderzoek(model.fields, x.persoon.Verblijfplaats);
-					}
-
-
-					T target = ApplyGbaPersoonBeperktScope(x.persoon, model.fields);
-					_gbaPersonenBeperktApiHelper.RemoveBeperktInOnderzoekFromPersonCategoryIfNoFieldsAreRequested(model.fields, target);
-					result.Add((target, x.pl_id));
                 }
+
+				x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.fields, x.persoon.Rni, _persoonBeperktFieldsSettings.GbaFieldsSettings);
+				if (x.persoon.Verblijfplaats != null)
+				{
+					_gbaPersonenBeperktApiHelper.AddVerblijfplaatsBeperktInOnderzoek(model.fields, x.persoon.Verblijfplaats);
+				}
+
+
+				T target = ApplyGbaPersoonBeperktScope(x.persoon, model.fields);
+				_gbaPersonenBeperktApiHelper.RemoveBeperktInOnderzoekFromPersonCategoryIfNoFieldsAreRequested(model.fields, target);
+				result.Add((target, x.pl_id));
 			}
 
 			if (_protocolleringAuthorizationOptions.Value.UseProtocollering)
