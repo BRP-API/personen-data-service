@@ -3,7 +3,7 @@
   "defaultVariables": null,
   "documentGenerator": {
     "fromDocument": {
-      "url": "openapi-gmapi.yml",
+      "url": "../../specificatie/brp-api-gezag/openapi.yaml",
       "output": null,
       "newLineBehavior": "Auto"
     }

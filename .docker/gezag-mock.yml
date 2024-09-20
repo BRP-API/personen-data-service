@@ -6,10 +6,12 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Release
       - ASPNETCORE_URLS=http://+:5020
+      - Ecs__Path=/var/log/gezag-mock.json
     ports:
       - "5020:5020"
     volumes:
       - ../test-data/GezagMock/test-data.json:/app/Data/test-data.json
+      - ../test-data/logs:/var/log
     networks:
       - brp-api-network
 
