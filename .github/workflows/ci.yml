@@ -152,7 +152,7 @@ jobs:
           driver: docker-container
 
       - name: Build & push personen data service container images naar registry
-        if: always() && (steps.changed-project.outputs.app == 'true' || inputs.publishType == 'app')
+        if: always()
         uses: docker/build-push-action@v6
         with:
           file: ${{ env.APP_PROJECT_PATH }}/Dockerfile
