@@ -1,19 +1,44 @@
+using Brp.Shared.Infrastructure.Logging;
+using Brp.Shared.Infrastructure.Utils;
 using GezagMock.Repositories;
+using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+Log.Logger = SerilogHelpers.SetupSerilogBootstrapLogger();
 
-// Add services to the container.
+try
+{
+    Log.Information("Starting {AppName} v{AppVersion}. TimeZone: {TimeZone}. Now: {TimeNow}",
+                        AssemblyHelpers.Name, AssemblyHelpers.Version, TimeZoneInfo.Local.StandardName, DateTime.Now);
 
-builder.Services.AddControllers().AddNewtonsoftJson();
+    var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped<GezagsrelatieRepository>();
+    builder.Services.AddHttpContextAccessor();
 
-var app = builder.Build();
+    builder.SetupSerilog(Log.Logger);
 
-// Configure the HTTP request pipeline.
+    // Add services to the container.
 
-app.UseAuthorization();
+    builder.Services.AddControllers().AddNewtonsoftJson();
 
-app.MapControllers();
+    builder.Services.AddScoped<GezagsrelatieRepository>();
 
-app.Run();
+    var app = builder.Build();
+
+    // Configure the HTTP request pipeline.
+
+    app.SetupSerilogRequestLogging();
+
+    app.UseAuthorization();
+
+    app.MapControllers();
+
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "{AppName} terminated unexpectedly", AssemblyHelpers.Name);
+}
+finally
+{
+    Log.CloseAndFlush();
+}

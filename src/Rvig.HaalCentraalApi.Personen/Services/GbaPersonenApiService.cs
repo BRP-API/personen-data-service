@@ -1,16 +1,13 @@
-﻿using Microsoft.AspNetCore.JsonPatch.Internal;
-using Microsoft.Extensions.Options;
-using Rvig.Api.Gezag.ResponseModels;
-using Rvig.Data.Base.Gezag.Repositories;
+﻿using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Personen.Fields;
 using Rvig.HaalCentraalApi.Personen.Helpers;
 using Rvig.HaalCentraalApi.Personen.Interfaces;
+using Rvig.HaalCentraalApi.Personen.Repositories;
 using Rvig.HaalCentraalApi.Personen.RequestModels.BRP;
 using Rvig.HaalCentraalApi.Personen.ResponseModels.BRP;
 using Rvig.HaalCentraalApi.Personen.Validation;
-using Rvig.HaalCentraalApi.Shared.ApiModels.PersonenHistorieBase;
-using Rvig.HaalCentraalApi.Shared.ApiModels.Universal;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
 using Rvig.HaalCentraalApi.Shared.Fields;
 using Rvig.HaalCentraalApi.Shared.Helpers;
@@ -29,7 +26,6 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 {
 	protected IGetAndMapGbaPersonenService _getAndMapPersoonService;
 	private readonly IRepoGezagsrelatie _gezagsrelatieRepo;
-	private readonly IGezagTransformer _gezagTransformer;
 	private readonly GbaPersonenApiHelper _gbaPersonenApiHelper;
 	private readonly GbaPersonenBeperktApiHelper _gbaPersonenBeperktApiHelper;
 
@@ -41,12 +37,11 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 	private static PersonenBeperktFieldsSettings _persoonBeperktFieldsSettings => new();
 
 	public GbaPersonenApiService(IGetAndMapGbaPersonenService getAndMapPersoonService, IDomeinTabellenRepo domeinTabellenRepo, IProtocolleringService protocolleringService
-		, ILoggingHelper loggingHelper, IRepoGezagsrelatie gezagsrelatieRepo, IGezagTransformer gezagTransformer, IOptions<ProtocolleringAuthorizationOptions> protocolleringAuthorizationOptions)
+		, ILoggingHelper loggingHelper, IRepoGezagsrelatie gezagsrelatieRepo, IOptions<ProtocolleringAuthorizationOptions> protocolleringAuthorizationOptions)
 		: base(domeinTabellenRepo, protocolleringService, loggingHelper, protocolleringAuthorizationOptions)
 	{
 		_getAndMapPersoonService = getAndMapPersoonService;
 		_gezagsrelatieRepo = gezagsrelatieRepo;
-		_gezagTransformer = gezagTransformer;
 		_gbaPersonenApiHelper = new GbaPersonenApiHelper(_fieldsExpandFilterService, _persoonFieldsSettings);
 		_gbaPersonenBeperktApiHelper = new GbaPersonenBeperktApiHelper(_persoonBeperktFieldsSettings);
 	}
@@ -72,6 +67,19 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 		};
 	}
 
+	private static bool GezagIsRequested(List<string> fields) =>
+		fields.Any(field => field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) &&
+						  	!field.StartsWith("indicatieGezagMinderjarige"));
+
+	private async Task<List<GbaPersoon>> GetGezagIfRequested(List<string> fields, List<string?> bsns){
+		if(GezagIsRequested(fields))
+		{
+			GezagResponse response = (await _gezagsrelatieRepo.GetGezag(bsns!)) ?? new GezagResponse();
+			return response.personen;
+		}
+		return new List<GbaPersoon>();
+	}
+
 	/// <summary>
 	/// Get personen via bsn(s).
 	/// </summary>
@@ -91,37 +99,31 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 			? _persoonFieldsSettings.GbaFieldsSettings.ShortHandMappings[field]
 			: field);
 
-		(IEnumerable<(GbaPersoon persoon, long pl_id)>? personenPlIds, int afnemerCode) = await _getAndMapPersoonService.GetPersonenMapByBsns(model.burgerservicenummer, model.gemeenteVanInschrijving, fieldsToUseForAuthorisations, _protocolleringAuthorizationOptions.Value.UseAuthorizationChecks);
+        List<(GbaPersoon persoon, long pl_id)> result = new List<(GbaPersoon persoon, long pl_id)>();
+        (IEnumerable<(GbaPersoon persoon, long pl_id)>? personenPlIds, int afnemerCode) = await _getAndMapPersoonService.GetPersonenMapByBsns(model.burgerservicenummer, model.gemeenteVanInschrijving, fieldsToUseForAuthorisations, _protocolleringAuthorizationOptions.Value.UseAuthorizationChecks);
 
 		// Filter response by fields
 		if (model?.fields?.Any() == true && personenPlIds != null)
 		{
 			_gbaPersonenApiHelper.HackLogicKinderenPartnersOuders(model.fields, personenPlIds?.ToList()?.ConvertAll(gbaPersoon => gbaPersoon.persoon));
 
-			personenPlIds = (await Task.WhenAll(personenPlIds!.Select(async x =>
-			{
-				if (model.fields.Any(field => field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) && !field.StartsWith("indicatieGezagMinderjarige"))
-				&& !string.IsNullOrWhiteSpace(x.persoon.Burgerservicenummer))
-                {
-                    var gezagsrelaties = (await _gezagsrelatieRepo.GetGezagsrelaties(x.persoon.Burgerservicenummer))?.ToList() ?? new List<Gezagsrelatie>();
-                    bool? underage = gezagsrelaties.Count > 0 ? gezagsrelaties.Any(gezagsrelatie => gezagsrelatie.BsnMinderjarige == x.persoon.Burgerservicenummer) : null;
-					int? leeftijd = 0;
-					if (x.persoon.Geboorte != null)
-					{
-						leeftijd = CalculateAge(new DatumOnvolledig(x.persoon.Geboorte.Datum));
-					}
+			var bsns = personenPlIds!.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
 
-					x.persoon.Gezag = new List<AbstractGezagsrelatie>();
-					if (leeftijd < 18 && (underage == true || !underage.HasValue))
+			IEnumerable<GbaPersoon> persoonGezagsrelaties = await GetGezagIfRequested(model.fields, bsns);
+			foreach (var x in personenPlIds!.Where(x => x.persoon != null))
+			{
+				if(GezagIsRequested(model.fields))
+				{
+					var persoonGezagsrelatie = persoonGezagsrelaties
+						.Where(pgr => pgr.Burgerservicenummer == x.persoon.Burgerservicenummer)
+						.FirstOrDefault();
+
+					if (persoonGezagsrelatie != null)
 					{
-						x.persoon.Gezag = await MapGezagMinderjarige(x.persoon.Burgerservicenummer, x.persoon.Partners, x.persoon.HistorischePartners, x.persoon.Kinderen, x.persoon.Ouders, gezagsrelaties, model.gemeenteVanInschrijving);
-					}
-					else
-					{
-						x.persoon.Gezag = await MapGezagMeerderjarige(x.persoon.Burgerservicenummer, x.persoon.GemeenteVanInschrijving, x.persoon.Partners, x.persoon.HistorischePartners, x.persoon.Kinderen, x.persoon.Ouders, gezagsrelaties, model.gemeenteVanInschrijving);
+						x.persoon.Gezag = persoonGezagsrelatie.Gezag;
 					}
 				}
-
+			
 				x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.fields, x.persoon.Rni, _persoonFieldsSettings.GbaFieldsSettings);
 				if (x.persoon.Verblijfplaats != null)
 				{
@@ -134,16 +136,15 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 
 				model.fields = GbaPersonenApiHelper.OpschortingBijhoudingLogicRaadplegen(model.fields, x.persoon.OpschortingBijhouding);
 
-				x.persoon = _fieldsExpandFilterService.ApplyScope(x.persoon, string.Join(",", model.fields), _persoonFieldsSettings.GbaFieldsSettings);
-				_gbaPersonenApiHelper.RemoveInOnderzoekFromPersonCategoryIfNoFieldsAreRequested(model.fields, x.persoon);
-				_gbaPersonenApiHelper.RemoveInOnderzoekFromGezagsverhoudingCategoryIfNoFieldsAreRequested(model.fields, x.persoon);
-
-				return x;
-			}))).ToList();
+				GbaPersoon target = _fieldsExpandFilterService.ApplyScope(x.persoon, string.Join(",", model.fields), _persoonFieldsSettings.GbaFieldsSettings);
+				_gbaPersonenApiHelper.RemoveInOnderzoekFromPersonCategoryIfNoFieldsAreRequested(model.fields, target);
+				_gbaPersonenApiHelper.RemoveInOnderzoekFromGezagsverhoudingCategoryIfNoFieldsAreRequested(model.fields, target);
+				result.Add((target, x.pl_id));
+			}
 
 			if (_protocolleringAuthorizationOptions.Value.UseProtocollering)
 			{
-				await LogProtocolleringInDb(afnemerCode, personenPlIds?.Select(x => x.pl_id).ToList(),
+				await LogProtocolleringInDb(afnemerCode, result.Select(x => x.pl_id).ToList(),
 								PersonenApiToRubriekCategoryHelper.ConvertModelParamsToRubrieken(model)
 									.Where(x => !string.IsNullOrWhiteSpace(x))
 									.OrderBy(rubriek => rubriek.Substring(0))
@@ -156,110 +157,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 			}
 		}
 
-		return (new RaadpleegMetBurgerservicenummerResponse { Personen = personenPlIds?.ToList()?.ConvertAll(gbaPersoon => gbaPersoon.persoon) ?? new List<GbaPersoon>() }, personenPlIds?.Select(x => x.pl_id).ToList());
-	}
-
-	private async Task<List<AbstractGezagsrelatie>?> MapGezagBase(string? persoonBurgerservicenummer, List<GbaPartner>? partners, List<GbaPartner>? historischePartners, List<GbaKind>? kinderen, List<GbaOuder>? ouders, List<Gezagsrelatie> gezagsrelaties, string? gemeenteVanInschrijving)
-	{
-		IEnumerable<Gezagsrelatie> gezagsrelatiesFromPartners = new List<Gezagsrelatie>();
-		var hasPartners = partners?.Any(partner => !string.IsNullOrWhiteSpace(partner.Burgerservicenummer)) == true || historischePartners?.Any(partner => !string.IsNullOrWhiteSpace(partner.Burgerservicenummer)) == true;
-		if (hasPartners && (!gezagsrelaties.Any() || gezagsrelaties.Any(gezagsrelatie => gezagsrelatie.SoortGezag != Gezagsrelatie.SoortGezagEnum.OG1Enum)))
-		{
-			var allPartners = partners!.Concat(historischePartners ?? new List<GbaPartner>()).Where(partner => !string.IsNullOrWhiteSpace(partner.Burgerservicenummer));
-			(IEnumerable<(GbaPersoon persoon, long pl_id)>? partnersPlIds, int _) = await _getAndMapPersoonService.GetPersonenMapByBsns(allPartners.Select(partner => partner.Burgerservicenummer).Where(bsn => !string.IsNullOrWhiteSpace(bsn))!, gemeenteVanInschrijving, new List<string> { "kinderen.burgerservicenummer" }, _protocolleringAuthorizationOptions.Value.UseAuthorizationChecks);
-
-			IEnumerable<string?>? partnerChildrenBsns = null;
-			if (partnersPlIds?.Any() == true)
-			{
-				partnerChildrenBsns = partnersPlIds
-												.Where(partner => partner.persoon.Kinderen?.Any() == true)
-												.SelectMany(partner => partner.persoon.Kinderen!
-																									.Select(kind => kind.Burgerservicenummer)
-																									.Where(bsn => !string.IsNullOrWhiteSpace(bsn)));
-			}
-
-			if (partnerChildrenBsns?.Any() == true)
-			{
-				gezagsrelatiesFromPartners = (await Task.WhenAll(partnerChildrenBsns!.Select(async bsn => await _gezagsrelatieRepo.GetGezagsrelaties(bsn)))).SelectMany(x => x!).Where(x => x != null);
-			}
-			if (gezagsrelatiesFromPartners.Any())
-			{
-				gezagsrelaties.AddRange(gezagsrelatiesFromPartners);
-			}
-
-			// To ensure that there are no duplicates after getting gezag from partners.
-			gezagsrelaties = gezagsrelaties.GroupBy(x => new { x.SoortGezag, x.BsnMinderjarige, x.BsnMeerderjarige }).Select(x => x.First()).ToList();
-		}
-
-		if ((!hasPartners || !gezagsrelatiesFromPartners.Any() || gezagsrelatiesFromPartners.Count() != gezagsrelaties.Count) && (!gezagsrelaties.Any() || gezagsrelaties.Any(gezagsrelatie => gezagsrelatie.SoortGezag != Gezagsrelatie.SoortGezagEnum.OG1Enum)))
-		{
-			var filteredGezagsrelaties = gezagsrelaties.Except(gezagsrelatiesFromPartners ?? Enumerable.Empty<Gezagsrelatie>());
-
-			if (filteredGezagsrelaties.Any() && filteredGezagsrelaties.All(gezagsrelatie => gezagsrelatie.BsnMinderjarige != persoonBurgerservicenummer))
-			{
-				var childGezagsrelaties = (
-					await Task.WhenAll(filteredGezagsrelaties.Select(async gezagsrelatie => await _gezagsrelatieRepo.GetGezagsrelaties(gezagsrelatie.BsnMinderjarige)))
-				).SelectMany(x => x!).Where(x => x != null);
-                if (childGezagsrelaties.Any())
-				{
-					gezagsrelaties.AddRange(childGezagsrelaties);
-				}
-			}
-
-			// To ensure that there are no duplicates after getting gezag from kinderen.
-			gezagsrelaties = gezagsrelaties.GroupBy(x => new { x.SoortGezag, x.BsnMinderjarige, x.BsnMeerderjarige }).Select(x => x.First()).ToList();
-		}
-
-		if (gezagsrelaties.Any())
-		{
-			return  _gezagTransformer.TransformGezagsrelaties(gezagsrelaties, persoonBurgerservicenummer, partners, kinderen, ouders).ToList();
-		}
-
-		return new List<AbstractGezagsrelatie>();
-	}
-
-	private Task<List<AbstractGezagsrelatie>?> MapGezagMeerderjarige(string? persoonBurgerservicenummer, Waardetabel? persoonGemeenteVanInschrijving, List<GbaPartner>? partners, List<GbaPartner>? historischePartners, List<GbaKind>? kinderen, List<GbaOuder>? ouders, List<Gezagsrelatie> gezagsrelaties, string? gemeenteVanInschrijving)
-	{
-		if (persoonGemeenteVanInschrijving?.Code != "1999")
-		{
-			return MapGezagBase(persoonBurgerservicenummer, partners, historischePartners, kinderen, ouders, gezagsrelaties, gemeenteVanInschrijving);
-		}
-
-		return Task.FromResult<List<AbstractGezagsrelatie>?>(new List<AbstractGezagsrelatie>());
-	}
-
-	private Task<List<AbstractGezagsrelatie>?> MapGezagMinderjarige(string? persoonBurgerservicenummer, List<GbaPartner>? partners, List<GbaPartner>? historischePartners, List<GbaKind>? kinderen, List<GbaOuder>? ouders, List<Gezagsrelatie> gezagsrelaties, string? gemeenteVanInschrijving)
-	{
-		return MapGezagBase(persoonBurgerservicenummer, partners, historischePartners, kinderen, ouders, gezagsrelaties, gemeenteVanInschrijving);
-	}
-
-	private static int? CalculateAge(DatumOnvolledig geboorteDatum)
-	{
-		// If birth year is unknown then it is impossible to know if person is younger than 27.
-		// Because of this Leerlingen requires us to add such a person anyway. Because of logic like that, person's age will be considered to be new born.
-		if (geboorteDatum == null || (!geboorteDatum.Jaar.HasValue || geboorteDatum.Jaar.Value == 0))
-		{
-			return 0;
-		}
-
-		// If birth month or birth day is unknown, force these to be the last of that month/day.
-		// That will just mean that they will be followed for a few more days or months.
-		geboorteDatum.Maand ??= 12;
-		geboorteDatum.Dag ??= DateTime.DaysInMonth(geboorteDatum.Jaar!.Value, geboorteDatum.Maand.Value);
-
-		var birthdate = new DateTime(geboorteDatum.Jaar!.Value, geboorteDatum.Maand.Value, geboorteDatum.Dag.Value);
-
-		var currentDate = DateTime.Now;
-		int age = currentDate.Year - birthdate.Year;
-
-		// Check if the birthday has occurred this year
-		if (currentDate.Month < birthdate.Month ||
-			(currentDate.Month == birthdate.Month && currentDate.Day < birthdate.Day))
-		{
-			age--;
-		}
-
-		return age;
+		return (new RaadpleegMetBurgerservicenummerResponse { Personen = result.ConvertAll(gbaPersoon => gbaPersoon.persoon) ?? new List<GbaPersoon>() }, result.Select(x => x.pl_id).ToList());
 	}
 
 	/// <summary>
@@ -276,43 +174,42 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 		var fieldsToUseForAuthorisations = model.fields.ConvertAll(field => _persoonBeperktFieldsSettings.GbaFieldsSettings.ShortHandMappings.ContainsKey(field)
 			? _persoonBeperktFieldsSettings.GbaFieldsSettings.ShortHandMappings[field]
 			: field);
-		(IEnumerable<(T persoon, long pl_id)>? personenPlIds, int afnemerCode) = await _getAndMapPersoonService.GetMapZoekPersonen<T>(model, fieldsToUseForAuthorisations, _protocolleringAuthorizationOptions.Value.UseAuthorizationChecks);
 
-		// Filter response by fields
-		if (model?.fields?.Any() == true && personenPlIds != null)
-		{
-			// Only opschortingBijhouding with code F must be ignored. If the value F is present then the entire PL must be ignored.
-			personenPlIds = (await Task.WhenAll(
-				personenPlIds
-				.Where(x => x.persoon.OpschortingBijhouding == null
+		(IEnumerable<(T persoon, long pl_id)>? personenPlIds, int afnemerCode) = await _getAndMapPersoonService.GetMapZoekPersonen<T>(model, fieldsToUseForAuthorisations, _protocolleringAuthorizationOptions.Value.UseAuthorizationChecks);
+        List<(T persoon, long pl_id)> result = new List<(T persoon, long pl_id)>();
+
+        // Filter response by fields
+        if (model?.fields?.Any() == true && personenPlIds != null)
+        {
+            // OpschortingBijhouding with code F must be ignored. If the value F is present then the entire PL must be ignored.
+            // and opschortingBijhouding with code O must be ignored if the result should not included deceased personen
+            personenPlIds = personenPlIds.Where(x => x.persoon.OpschortingBijhouding == null
 				|| x.persoon.OpschortingBijhouding?.Reden?.Code?.Equals("F") == false
 				&& x.persoon.OpschortingBijhouding?.Reden?.Code?.Equals("O") == false
 				|| x.persoon.OpschortingBijhouding?.Reden?.Code?.Equals("O") == true
-							&& inclusiefOverledenPersonen == true)
-				.Select(async x =>
-			{
-				if (x.persoon is GbaGezagPersoonBeperkt persoonGezagBeperkt
-						&& model.fields.Any(field => field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) && !field.StartsWith("indicatieGezagMinderjarige"))
-					&& !string.IsNullOrWhiteSpace(x.persoon.Burgerservicenummer))
-				{
-					var gezagsrelaties = (await _gezagsrelatieRepo.GetGezagsrelaties(persoonGezagBeperkt.Burgerservicenummer))?.ToList() ?? new List<Gezagsrelatie>();
-					bool? underage = gezagsrelaties.Count > 0 ? gezagsrelaties.Any(gezagsrelatie => gezagsrelatie.BsnMinderjarige == persoonGezagBeperkt.Burgerservicenummer) : null;
-					int? leeftijd = 0;
-					if (persoonGezagBeperkt.Geboorte != null)
-					{
-						leeftijd = CalculateAge(new DatumOnvolledig(persoonGezagBeperkt.Geboorte.Datum));
-					}
+							&& inclusiefOverledenPersonen == true);
 
-					persoonGezagBeperkt.Gezag = new List<AbstractGezagsrelatie>();
-					if (leeftijd < 18 && (underage == true || !underage.HasValue))
+            var bsns = personenPlIds.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
+
+            IEnumerable<GbaPersoon> persoonGezagsrelaties = personenPlIds.FirstOrDefault().persoon is GbaGezagPersoonBeperkt
+				? await GetGezagIfRequested(model.fields, bsns)
+				: new List<GbaPersoon>();
+
+            foreach (var x in personenPlIds.Where(x => x.persoon != null))
+			{
+				if (x.persoon is GbaGezagPersoonBeperkt persoonBeperkt &&
+					GezagIsRequested(model.fields) &&
+					!string.IsNullOrWhiteSpace(x.persoon.Burgerservicenummer))
+				{
+					var persoonGezagsrelatie = persoonGezagsrelaties
+						.Where(pgr => pgr.Burgerservicenummer == x.persoon.Burgerservicenummer)
+						.FirstOrDefault();
+
+					if (persoonGezagsrelatie != null)
 					{
-						persoonGezagBeperkt.Gezag = await MapGezagMinderjarige(x.persoon.Burgerservicenummer, x.persoon.Partners, x.persoon.HistorischePartners, x.persoon.Kinderen, x.persoon.Ouders, gezagsrelaties, model.gemeenteVanInschrijving);
+						persoonBeperkt.Gezag = persoonGezagsrelatie.Gezag;
 					}
-					else
-					{
-						persoonGezagBeperkt.Gezag = await MapGezagMeerderjarige(x.persoon.Burgerservicenummer, x.persoon.GemeenteVanInschrijving, x.persoon.Partners, x.persoon.HistorischePartners, x.persoon.Kinderen, x.persoon.Ouders, gezagsrelaties, model.gemeenteVanInschrijving);
-					}
-				}
+                }
 
 				x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.fields, x.persoon.Rni, _persoonBeperktFieldsSettings.GbaFieldsSettings);
 				if (x.persoon.Verblijfplaats != null)
@@ -320,17 +217,15 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 					_gbaPersonenBeperktApiHelper.AddVerblijfplaatsBeperktInOnderzoek(model.fields, x.persoon.Verblijfplaats);
 				}
 
-				x.persoon = ApplyGbaPersoonBeperktScope(x.persoon, model.fields);
-				_gbaPersonenBeperktApiHelper.RemoveBeperktInOnderzoekFromPersonCategoryIfNoFieldsAreRequested(model.fields, x.persoon);
 
-				return x;
-			})
-			))
-			.ToList();
+				T target = ApplyGbaPersoonBeperktScope(x.persoon, model.fields);
+				_gbaPersonenBeperktApiHelper.RemoveBeperktInOnderzoekFromPersonCategoryIfNoFieldsAreRequested(model.fields, target);
+				result.Add((target, x.pl_id));
+			}
 
 			if (_protocolleringAuthorizationOptions.Value.UseProtocollering)
 			{
-				await LogProtocolleringInDb(afnemerCode, personenPlIds?.Select(x => x.pl_id).ToList(),
+				await LogProtocolleringInDb(afnemerCode, result.Select(x => x.pl_id).ToList(),
 								PersonenApiToRubriekCategoryHelper.ConvertModelParamsToRubrieken(model)
 									.Where(x => !string.IsNullOrWhiteSpace(x))
 									.OrderBy(rubriek => rubriek.Substring(0))
@@ -343,7 +238,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 			}
 		}
 
-		return (personenPlIds?.ToList()?.ConvertAll(gbaPersoon => gbaPersoon.persoon) ?? new List<T>(), personenPlIds?.Select(x => x.pl_id).ToList());
+		return (result.ConvertAll(gbaPersoon => gbaPersoon.persoon) ?? new List<T>(), result.Select(x => x.pl_id).ToList());
 	}
 
 	/// <summary>

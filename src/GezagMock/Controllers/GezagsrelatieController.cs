@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GezagMock.Controllers
 {
+    [ApiController]
     public class GezagsrelatieController : Brp.Gezag.Mock.Generated.ControllerBase
     {
         private readonly GezagsrelatieRepository _repository;
@@ -12,23 +13,26 @@ namespace GezagMock.Controllers
         {
             _repository = repository;
         }
-        public override async Task<ActionResult<ICollection<Gezagsrelatie>>> OpvragenBevoegdheidTotGezag([FromHeader] string oIN, [FromBody] GezagRequest body)
+        public override async Task<ActionResult<GezagResponse>> OpvragenBevoegdheidTotGezag([FromHeader] string? oIN, [FromBody] GezagRequest body)
         {
-            var retval = await _repository.Zoek(body.Bsn);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
 
-            return Ok(retval);
-        }
+            var retval = new GezagResponse
+            {
+                Personen = new List<Persoon>()
+            };
 
-        public override async Task<ActionResult<ICollection<Gezagsrelatie>>> OpvragenBevoegdheidTotGezagMeerderjarige([FromHeader] string oIN, [FromBody] GezagRequest body)
-        {
-            var retval = await _repository.Zoek(body.Bsn);
-
-            return Ok(retval);
-        }
-
-        public override async Task<ActionResult<ICollection<Gezagsrelatie>>> OpvragenBevoegdheidTotGezagMinderjarige([FromHeader] string oIN, [FromBody] GezagRequest body)
-        {
-            var retval = await _repository.Zoek(body.Bsn);
+            foreach(var bsn in body.Burgerservicenummer)
+            {
+                var p = await _repository.Zoek(bsn);
+                if (p != null)
+                {
+                    retval.Personen.Add(p);
+                }
+            }
 
             return Ok(retval);
         }

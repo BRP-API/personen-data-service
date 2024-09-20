@@ -1,5 +1,4 @@
 ﻿using Brp.Gezag.Mock.Generated;
-using GezagMock.Generated;
 using Newtonsoft.Json;
 
 namespace GezagMock.Repositories;
@@ -13,7 +12,7 @@ public class GezagsrelatieRepository
         _environment = environment;
     }
 
-    public async Task<ICollection<Gezagsrelatie>> Zoek(string bsn)
+    public async Task<Persoon?> Zoek(string bsn)
     {
         var path = Path.Combine(_environment.ContentRootPath, "Data", "test-data.json");
         if(!File.Exists(path))
@@ -23,8 +22,6 @@ public class GezagsrelatieRepository
 
         var data = await File.ReadAllTextAsync(path);
 
-        var retval = JsonConvert.DeserializeObject<List<Gezag>>(data)?.Find(x => x.Burgerservicenummer == bsn);
-
-        return retval?.Gezagsrelaties ?? new List<Gezagsrelatie>();
+        return JsonConvert.DeserializeObject<List<Persoon>>(data)?.Find(x => x.Burgerservicenummer == bsn);
     }
 }

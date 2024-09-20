@@ -144,6 +144,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
   
       - name: Configureer container image builder voor multi-platform
+        if: always()
         uses: docker/setup-buildx-action@v3
         with:
           platforms: linux/amd64,linux/arm64
