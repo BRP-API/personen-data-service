@@ -137,6 +137,7 @@ jobs:
           commit-message: "test rapporten van build: ${{ steps.build-run-id.outputs.build-run }}"
 
       - name: Login to GitHub Container Registry
+        if: always()
         uses: docker/login-action@v3.1.0
         with:
           registry: ghcr.io
