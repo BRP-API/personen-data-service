@@ -213,3 +213,25 @@ Functionaliteit: gezagsrelaties vragen met fields bij zoeken op adresseerbaar ob
       En heeft de response invalidParams met de volgende gegevens
       | code   | name      | reason                                       |
       | fields | fields[0] | Parameter bevat een niet bestaande veldnaam. |
+
+  Regel: Het toelichting veld bij een 'niet te bepalen' gezagsrelatie wordt niet geleverd
+
+    Scenario: Gezag kan niet worden bepaald voor de gevraagde persoon en de response bevat een toelichting
+      Gegeven adres 'A2' heeft de volgende gegevens
+      | gemeentecode (92.10) | identificatiecode verblijfplaats (11.80) |
+      | 0518                 | 0518010051001502                         |
+      Gegeven de persoon met burgerservicenummer '000000480' is ingeschreven op adres 'A2' met de volgende gegevens
+      | gemeente van inschrijving (09.10) |
+      | 0518                              |
+      En voor de persoon geldt het volgende gezag
+      | naam        | waarde             |
+      | type        | GezagNietTeBepalen |
+      | toelichting | test               |
+      Als personen wordt gezocht met de volgende parameters
+      | naam                             | waarde                                  |
+      | type                             | ZoekMetAdresseerbaarObjectIdentificatie |
+      | adresseerbaarObjectIdentificatie | 0518010051001502                        |
+      | fields                           | gezag                                   |
+      Dan heeft de response een persoon met een 'gezag' met de volgende gegevens
+      | naam | waarde             |
+      | type | GezagNietTeBepalen |
