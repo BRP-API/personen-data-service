@@ -115,12 +115,15 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 				if(GezagIsRequested(model.fields))
 				{
 					var persoonGezagsrelatie = persoonGezagsrelaties
-						.Where(pgr => pgr.Burgerservicenummer == x.persoon.Burgerservicenummer)
-						.FirstOrDefault();
+						.Where(pgr => pgr.Burgerservicenummer == x.persoon.Burgerservicenummer);
 
-					if (persoonGezagsrelatie != null)
+					if (persoonGezagsrelatie.Any())
 					{
-						x.persoon.Gezag = persoonGezagsrelatie.Gezag;
+						x.persoon.Gezag = new List<AbstractGezagsrelatie>();
+					}
+					foreach(var pg in persoonGezagsrelatie)
+					{
+						x.persoon.Gezag?.AddRange(pg.Gezag!);
 					}
 				}
 			

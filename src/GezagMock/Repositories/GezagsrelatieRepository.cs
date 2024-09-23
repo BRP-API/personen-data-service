@@ -12,7 +12,7 @@ public class GezagsrelatieRepository
         _environment = environment;
     }
 
-    public async Task<Persoon?> Zoek(string bsn)
+    public async Task<IEnumerable<Persoon>?> Zoek(string bsn)
     {
         var path = Path.Combine(_environment.ContentRootPath, "Data", "test-data.json");
         if(!File.Exists(path))
@@ -22,6 +22,6 @@ public class GezagsrelatieRepository
 
         var data = await File.ReadAllTextAsync(path);
 
-        return JsonConvert.DeserializeObject<List<Persoon>>(data)?.Find(x => x.Burgerservicenummer == bsn);
+        return JsonConvert.DeserializeObject<List<Persoon>>(data)?.Where(x => x.Burgerservicenummer == bsn);
     }
 }

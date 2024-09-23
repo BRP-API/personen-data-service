@@ -28,9 +28,9 @@ namespace GezagMock.Controllers
             foreach(var bsn in body.Burgerservicenummer)
             {
                 var p = await _repository.Zoek(bsn);
-                if (p != null)
+                if (p != null && p.Any())
                 {
-                    retval.Personen.Add(p);
+                    retval.Personen.AddRange(p);
                 }
             }
 
