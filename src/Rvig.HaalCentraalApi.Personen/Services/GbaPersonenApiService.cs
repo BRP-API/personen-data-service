@@ -205,13 +205,16 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 					!string.IsNullOrWhiteSpace(x.persoon.Burgerservicenummer))
 				{
 					var persoonGezagsrelatie = persoonGezagsrelaties
-						.Where(pgr => pgr.Burgerservicenummer == x.persoon.Burgerservicenummer)
-						.FirstOrDefault();
+						.Where(pgr => pgr.Burgerservicenummer == x.persoon.Burgerservicenummer);
 
-					if (persoonGezagsrelatie != null)
-					{
-						persoonBeperkt.Gezag = persoonGezagsrelatie.Gezag;
-					}
+                    if (persoonGezagsrelatie.Any())
+                    {
+                        persoonBeperkt.Gezag = new List<AbstractGezagsrelatie>();
+                    }
+                    foreach (var pg in persoonGezagsrelatie)
+                    {
+                        persoonBeperkt.Gezag?.AddRange(pg.Gezag!);
+                    }
                 }
 
 				x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.fields, x.persoon.Rni, _persoonBeperktFieldsSettings.GbaFieldsSettings);
