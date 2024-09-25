@@ -10,16 +10,17 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       Gegeven de persoon met burgerservicenummer '000000024' heeft een 'kind' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000012                   |
-      En voor de persoon met burgerservicenummer '000000024' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000012       | OG2        | 000000024        |
+      En voor de persoon geldt het volgende gezag
+      | naam                             | waarde                    |
+      | type                             | TweehoofdigOuderlijkGezag |
+      | minderjarige.burgerservicenummer | 000000012                 |
+      En het gezag heeft de volgende ouders
+      | burgerservicenummer |
+      | 000000024           |
+      | 000000048           |
       En de persoon met burgerservicenummer '000000012' heeft een ouder '1' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000024                   |
-      En voor de persoon met burgerservicenummer '000000012' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000012       | OG2        | 000000024        |
-      | 000000012       | OG2        | 000000048        |
       Als personen wordt gezocht met de volgende parameters
       | naam                | waarde                          |
       | type                | RaadpleegMetBurgerservicenummer |
@@ -43,9 +44,11 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       Gegeven de persoon met burgerservicenummer '000000024' heeft een 'kind' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000012                   |
-      En voor de persoon met burgerservicenummer '000000024' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000012       | OG1        | 000000024        |
+      En voor de persoon geldt het volgende gezag
+      | naam                             | waarde                   |
+      | type                             | EenhoofdigOuderlijkGezag |
+      | minderjarige.burgerservicenummer | 000000012                |
+      | ouder.burgerservicenummer        | 000000024                |
       Als personen wordt gezocht met de volgende parameters
       | naam                | waarde                          |
       | type                | RaadpleegMetBurgerservicenummer |
@@ -67,16 +70,15 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       En de persoon heeft een 'partner' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000048                   |
-      En voor de persoon met burgerservicenummer '000000024' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000012       | GG         | 000000024        |
+      En voor de persoon geldt het volgende gezag
+      | naam                             | waarde           |
+      | type                             | GezamenlijkGezag |
+      | minderjarige.burgerservicenummer | 000000012        |
+      | ouder.burgerservicenummer        | 000000024        |
+      | derde.burgerservicenummer        | 000000048        |
       En de persoon met burgerservicenummer '000000012' heeft een ouder '1' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000024                   |
-      En voor de persoon met burgerservicenummer '000000012' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000012       | GG         | 000000024        |
-      | 000000012       | GG         | 000000048        |
       Als personen wordt gezocht met de volgende parameters
       | naam                | waarde                          |
       | type                | RaadpleegMetBurgerservicenummer |
@@ -102,20 +104,18 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       En de persoon heeft een 'partner' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000048                   |
-      En voor de persoon met burgerservicenummer '000000024' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000012       | GG         | 000000024        |
       En de persoon met burgerservicenummer '000000012' heeft een ouder '1' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000024                   |
-      En voor de persoon met burgerservicenummer '000000012' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000012       | GG         | 000000024        |
-      | 000000012       | GG         | 000000048        |
       En de persoon met burgerservicenummer '000000048' heeft een 'partner' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000024                   |
-      En de persoon met burgerservicenummer '000000048' heeft geen gezagsrelaties
+      En voor de persoon geldt het volgende gezag
+      | naam                             | waarde           |
+      | type                             | GezamenlijkGezag |
+      | minderjarige.burgerservicenummer | 000000012        |
+      | ouder.burgerservicenummer        | 000000024        |
+      | derde.burgerservicenummer        | 000000048        |
       Als personen wordt gezocht met de volgende parameters
       | naam                | waarde                          |
       | type                | RaadpleegMetBurgerservicenummer |
@@ -141,36 +141,30 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       En de persoon heeft een 'partner' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000061                   |
-      En voor de persoon met burgerservicenummer '000000048' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000012       | GG         | 000000048        |
-      | 000000024       | GG         | 000000048        |
-      | 000000036       | GG         | 000000048        |
       En de persoon met burgerservicenummer '000000012' heeft een ouder '1' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000048                   |
-      En voor de persoon met burgerservicenummer '000000012' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000012       | GG         | 000000048        |
-      | 000000012       | GG         | 000000061        |
       En de persoon met burgerservicenummer '000000024' heeft een ouder '1' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000048                   |
-      En voor de persoon met burgerservicenummer '000000024' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000024       | GG         | 000000061        |
-      | 000000024       | GG         | 000000048        |
       En de persoon met burgerservicenummer '000000036' heeft een ouder '1' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000048                   |
-      En voor de persoon met burgerservicenummer '000000036' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000036       | GG         | 000000048        |
-      | 000000036       | GG         | 000000073        |
       En de persoon met burgerservicenummer '000000061' heeft een 'partner' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000048                   |
-      En de persoon met burgerservicenummer '000000061' heeft geen gezagsrelaties
+      En voor de persoon geldt het volgende gezag
+      | naam                             | waarde           |
+      | type                             | GezamenlijkGezag |
+      | minderjarige.burgerservicenummer | 000000012        |
+      | ouder.burgerservicenummer        | 000000048        |
+      | derde.burgerservicenummer        | 000000061        |
+      En voor de persoon geldt ook het volgende gezag
+      | naam                             | waarde           |
+      | type                             | GezamenlijkGezag |
+      | minderjarige.burgerservicenummer | 000000024        |
+      | ouder.burgerservicenummer        | 000000048        |
+      | derde.burgerservicenummer        | 000000061        |
       Als personen wordt gezocht met de volgende parameters
       | naam                | waarde                          |
       | type                | RaadpleegMetBurgerservicenummer |
@@ -196,23 +190,31 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       En de persoon heeft een 'partner' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000048                   |
-      En voor de persoon met burgerservicenummer '000000024' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000012       | OG2        | 000000024        |
+      En voor de persoon geldt het volgende gezag
+      | naam                             | waarde                    |
+      | type                             | TweehoofdigOuderlijkGezag |
+      | minderjarige.burgerservicenummer | 000000012                 |
+      En het gezag heeft de volgende ouders
+      | burgerservicenummer |
+      | 000000024           |
       En de persoon met burgerservicenummer '000000012' heeft een ouder '1' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000024                   |
       En de persoon heeft een ouder '2' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000036                   |
-      En voor de persoon met burgerservicenummer '000000012' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000012       | OG2        | 000000024        |
-      | 000000012       | OG2        | 000000036        |
+      En voor de persoon geldt het volgende gezag
+      | naam                             | waarde                    |
+      | type                             | TweehoofdigOuderlijkGezag |
+      | minderjarige.burgerservicenummer | 000000012                 |
+      En het gezag heeft de volgende ouders
+      | burgerservicenummer |
+      | 000000024           |
+      | 000000036           |
       En de persoon met burgerservicenummer '000000048' heeft een 'partner' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000024                   |
-      En de persoon met burgerservicenummer '000000048' heeft geen gezagsrelaties
+      En voor de persoon geldt geen gezag
       Als personen wordt gezocht met de volgende parameters
       | naam                | waarde                          |
       | type                | RaadpleegMetBurgerservicenummer |
@@ -227,32 +229,51 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       En de persoon heeft een 'partner' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000048                   |
-      En voor de persoon met burgerservicenummer '000000036' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000012       | GG         | 000000036        |
+      En voor de persoon geldt het volgende gezag
+      | naam                             | waarde           |
+      | type                             | GezamenlijkGezag |
+      | minderjarige.burgerservicenummer | 000000012        |
+      | ouder.burgerservicenummer        | 000000036        |
       En de persoon met burgerservicenummer '000000012' heeft een ouder '1' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000036                   |
-      En voor de persoon met burgerservicenummer '000000012' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000012       | GG         | 000000036        |
-      | 000000012       | GG         | 000000048        |
+      En voor de persoon geldt het volgende gezag
+      | naam                             | waarde           |
+      | type                             | GezamenlijkGezag |
+      | minderjarige.burgerservicenummer | 000000012        |
+      | ouder.burgerservicenummer        | 000000036        |
+      | derde.burgerservicenummer        | 000000048        |
       En de persoon met burgerservicenummer '000000048' heeft een 'partner' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000036                   |
       En de persoon heeft een 'kind' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000024                   |
-      En voor de persoon met burgerservicenummer '000000048' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000024       | OG2        | 000000048        |
+      En voor de persoon geldt het volgende gezag
+      | naam                             | waarde                    |
+      | type                             | TweehoofdigOuderlijkGezag |
+      | minderjarige.burgerservicenummer | 000000024                 |
+      En het gezag heeft de volgende ouders
+      | burgerservicenummer |
+      | 000000048           |
+      | 000000061           |
+      En voor de persoon geldt ook het volgende gezag
+      | naam                             | waarde           |
+      | type                             | GezamenlijkGezag |
+      | minderjarige.burgerservicenummer | 000000012        |
+      | ouder.burgerservicenummer        | 000000036        |
+      | derde.burgerservicenummer        | 000000048        |
       En de persoon met burgerservicenummer '000000024' heeft een ouder '1' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000048                   |
-      En voor de persoon met burgerservicenummer '000000024' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000024       | OG2        | 000000048        |
-      | 000000024       | OG2        | 000000061        |
+      En voor de persoon geldt het volgende gezag
+      | naam                             | waarde                    |
+      | type                             | TweehoofdigOuderlijkGezag |
+      | minderjarige.burgerservicenummer | 000000024                 |
+      En het gezag heeft de volgende ouders
+      | burgerservicenummer |
+      | 000000048           |
+      | 000000061           |
       Als personen wordt gezocht met de volgende parameters
       | naam                | waarde                          |
       | type                | RaadpleegMetBurgerservicenummer |
@@ -282,17 +303,14 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       En de persoon heeft een 'partner' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000048                   |
-      En de persoon met burgerservicenummer '000000024' heeft geen gezagsrelaties
+      En voor de persoon geldt geen gezag
       En de persoon met burgerservicenummer '000000012' heeft een ouder '1' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000024                   |
-      En voor de persoon met burgerservicenummer '000000012' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag    | bsnMeerderjarige |
-      | 000000012       | <soort gezag> | <meerderjarige>  |
       En de persoon met burgerservicenummer '000000048' heeft een 'partner' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000024                   |
-      En de persoon met burgerservicenummer '000000048' heeft geen gezagsrelaties
+      En voor de persoon geldt geen gezag
       Als personen wordt gezocht met de volgende parameters
       | naam                | waarde                          |
       | type                | RaadpleegMetBurgerservicenummer |
@@ -320,7 +338,7 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       En de persoon met burgerservicenummer '000000024' heeft een 'kind' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000012                   |
-      En de persoon met burgerservicenummer '000000024' heeft geen gezagsrelaties
+      En voor de persoon geldt geen gezag
       Als personen wordt gezocht met de volgende parameters
       | naam                | waarde                          |
       | type                | RaadpleegMetBurgerservicenummer |
@@ -335,13 +353,13 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       Gegeven de persoon met burgerservicenummer '000000024' heeft een 'kind' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000012                   |
-      En de persoon met burgerservicenummer '000000024' heeft geen gezagsrelaties
+      En voor de persoon geldt geen gezag
       En de persoon met burgerservicenummer '000000012' heeft een ouder '1' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000024                   |
-      En voor de persoon met burgerservicenummer '000000012' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000012       | N          |                  |
+      En voor de persoon geldt het volgende gezag
+      | naam | waarde             |
+      | type | GezagNietTeBepalen |
       Als personen wordt gezocht met de volgende parameters
       | naam                | waarde                          |
       | type                | RaadpleegMetBurgerservicenummer |
@@ -359,13 +377,13 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       En de persoon heeft de volgende 'gezagsverhouding' gegevens
       | naam                               | waarde |
       | indicatie curateleregister (33.10) | 1      |
-      En de persoon met burgerservicenummer '000000024' heeft geen gezagsrelaties
+      En voor de persoon geldt geen gezag
       En de persoon met burgerservicenummer '000000012' heeft een ouder '1' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000024                   |
-      En voor de persoon met burgerservicenummer '000000012' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000012       | G          |                  |
+      En voor de persoon geldt het volgende gezag
+      | naam | waarde             |
+      | type | TijdelijkGeenGezag |
       Als personen wordt gezocht met de volgende parameters
       | naam                | waarde                          |
       | type                | RaadpleegMetBurgerservicenummer |
@@ -383,15 +401,9 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       Gegeven de persoon met burgerservicenummer '000000012' heeft een ouder '1' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000036                   |
-      En voor de persoon met burgerservicenummer '000000012' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000012       | V          | 000000048        |
       En de persoon met burgerservicenummer '000000024' heeft een ouder '1' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000036                   |
-      En voor de persoon met burgerservicenummer '000000024' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000024       | V          | 000000048        |
       En de persoon met burgerservicenummer '000000036' heeft een 'partner' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000048                   |
@@ -404,14 +416,27 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       En de persoon heeft de volgende 'overlijden' gegevens
       | naam                     | waarde   |
       | datum overlijden (08.10) | 20231001 |
-      En de persoon met burgerservicenummer '000000036' heeft geen gezagsrelaties
+      En voor de persoon geldt geen gezag
       En de persoon met burgerservicenummer '000000048' heeft een 'partner' met de volgende gegevens
       | burgerservicenummer (01.20) | datum huwelijkssluiting/aangaan geregistreerd partnerschap (06.10) |
       | 000000036                   | 20120428                                                           |
       En de 'partner' is gewijzigd naar de volgende gegevens
       | burgerservicenummer (01.20) | datum ontbinding huwelijk/geregistreerd partnerschap (07.10) | reden ontbinding huwelijk/geregistreerd partnerschap (07.40) |
       | 000000036                   | 20231001                                                     | O                                                            |
-      En de persoon met burgerservicenummer '000000048' heeft geen gezagsrelaties
+      En voor de persoon geldt het volgende gezag
+      | naam                             | waarde    |
+      | type                             | Voogdij   |
+      | minderjarige.burgerservicenummer | 000000012 |
+      En het gezag heeft de volgende derden
+      | burgerservicenummer |
+      | 000000048           |
+      En voor de persoon geldt ook het volgende gezag
+      | naam                             | waarde    |
+      | type                             | Voogdij   |
+      | minderjarige.burgerservicenummer | 000000024 |
+      En het gezag heeft de volgende derden
+      | burgerservicenummer |
+      | 000000048           |
       Als personen wordt gezocht met de volgende parameters
       | naam                | waarde                          |
       | type                | RaadpleegMetBurgerservicenummer |
@@ -442,19 +467,15 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       En de persoon met burgerservicenummer '000000024' heeft een ouder '1' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000061                   |
-      En voor de persoon met burgerservicenummer '000000024' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000024       | V          | 000000073        |
+      En voor de persoon geldt geen gezag
       En de persoon met burgerservicenummer '000000036' heeft een ouder '1' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000061                   |
-      En voor de persoon met burgerservicenummer '000000036' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000036       | OG1        | 000000152        |
+      En voor de persoon geldt geen gezag
       En de persoon met burgerservicenummer '000000048' heeft een ouder '1' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000061                   |
-      En de persoon met burgerservicenummer '000000048' heeft geen gezagsrelaties
+      En voor de persoon geldt geen gezag
       En de persoon met burgerservicenummer '000000061' heeft de volgende 'gezagsverhouding' gegevens
       | naam                               | waarde |
       | indicatie curateleregister (33.10) | 1      |
@@ -473,11 +494,17 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       En de persoon heeft een 'kind' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000048                   |
-      En de persoon met burgerservicenummer '000000061' heeft geen gezagsrelaties
+      En voor de persoon geldt geen gezag
       En de persoon met burgerservicenummer '000000073' heeft een 'partner' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000061                   |
-      En de persoon met burgerservicenummer '000000073' heeft geen gezagsrelaties
+      En voor de persoon geldt het volgende gezag
+      | naam                             | waarde    |
+      | type                             | Voogdij   |
+      | minderjarige.burgerservicenummer | 000000024 |
+      En het gezag heeft de volgende derden
+      | burgerservicenummer |
+      | 000000073           |
       Als personen wordt gezocht met de volgende parameters
       | naam                | waarde                          |
       | type                | RaadpleegMetBurgerservicenummer |
@@ -495,9 +522,7 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       Gegeven de persoon met burgerservicenummer '000000012' heeft een ouder '1' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000036                   |
-      En voor de persoon met burgerservicenummer '000000012' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000012       | V          | 000000048        |
+      En voor de persoon geldt geen gezag
       En de persoon met burgerservicenummer '000000036' heeft een 'partner' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000048                   |
@@ -507,7 +532,7 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       En de persoon heeft de volgende 'overlijden' gegevens
       | naam                     | waarde   |
       | datum overlijden (08.10) | 20231001 |
-      En de persoon met burgerservicenummer '000000036' heeft geen gezagsrelaties
+      En voor de persoon geldt geen gezag
       En de persoon met burgerservicenummer '000000048' heeft een 'partner' met de volgende gegevens
       | burgerservicenummer (01.20) | datum huwelijkssluiting/aangaan geregistreerd partnerschap (06.10) |
       | 000000036                   | 20120428                                                           |
@@ -517,7 +542,13 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       En de persoon heeft een 'partner' met de volgende gegevens
       | burgerservicenummer (01.20) | datum huwelijkssluiting/aangaan geregistreerd partnerschap (06.10) |
       | 000000061                   | 20230614                                                           |
-      En de persoon met burgerservicenummer '000000048' heeft geen gezagsrelaties
+      En voor de persoon geldt het volgende gezag
+      | naam                             | waarde    |
+      | type                             | Voogdij   |
+      | minderjarige.burgerservicenummer | 000000012 |
+      En het gezag heeft de volgende derden
+      | burgerservicenummer |
+      | 000000048           |
       En de persoon met burgerservicenummer '000000061' heeft een 'partner' met de volgende gegevens
       | burgerservicenummer (01.20) | datum huwelijkssluiting/aangaan geregistreerd partnerschap (06.10) |
       | 000000048                   | 20230614                                                           |
@@ -547,9 +578,9 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       En de persoon heeft de volgende 'verblijfplaats' gegevens
       | naam                              | waarde |
       | gemeente van inschrijving (09.10) | 1999   |
-      En voor de persoon met burgerservicenummer '000000024' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000024       | N          |                  |
+      En voor de persoon geldt het volgende gezag
+      | naam | waarde             |
+      | type | GezagNietTeBepalen |
       Als personen wordt gezocht met de volgende parameters
       | naam                | waarde                          |
       | type                | RaadpleegMetBurgerservicenummer |
@@ -575,9 +606,7 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       En de persoon heeft de volgende 'verblijfplaats' gegevens
       | naam                              | waarde |
       | gemeente van inschrijving (09.10) | 1999   |
-      En voor de persoon met burgerservicenummer '000000024' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000024       | N          |                  |
+      En voor de persoon geldt geen gezag
       Als personen wordt gezocht met de volgende parameters
       | naam                | waarde                          |
       | type                | RaadpleegMetBurgerservicenummer |
@@ -603,9 +632,9 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       En de persoon heeft de volgende 'verblijfplaats' gegevens
       | naam                              | waarde |
       | gemeente van inschrijving (09.10) | 1999   |
-      En voor de persoon met burgerservicenummer '000000024' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000024       | N          |                  |
+      En voor de persoon geldt het volgende gezag
+      | naam | waarde             |
+      | type | GezagNietTeBepalen |
       Als personen wordt gezocht met de volgende parameters
       | naam                | waarde                          |
       | type                | RaadpleegMetBurgerservicenummer |
@@ -629,9 +658,7 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       En de persoon heeft de volgende 'verblijfplaats' gegevens
       | naam                              | waarde |
       | gemeente van inschrijving (09.10) | 1999   |
-      En voor de persoon met burgerservicenummer '000000024' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000024       | N          |                  |
+      En voor de persoon geldt geen gezag
       Als personen wordt gezocht met de volgende parameters
       | naam                | waarde                          |
       | type                | RaadpleegMetBurgerservicenummer |
@@ -656,9 +683,9 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       En de persoon heeft de volgende 'verblijfplaats' gegevens
       | naam                              | waarde |
       | gemeente van inschrijving (09.10) | 1999   |
-      En voor de persoon met burgerservicenummer '000000024' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000024       | N          |                  |
+      En voor de persoon geldt het volgende gezag
+      | naam | waarde             |
+      | type | GezagNietTeBepalen |
       Als personen wordt gezocht met de volgende parameters
       | naam                | waarde                          |
       | type                | RaadpleegMetBurgerservicenummer |
@@ -681,22 +708,25 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       En de persoon heeft een 'kind' met de volgende gegevens
       | burgerservicenummer (01.20) |
       | 000000036                   |
-      En voor de persoon met burgerservicenummer '000000048' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000012       | OG2        | 000000048        |
-      | 000000024       | OG1        | 000000048        |
-      | 000000036       | GG         | 000000048        |
-      En voor de persoon met burgerservicenummer '000000012' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000012       | OG2        | 000000048        |
-      | 000000012       | OG2        | 000000061        |
-      En voor de persoon met burgerservicenummer '000000024' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000024       | OG1        | 000000048        |
-      En voor de persoon met burgerservicenummer '000000036' gelden de volgende gezagsrelaties
-      | bsnMinderjarige | soortGezag | bsnMeerderjarige |
-      | 000000036       | GG         | 000000048        |
-      | 000000036       | GG         | 000000073        |
+      En voor de persoon geldt het volgende gezag
+      | naam                             | waarde                    |
+      | type                             | TweehoofdigOuderlijkGezag |
+      | minderjarige.burgerservicenummer | 000000012                 |
+      En het gezag heeft de volgende ouders
+      | burgerservicenummer |
+      | 000000048           |
+      | 000000061           |
+      En voor de persoon geldt ook het volgende gezag
+      | naam                             | waarde                   |
+      | type                             | EenhoofdigOuderlijkGezag |
+      | minderjarige.burgerservicenummer | 000000024                |
+      | ouder.burgerservicenummer        | 000000048                |
+      En voor de persoon geldt ook het volgende gezag
+      | naam                             | waarde           |
+      | type                             | GezamenlijkGezag |
+      | minderjarige.burgerservicenummer | 000000036        |
+      | ouder.burgerservicenummer        | 000000048        |
+      | derde.burgerservicenummer        | 000000073        |
       Als personen wordt gezocht met de volgende parameters
       | naam                | waarde                          |
       | type                | RaadpleegMetBurgerservicenummer |

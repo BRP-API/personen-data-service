@@ -115,12 +115,15 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 				if(GezagIsRequested(model.fields))
 				{
 					var persoonGezagsrelatie = persoonGezagsrelaties
-						.Where(pgr => pgr.Burgerservicenummer == x.persoon.Burgerservicenummer)
-						.FirstOrDefault();
+						.Where(pgr => pgr.Burgerservicenummer == x.persoon.Burgerservicenummer);
 
-					if (persoonGezagsrelatie != null)
+					if (persoonGezagsrelatie.Any())
 					{
-						x.persoon.Gezag = persoonGezagsrelatie.Gezag;
+						x.persoon.Gezag = new List<AbstractGezagsrelatie>();
+					}
+					foreach(var pg in persoonGezagsrelatie)
+					{
+						x.persoon.Gezag?.AddRange(pg.Gezag!);
 					}
 				}
 			
@@ -202,13 +205,16 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 					!string.IsNullOrWhiteSpace(x.persoon.Burgerservicenummer))
 				{
 					var persoonGezagsrelatie = persoonGezagsrelaties
-						.Where(pgr => pgr.Burgerservicenummer == x.persoon.Burgerservicenummer)
-						.FirstOrDefault();
+						.Where(pgr => pgr.Burgerservicenummer == x.persoon.Burgerservicenummer);
 
-					if (persoonGezagsrelatie != null)
-					{
-						persoonBeperkt.Gezag = persoonGezagsrelatie.Gezag;
-					}
+                    if (persoonGezagsrelatie.Any())
+                    {
+                        persoonBeperkt.Gezag = new List<AbstractGezagsrelatie>();
+                    }
+                    foreach (var pg in persoonGezagsrelatie)
+                    {
+                        persoonBeperkt.Gezag?.AddRange(pg.Gezag!);
+                    }
                 }
 
 				x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.fields, x.persoon.Rni, _persoonBeperktFieldsSettings.GbaFieldsSettings);

@@ -1,0 +1,17 @@
+services:
+  gezag-service:
+    container_name: gezag-service
+    image: ghcr.io/brp-api/brp-api-gezag:latest
+    environment:
+      - SERVER_PORT=8080
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/rvig_haalcentraal_testdata
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    ports:
+      - "8080:8080"
+    networks:
+      - brp-api-network
+
+networks:
+  brp-api-network:
+    name: brp-api-network

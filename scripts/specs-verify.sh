@@ -27,4 +27,5 @@ npx cucumber-js -f json:./test-reports/cucumber-js/personen/test-result.json \
                 features/zoek-met-nummeraanduiding-identificatie \
                 features/zoek-met-postcode-en-huisnummer \
                 features/zoek-met-straatnaam-huisnummer-en-gemeente-van-inschrijving \
+                --tags "not @skip-verify" \
                 --world-parameters "$PARAMS"
