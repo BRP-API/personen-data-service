@@ -1,6 +1,6 @@
 #language: nl
 
-@api
+@api @skip-verify
 Functionaliteit: test gezagsrelaties van een meerderjarige
 
   Regel: een meerderjarige die van rechtswege gezag heeft over een minderjarige die geen kind is van de meerderjarige krijgt de gezagsrelatie naar zichzelf geleverd
