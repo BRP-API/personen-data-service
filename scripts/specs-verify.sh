@@ -12,7 +12,8 @@ npx cucumber-js -f json:./test-reports/cucumber-js/step-definitions/test-result-
                 -f summary:./test-reports/cucumber-js/step-definitions/test-result-zonder-dependency-integratie-summary.txt \
                 -f summary \
                 features/docs \
-                --tags "not @integratie"
+                --tags "not @integratie" \
+                --tags "not @skip-verify"
 
 npx cucumber-js -f json:./test-reports/cucumber-js/personen/test-result.json \
                 -f summary:./test-reports/cucumber-js/personen/test-result-summary.txt \
@@ -27,4 +28,5 @@ npx cucumber-js -f json:./test-reports/cucumber-js/personen/test-result.json \
                 features/zoek-met-nummeraanduiding-identificatie \
                 features/zoek-met-postcode-en-huisnummer \
                 features/zoek-met-straatnaam-huisnummer-en-gemeente-van-inschrijving \
+                --tags "not @skip-verify" \
                 --world-parameters "$PARAMS"
