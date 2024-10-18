@@ -78,7 +78,8 @@ public class GbaPersonenApiHelper : GbaPersonenApiHelperBase
 				|| fields.Any(field => field.Contains("adressering.land"))
 				|| fields.Any(field => field.Contains("adresseringBinnenland.adresregel"))
 				|| fields.Any(field => field.Equals("adressering"))
-				|| fields.Any(field => field.Equals("adresseringBinnenland")))
+				|| fields.Any(field => field.Equals("adresseringBinnenland"))
+				|| fields.Any(field => field.Contains("verblijfplaatsBinnenland")))
 			&& !fields.Contains("verblijfplaats") && !fields.Contains("verblijfplaats.inOnderzoek")
 			&& verblijfplaats.InOnderzoek != null)
 		{
