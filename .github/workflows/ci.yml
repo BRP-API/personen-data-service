@@ -23,6 +23,10 @@ env:
   NODE_VERSION: '20'
   DOTNET_SOLUTION_FILE_PATH: src/PersonenDataService.sln
   APP_PROJECT_PATH: ./src/Personen.Data.Service
+  BASE_PROJECT_PATH: ./src/Rvig.Base.App
+  DATA_PROJECT_PATH: ./src/Rvig.Data.Personen
+  PERSONEN_PROJECT_PATH: ./src/Rvig.HaalCentraalApi.Personen
+  SHARED_PROJECT_PATH: ./src/Rvig.HaalCentraalApi.Shared
   APP_CSPROJ_FILE_PATH: ./src/Personen.Data.Service/Personen.Data.Service.csproj
   APP_CONTAINER_IMAGE: ghcr.io/brp-api/personen-data-service
   GEZAG_MOCK_PROJECT_PATH: ./src/GezagMock
@@ -70,6 +74,10 @@ jobs:
           filters: |
             app:
               - '${{ env.APP_PROJECT_PATH }}/**'
+              - '${{ env.BASE_PROJECT_PATH }}/**'
+              - '${{ env.DATA_PROJECT_PATH }}/**'
+              - '${{ env.PERSONEN_PROJECT_PATH }}/**'
+              - '${{ env.SHARED_PROJECT_PATH }}/**'
             mock:
               - '${{ env.GEZAG_MOCK_PROJECT_PATH }}/**'
             proxy-mock:
