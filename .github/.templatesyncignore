@@ -5,4 +5,5 @@
 :!features/step_definitions/*.*
 :!src/Brp.Shared.Infrastructure/*.*
 :!src/Serilog.Sinks.PersistentFile/*.*
+:!specificatie/*.*
 *
