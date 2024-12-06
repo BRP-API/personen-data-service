@@ -114,6 +114,19 @@ jobs:
       - name: Valideer functionele specs
         run: |
           ./scripts/specs-verify.sh
+      
+      - name: Genereer step summary
+        if: always()
+        run: |
+          node ./scripts/generate-step-summary.js
+        
+      - name: Voeg test summary toe aan Github Step Summary
+        if: always()
+        run: |
+          echo "### Cucumber Test Reports" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          cat test-reports/cucumber-js/bewoning/step-summary.txt >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
 
       - name: Stop containers
         if: always()
@@ -160,7 +173,7 @@ jobs:
           driver: docker-container
 
       - name: Build & push personen data service container images naar registry
-        if: always() && (steps.changed-project.outputs.app == 'true' || inputs.publishType == 'app')
+        if: false # skip this step
         uses: docker/build-push-action@v6
         with:
           file: ${{ env.APP_PROJECT_PATH }}/Dockerfile
