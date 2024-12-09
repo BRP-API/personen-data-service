@@ -1,0 +1,24 @@
+openapi: 3.0.3
+info:
+  title: Verblijfstitel definities
+  version: 2.0.0
+  contact: {}
+paths: {}
+components:
+  schemas:
+    GbaVerblijfstitel:
+      type: object
+      description: |
+        Gegevens over de verblijfsrechtelijke status van de persoon.
+        * **datumEinde**: Datum waarop de geldigheid van de gegevens over de verblijfstitel is beëindigd.
+        * **datumIngang**: Datum waarop de gegevens over de verblijfstitel geldig zijn geworden.
+        * **aanduiding** : Verblijfstiteltabel die aangeeft over welke verblijfsrechtelijke status de persoon beschikt. Wordt gevuld met waarden uit de landelijke tabel 'Verblijfstitel'.
+      properties:
+        aanduiding:
+          $ref: 'brp/waardetabel-v1.yaml#/components/schemas/Waardetabel'
+        datumEinde:
+          $ref: 'brp/datum-v1.yaml#/components/schemas/GbaDatum'
+        datumIngang:
+          $ref: 'brp/datum-v1.yaml#/components/schemas/GbaDatum'
+        inOnderzoek:
+          $ref: 'brp/in-onderzoek-v1.yaml#/components/schemas/InOnderzoek'
