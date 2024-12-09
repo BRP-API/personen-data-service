@@ -38,9 +38,10 @@ Functionaliteit: 1.1 - Staat het kind (minderjarige) als ingezetene in de BRP?
         | naam | waarde |
         | null |        |
       En heeft de persoon een 'gezag' met de volgende gegevens
-        | naam        | waarde                                                               |
-        | type        | GezagNietTeBepalen                                                   |
-        | toelichting | gezag is niet te bepalen omdat minderjarige niet in Nederland woont. |
+        | naam                             | waarde                                                               |
+        | type                             | GezagNietTeBepalen                                                   |
+        | toelichting                      | gezag is niet te bepalen omdat minderjarige niet in Nederland woont. |
+        | minderjarige.burgerservicenummer |                                                            000000036 |
 
     Scenario: Van een kind met onbekende verblijfplaats kan geen gezag worden bepaald er is sprake van GezagNietTeBepalen
       Gegeven persoon 'Zoe'
@@ -54,9 +55,10 @@ Functionaliteit: 1.1 - Staat het kind (minderjarige) als ingezetene in de BRP?
         | naam | waarde |
         | null |        |
       En heeft de persoon een 'gezag' met de volgende gegevens
-        | naam        | waarde                                                                                                        |
-        | type        | GezagNietTeBepalen                                                                                            |
-        | toelichting | gezag is niet te bepalen omdat de volgende relevante gegevens ontbreken: verblijfplaats van bevraagde persoon |
+        | naam                             | waarde                                                                                                        |
+        | type                             | GezagNietTeBepalen                                                                                            |
+        | toelichting                      | gezag is niet te bepalen omdat de volgende relevante gegevens ontbreken: verblijfplaats van bevraagde persoon |
+        | minderjarige.burgerservicenummer |                                                                                                     000000036 |
 
     Scenario: Van een kind met een onbekende gemeente van inschrijving kan geen gezag worden bepaald er is sprake van GezagNietTeBepalen
       Gegeven persoon 'Zoe'
@@ -70,9 +72,10 @@ Functionaliteit: 1.1 - Staat het kind (minderjarige) als ingezetene in de BRP?
         | naam | waarde |
         | null |        |
       En heeft de persoon een 'gezag' met de volgende gegevens
-        | naam        | waarde                                                                                                                   |
-        | type        | GezagNietTeBepalen                                                                                                       |
-        | toelichting | gezag is niet te bepalen omdat de volgende relevante gegevens ontbreken: gemeente van inschrijving van bevraagde persoon |
+        | naam                             | waarde                                                                                                                   |
+        | type                             | GezagNietTeBepalen                                                                                                       |
+        | toelichting                      | gezag is niet te bepalen omdat de volgende relevante gegevens ontbreken: gemeente van inschrijving van bevraagde persoon |
+        | minderjarige.burgerservicenummer |                                                                                                                000000036 |
 
     Scenario: Wanneer gezag wordt opgevraagd van een kind waarvan leeftijd onbekend is, wordt geen gezag teruggeven.
       Gegeven persoon 'Zoe'
@@ -89,6 +92,7 @@ Functionaliteit: 1.1 - Staat het kind (minderjarige) als ingezetene in de BRP?
         | naam | waarde |
         | null |        |
       En heeft de persoon een 'gezag' met de volgende gegevens
-        | naam        | waarde                                                                      |
-        | type        | GezagNietTeBepalen                                                          |
-        | toelichting | gezag is niet te bepalen omdat de geboortedatum van persoon niet bekend is. |
+        | naam                             | waarde                                                                      |
+        | type                             | GezagNietTeBepalen                                                          |
+        | toelichting                      | gezag is niet te bepalen omdat de geboortedatum van persoon niet bekend is. |
+        | minderjarige.burgerservicenummer |                                                                   000000036 |
