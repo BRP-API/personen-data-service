@@ -34,10 +34,7 @@ Functionaliteit: 1.1 - Staat het kind (minderjarige) als ingezetene in de BRP?
         | type                | RaadpleegMetBurgerservicenummer |
         | burgerservicenummer |                       000000036 |
         | fields              | gezag                           |
-      Dan heeft de response een persoon met de volgende gegevens
-        | naam | waarde |
-        | null |        |
-      En heeft de persoon een 'gezag' met de volgende gegevens
+     Dan heeft de response een persoon met een 'gezag' met de volgende gegevens
         | naam                             | waarde                                                               |
         | type                             | GezagNietTeBepalen                                                   |
         | toelichting                      | gezag is niet te bepalen omdat minderjarige niet in Nederland woont. |
@@ -51,10 +48,7 @@ Functionaliteit: 1.1 - Staat het kind (minderjarige) als ingezetene in de BRP?
         | type                | RaadpleegMetBurgerservicenummer |
         | burgerservicenummer |                       000000036 |
         | fields              | gezag                           |
-      Dan heeft de response een persoon met de volgende gegevens
-        | naam | waarde |
-        | null |        |
-      En heeft de persoon een 'gezag' met de volgende gegevens
+      Dan heeft de response een persoon met een 'gezag' met de volgende gegevens
         | naam                             | waarde                                                                                                        |
         | type                             | GezagNietTeBepalen                                                                                            |
         | toelichting                      | gezag is niet te bepalen omdat de volgende relevante gegevens ontbreken: verblijfplaats van bevraagde persoon |
@@ -68,10 +62,7 @@ Functionaliteit: 1.1 - Staat het kind (minderjarige) als ingezetene in de BRP?
         | type                | RaadpleegMetBurgerservicenummer |
         | burgerservicenummer |                       000000036 |
         | fields              | gezag                           |
-      Dan heeft de response een persoon met de volgende gegevens
-        | naam | waarde |
-        | null |        |
-      En heeft de persoon een 'gezag' met de volgende gegevens
+      Dan heeft de response een persoon met een 'gezag' met de volgende gegevens
         | naam                             | waarde                                                                                                                   |
         | type                             | GezagNietTeBepalen                                                                                                       |
         | toelichting                      | gezag is niet te bepalen omdat de volgende relevante gegevens ontbreken: gemeente van inschrijving van bevraagde persoon |
@@ -88,10 +79,7 @@ Functionaliteit: 1.1 - Staat het kind (minderjarige) als ingezetene in de BRP?
         | type                | RaadpleegMetBurgerservicenummer |
         | burgerservicenummer |                       000000036 |
         | fields              | gezag                           |
-      Dan heeft de response een persoon met de volgende gegevens
-        | naam | waarde |
-        | null |        |
-      En heeft de persoon een 'gezag' met de volgende gegevens
+      Dan heeft de response een persoon met een 'gezag' met de volgende gegevens
         | naam                             | waarde                                                                      |
         | type                             | GezagNietTeBepalen                                                          |
         | toelichting                      | gezag is niet te bepalen omdat de geboortedatum van persoon niet bekend is. |

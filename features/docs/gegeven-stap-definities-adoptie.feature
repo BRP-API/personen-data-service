@@ -30,7 +30,7 @@
   Scenario: is geadopteerd door '[aanduiding]' als ouder [1 of 2] met de volgende gegevens
     Gegeven de persoon 'P1' met burgerservicenummer '000000012'
     En de persoon 'P2' met burgerservicenummer '000000024'
-    * is geadopteerd door 'P1' als ouder 1 met de volgende gegevens
+    * 'P2' is geadopteerd door 'P1' als ouder 1 met de volgende gegevens
       | datum ingang familierechtelijke betrekking (62.10) | aktenummer (81.20) |
       | gisteren - 5 jaar                                  | 2BR1211            |
     Dan zijn de gegenereerde SQL statements    
