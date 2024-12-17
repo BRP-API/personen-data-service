@@ -25,7 +25,7 @@ Functionaliteit: maximaal aantal zoekresultaten ZoekMetAdresseerbaarObjectIdenti
       En de persoon heeft de volgende 'inschrijving' gegevens
       | naam                                 | waarde |
       | reden opschorting bijhouding (67.20) | F      |
-      En er zijn 30 personen ingeschreven op adres 'A2' met de volgende gegevens
+      En er zijn 31 personen ingeschreven op adres 'A2' met de volgende gegevens
       | gemeente van inschrijving (09.10) |
       | 0800                              |
 
