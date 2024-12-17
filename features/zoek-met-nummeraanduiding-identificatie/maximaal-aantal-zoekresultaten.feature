@@ -25,7 +25,7 @@ Functionaliteit: maximaal aantal zoekresultaten ZoekMetNummeraanduidingIdentific
       En adres 'A2' heeft de volgende gegevens
       | gemeentecode (92.10) | identificatiecode nummeraanduiding (11.90) |
       | 0599                 | 0518200000617228                           |
-      En er zijn 30 personen ingeschreven op adres 'A2' met de volgende gegevens
+      En er zijn 31 personen ingeschreven op adres 'A2' met de volgende gegevens
       | gemeente van inschrijving (09.10) |
       | 0599                              |
 
