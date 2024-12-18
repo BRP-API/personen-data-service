@@ -1,4 +1,6 @@
 # language: nl
+
+@skip-verify
 Functionaliteit: 1.1 - Staat het kind (minderjarige) als ingezetene in de BRP?
   De persoon (minderjarige) moet voorkomen in de BRP aangezien dit de bron is voor
   het achterhalen van het gezag. Een niet ingezeten kind staat wel de RNI (ook
@@ -32,6 +34,7 @@ Functionaliteit: 1.1 - Staat het kind (minderjarige) als ingezetene in de BRP?
         | burgerservicenummer |                       000000036 |
         | fields              | gezag                           |
       Dan heeft de response een persoon met een 'gezag' met de volgende gegevens
-        | naam                             | waarde             |
-        | type                             | TijdelijkGeenGezag |
-        | minderjarige.burgerservicenummer |          000000036 |
+        | naam                             | waarde                                                  |
+        | type                             | TijdelijkGeenGezag                                      |
+        | minderjarige.burgerservicenummer |                                               000000036 |
+        | toelichting                      | Tijdelijk geen gezag omdat beide ouders overleden zijn. |
