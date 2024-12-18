@@ -7,6 +7,7 @@ using Rvig.Data.Base.Postgres.DatabaseModels;
 using Rvig.Data.Base.Postgres.Repositories;
 using Rvig.Data.Personen.Repositories.Queries.Helper;
 using Rvig.HaalCentraalApi.Shared.Helpers;
+using System.Diagnostics;
 
 namespace Rvig.Data.Personen.Repositories;
 public interface IRvigPersoonBeperktRepo
@@ -28,17 +29,17 @@ public class RvigPersoonBeperktRepo : RvigRepoPostgresBase<DbPersoonActueelWrapp
 	{
 		return model switch
 		{
-			ZoekMetGeslachtsnaamEnGeboortedatum geslachtsnaamGeboortedatum => await SearchPersonenBase(PersonenQueryHelper.CreateGeslachtsnaamGeboortedatumWhere(geslachtsnaamGeboortedatum), geslachtsnaamGeboortedatum.inclusiefOverledenPersonen, fields),
-			ZoekMetNaamEnGemeenteVanInschrijving naamGemeenteVanInschrijving => await SearchPersonenBase(PersonenQueryHelper.CreateNaamGemeenteVanInschrijvingWhere(naamGemeenteVanInschrijving), naamGemeenteVanInschrijving.inclusiefOverledenPersonen, fields),
-			ZoekMetNummeraanduidingIdentificatie nummeraanduidingIdentificatie => await SearchPersonenBase(PersonenQueryHelper.CreateNummeraanduidingIdentificatieWhere(nummeraanduidingIdentificatie), nummeraanduidingIdentificatie.inclusiefOverledenPersonen, fields),
-			ZoekMetPostcodeEnHuisnummer postcodeHuisnummer => await SearchPersonenBase(PersonenQueryHelper.CreatePostcodeHuisnummerWhere(postcodeHuisnummer), postcodeHuisnummer.inclusiefOverledenPersonen, fields),
-			ZoekMetStraatHuisnummerEnGemeenteVanInschrijving staatHuisnummerGemeenteVanInschrijving => await SearchPersonenBase(PersonenQueryHelper.CreateStraatHuisnummerGemeenteVanInschrijvingWhere(staatHuisnummerGemeenteVanInschrijving), staatHuisnummerGemeenteVanInschrijving.inclusiefOverledenPersonen, fields),
-			ZoekMetAdresseerbaarObjectIdentificatie adresseerbaarObjectIdentificatie => await SearchPersonenBase(PersonenQueryHelper.CreateAdresseerbaarObjectIdentificatieWhere(adresseerbaarObjectIdentificatie), adresseerbaarObjectIdentificatie.inclusiefOverledenPersonen, fields),
+			ZoekMetGeslachtsnaamEnGeboortedatum geslachtsnaamGeboortedatum => await SearchPersonenBase(PersonenQueryHelper.CreateGeslachtsnaamGeboortedatumWhere(geslachtsnaamGeboortedatum), geslachtsnaamGeboortedatum.inclusiefOverledenPersonen, geslachtsnaamGeboortedatum.maxItems, fields),
+			ZoekMetNaamEnGemeenteVanInschrijving naamGemeenteVanInschrijving => await SearchPersonenBase(PersonenQueryHelper.CreateNaamGemeenteVanInschrijvingWhere(naamGemeenteVanInschrijving), naamGemeenteVanInschrijving.inclusiefOverledenPersonen, naamGemeenteVanInschrijving.maxItems, fields),
+			ZoekMetNummeraanduidingIdentificatie nummeraanduidingIdentificatie => await SearchPersonenBase(PersonenQueryHelper.CreateNummeraanduidingIdentificatieWhere(nummeraanduidingIdentificatie), nummeraanduidingIdentificatie.inclusiefOverledenPersonen, nummeraanduidingIdentificatie.maxItems, fields),
+			ZoekMetPostcodeEnHuisnummer postcodeHuisnummer => await SearchPersonenBase(PersonenQueryHelper.CreatePostcodeHuisnummerWhere(postcodeHuisnummer), postcodeHuisnummer.inclusiefOverledenPersonen, postcodeHuisnummer.maxItems, fields),
+			ZoekMetStraatHuisnummerEnGemeenteVanInschrijving staatHuisnummerGemeenteVanInschrijving => await SearchPersonenBase(PersonenQueryHelper.CreateStraatHuisnummerGemeenteVanInschrijvingWhere(staatHuisnummerGemeenteVanInschrijving), staatHuisnummerGemeenteVanInschrijving.inclusiefOverledenPersonen, staatHuisnummerGemeenteVanInschrijving.maxItems, fields),
+			ZoekMetAdresseerbaarObjectIdentificatie adresseerbaarObjectIdentificatie => await SearchPersonenBase(PersonenQueryHelper.CreateAdresseerbaarObjectIdentificatieWhere(adresseerbaarObjectIdentificatie), adresseerbaarObjectIdentificatie.inclusiefOverledenPersonen, adresseerbaarObjectIdentificatie.maxItems, fields),
 			_ => throw new CustomInvalidOperationException($"Onbekend type query: {model}"),
 		};
 	}
 
-	public async Task<List<DbPersoonActueelWrapper>> SearchPersonenBase((string where, IEnumerable<NpgsqlParameter> parameters) whereStringAndParams, bool inclusiefOverledenPersonen, List<string> fields)
+	public async Task<List<DbPersoonActueelWrapper>> SearchPersonenBase((string where, IEnumerable<NpgsqlParameter> parameters) whereStringAndParams, bool inclusiefOverledenPersonen, int maxItems, List<string> fields)
 	{
 		var command = CreateFilterCommand(PersonenQueryHelper.PersoonBeperktBaseQuery, WhereMappings.Select(o => o.Key).Aggregate((i, j) => i + "," + j), whereStringAndParams);
 
@@ -48,11 +49,11 @@ public class RvigPersoonBeperktRepo : RvigRepoPostgresBase<DbPersoonActueelWrapp
 		{
 			return new List<DbPersoonActueelWrapper>();
 		}
-
-		if ((!inclusiefOverledenPersonen && dbPersoonWrappers.Count(x => x.Inschrijving.bijhouding_opschort_reden == null || !x.Inschrijving.bijhouding_opschort_reden.Equals("o", StringComparison.CurrentCultureIgnoreCase)) > 10)
-			|| (inclusiefOverledenPersonen && dbPersoonWrappers.Count() > 10))
+	
+		if ((!inclusiefOverledenPersonen && dbPersoonWrappers.Count(x => x.Inschrijving.bijhouding_opschort_reden == null || !x.Inschrijving.bijhouding_opschort_reden.Equals("o", StringComparison.CurrentCultureIgnoreCase)) > maxItems)
+			|| (inclusiefOverledenPersonen && dbPersoonWrappers.Count() > maxItems))
 		{
-			throw new TooManyResultsException("Meer dan maximum van 10 zoekresultaten gevonden. Verfijn de zoekopdracht.");
+			throw new TooManyResultsException($"Meer dan maximum van {maxItems} zoekresultaten gevonden. Verfijn de zoekopdracht.");
 		}
 
 		var pl_ids = dbPersoonWrappers.ConvertAll(dbPersoon => dbPersoon.Persoon.pl_id);
