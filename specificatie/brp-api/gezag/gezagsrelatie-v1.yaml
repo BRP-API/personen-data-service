@@ -81,6 +81,7 @@ components:
           properties:
             toelichting:
               $ref: 'toelichting-v1.yaml#/components/schemas/Toelichting'
+
     GezagNietTeBepalen:
       allOf:
         - $ref: '#/components/schemas/AbstractGezagsrelatie'
