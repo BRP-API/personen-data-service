@@ -111,11 +111,19 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 			_gbaPersonenApiHelper.HackLogicKinderenPartnersOuders(model.fields, personenPlIds?.ToList()?.ConvertAll(gbaPersoon => gbaPersoon.persoon));
 
 			var bsns = personenPlIds!.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
+
 			IEnumerable<Persoon> persoonGezagsrelaties = await GetGezagIfRequested(model.fields, bsns);
-            var gezagsrelaties = persoonGezagsrelaties.Where(p => p.Gezag != null).SelectMany(p => p.Gezag).ToList();
-			
-			var gezagBsns = GetGezagBsns(gezagsrelaties);
-			var gezagPersonen = await GetGezagPersonen(gezagBsns);	
+
+			List<ApiModels.Gezag.AbstractGezagsrelatie> gezagsrelaties;
+			List<string> gezagBsns;
+			List<GbaPersoon> gezagPersonen = new();
+
+            if (GezagIsRequested(model.fields))
+			{
+                gezagsrelaties = persoonGezagsrelaties.Where(p => p.Gezag != null).SelectMany(p => p.Gezag).ToList();
+				gezagBsns = GetGezagBsns(gezagsrelaties);
+				gezagPersonen = await GetGezagPersonen(gezagBsns);	
+			}
 
 			foreach (var x in personenPlIds!.Where(x => x.persoon != null))
 			{
@@ -262,10 +270,16 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 				? await GetGezagIfRequested(model.fields, bsns)
 				: new List<Persoon>();
 
-			var gezagsrelaties = persoonGezagsrelaties.Where(p => p.Gezag != null).SelectMany(p => p.Gezag).ToList();
+            List<ApiModels.Gezag.AbstractGezagsrelatie> gezagsrelaties;
+            List<string> gezagBsns;
+            List<GbaPersoon> gezagPersonen = new();
 
-            var gezagBsns = GetGezagBsns(gezagsrelaties);
-			var gezagPersonen = await GetGezagPersonen(gezagBsns);
+            if (GezagIsRequested(model.fields))
+            {
+                gezagsrelaties = persoonGezagsrelaties.Where(p => p.Gezag != null).SelectMany(p => p.Gezag).ToList();
+                gezagBsns = GetGezagBsns(gezagsrelaties);
+                gezagPersonen = await GetGezagPersonen(gezagBsns);
+            }
 
             foreach (var x in personenPlIds.Where(x => x.persoon != null))
 			{
