@@ -1,10 +1,10 @@
 # language: nl
 @api
-Functionaliteit: gezagsrelaties van een meerderjarige
+Functionaliteit: gezagsrelaties van een minderjarige
 
   Regel: wanneer gezag wordt gevraagd wordt indien aanwezig naam, geslacht en geboorte geleverd
 
-    Scenario: gezag voor een persoon met Voogdij wordt gevraagd
+    Scenario: gezag voor een minderjarig persoon met Voogdij wordt gevraagd
       Gegeven de persoon met burgerservicenummer '000000012' heeft de volgende gegevens
         | naam                                 | waarde           |
         | geslachtsaanduiding (04.10)          | M                |
