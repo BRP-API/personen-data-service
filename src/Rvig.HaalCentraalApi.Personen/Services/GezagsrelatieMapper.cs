@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
+﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
 
 namespace Rvig.HaalCentraalApi.Personen.Services
