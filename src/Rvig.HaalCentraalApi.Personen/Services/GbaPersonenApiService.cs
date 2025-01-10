@@ -118,11 +118,15 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 			List<string> gezagBsns;
 			List<GbaPersoon> gezagPersonen = new();
 
-            if (GezagIsRequested(model.fields))
+			if (GezagIsRequested(model.fields))
 			{
-                gezagsrelaties = persoonGezagsrelaties.Where(p => p.Gezag != null).SelectMany(p => p.Gezag).ToList();
-				gezagBsns = GetGezagBsns(gezagsrelaties);
-				gezagPersonen = await GetGezagPersonen(gezagBsns);	
+				gezagsrelaties = persoonGezagsrelaties.Where(p => p.Gezag != null).SelectMany(p => p.Gezag).ToList();
+
+				if (gezagsrelaties.Count != 0)
+				{
+					gezagBsns = GetGezagBsns(gezagsrelaties);
+					gezagPersonen = await GetGezagPersonen(gezagBsns);
+				}
 			}
 
 			foreach (var x in personenPlIds!.Where(x => x.persoon != null))
@@ -209,6 +213,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
             if (x is ApiModels.Gezag.EenhoofdigOuderlijkGezag y2)
             {
                 gezagBsns.Add(y2.Ouder.Burgerservicenummer);
+                gezagBsns.Add(y2.Minderjarige.Burgerservicenummer);
             }
             if (x is ApiModels.Gezag.Voogdij v)
             {
@@ -222,15 +227,15 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
                 gezagBsns.Add(gz.Ouder.Burgerservicenummer);
                 gezagBsns.Add(gz.Minderjarige.Burgerservicenummer);
             }
-            if (x is ApiModels.Gezag.GezagNietTeBepalen gn)
-            {
-                gezagBsns.Add(gn.Minderjarige.Burgerservicenummer);
-            }
-            if (x is ApiModels.Gezag.TijdelijkGeenGezag tg)
-            {
-                gezagBsns.Add(tg.Minderjarige.Burgerservicenummer);
-            }
-        }
+			if (x is ApiModels.Gezag.GezagNietTeBepalen gn && gn.Minderjarige != null)
+			{
+				gezagBsns.Add(gn.Minderjarige.Burgerservicenummer);
+			}
+			if (x is ApiModels.Gezag.TijdelijkGeenGezag tg && tg.Minderjarige != null)
+			{
+				gezagBsns.Add(tg.Minderjarige.Burgerservicenummer);
+			}
+		}
 
         return gezagBsns.Distinct().ToList();
     }
@@ -277,8 +282,11 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
             if (GezagIsRequested(model.fields))
             {
                 gezagsrelaties = persoonGezagsrelaties.Where(p => p.Gezag != null).SelectMany(p => p.Gezag).ToList();
-                gezagBsns = GetGezagBsns(gezagsrelaties);
-                gezagPersonen = await GetGezagPersonen(gezagBsns);
+                if (gezagsrelaties.Count != 0)
+                {
+                    gezagBsns = GetGezagBsns(gezagsrelaties);
+                    gezagPersonen = await GetGezagPersonen(gezagBsns);
+                }
             }
 
             foreach (var x in personenPlIds.Where(x => x.persoon != null))
