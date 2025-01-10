@@ -84,7 +84,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
                     {
                         var minderjarige = MapPersoonToMinderjarige(gezagPersonen, gezagNietTeBepalen.Minderjarige.Burgerservicenummer);
 
-                        result.Add(new ApiModels.BRP.TijdelijkGeenGezag
+                        result.Add(new ApiModels.BRP.GezagNietTeBepalen
                         {
                             Minderjarige = minderjarige,
                             Toelichting = gezagNietTeBepalen.Toelichting
