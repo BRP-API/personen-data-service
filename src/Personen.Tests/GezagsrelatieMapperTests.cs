@@ -116,6 +116,258 @@ namespace Personen.Tests
             }
         };
 
+        private readonly List<GbaPersoon> _gezagPersonen_ZonderNaam = new()
+        {
+            new()
+            {
+                Burgerservicenummer = "000000012",
+                Geboorte = new GbaGeboorte()
+                {
+                    Datum = "20200101",
+                    Land = new Waardetabel()
+                    {
+                        Code = "6030",
+                        Omschrijving = "Nederland"
+                    },
+                    Plaats = new Waardetabel()
+                    {
+                        Code = "6030",
+                        Omschrijving = "Amsterdam"
+                    }
+                },
+                Geslacht = new Waardetabel()
+                {
+                    Code = "V",
+                    Omschrijving = "Vrouw"
+                },
+            },
+            new()
+            {
+                Burgerservicenummer = "000000024",
+                Geboorte = new GbaGeboorte()
+                {
+                    Datum = "20200101",
+                    Land = new Waardetabel()
+                    {
+                        Code = "6030",
+                        Omschrijving = "Nederland"
+                    },
+                    Plaats = new Waardetabel()
+                    {
+                        Code = "6030",
+                        Omschrijving = "Amsterdam"
+                    }
+                },
+                Geslacht = new Waardetabel()
+                {
+                    Code = "M",
+                    Omschrijving = "Man"
+                },
+            }
+        };
+
+        private readonly List<GbaPersoon> _gezagPersonen_ZonderGeslacht = new()
+        {
+            new()
+            {
+                Burgerservicenummer = "000000012",
+                Naam = new GbaNaamPersoon()
+                {
+                    Geslachtsnaam = "Jansen",
+                    Voornamen = "Anna",
+                    Voorvoegsel = "van",
+                    AanduidingNaamgebruik = new Waardetabel()
+                    {
+                        Code = "E",
+                        Omschrijving = "Eigen naam"
+                    },
+                    AdellijkeTitelPredicaat = new AdellijkeTitelPredicaatType()
+                    {
+                        Code = "JH",
+                        Omschrijving = "Jonkheer",
+                        Soort = AdellijkeTitelPredicaatSoort.PredicaatEnum
+                    }
+                },
+                Geboorte = new GbaGeboorte()
+                {
+                    Datum = "20200101",
+                    Land = new Waardetabel()
+                    {
+                        Code = "6030",
+                        Omschrijving = "Nederland"
+                    },
+                    Plaats = new Waardetabel()
+                    {
+                        Code = "6030",
+                        Omschrijving = "Amsterdam"
+                    }
+                }
+            },
+            new()
+            {
+                Burgerservicenummer = "000000024",
+                Naam = new GbaNaamPersoon()
+                {
+                    Geslachtsnaam = "Jansen",
+                    Voornamen = "Alex",
+                    Voorvoegsel = "van",
+                    AanduidingNaamgebruik = new Waardetabel()
+                    {
+                        Code = "E",
+                        Omschrijving = "Eigen naam"
+                    },
+                    AdellijkeTitelPredicaat = new AdellijkeTitelPredicaatType()
+                    {
+                        Code = "JH",
+                        Omschrijving = "Jonkheer",
+                        Soort = AdellijkeTitelPredicaatSoort.PredicaatEnum
+                    }
+                },
+                Geboorte = new GbaGeboorte()
+                {
+                    Datum = "20200101",
+                    Land = new Waardetabel()
+                    {
+                        Code = "6030",
+                        Omschrijving = "Nederland"
+                    },
+                    Plaats = new Waardetabel()
+                    {
+                        Code = "6030",
+                        Omschrijving = "Amsterdam"
+                    }
+                }
+            }
+        };
+
+        private readonly List<GbaPersoon> _gezagPersonen_ZonderGeboorte = new()
+        {
+            new()
+            {
+                Burgerservicenummer = "000000012",
+                Naam = new GbaNaamPersoon()
+                {
+                    Geslachtsnaam = "Jansen",
+                    Voornamen = "Anna",
+                    Voorvoegsel = "van",
+                    AanduidingNaamgebruik = new Waardetabel()
+                    {
+                        Code = "E",
+                        Omschrijving = "Eigen naam"
+                    },
+                    AdellijkeTitelPredicaat = new AdellijkeTitelPredicaatType()
+                    {
+                        Code = "JH",
+                        Omschrijving = "Jonkheer",
+                        Soort = AdellijkeTitelPredicaatSoort.PredicaatEnum
+                    }
+                },
+                Geslacht = new Waardetabel()
+                {
+                    Code = "V",
+                    Omschrijving = "Vrouw"
+                },
+            },
+            new()
+            {
+                Burgerservicenummer = "000000024",
+                Naam = new GbaNaamPersoon()
+                {
+                    Geslachtsnaam = "Jansen",
+                    Voornamen = "Alex",
+                    Voorvoegsel = "van",
+                    AanduidingNaamgebruik = new Waardetabel()
+                    {
+                        Code = "E",
+                        Omschrijving = "Eigen naam"
+                    },
+                    AdellijkeTitelPredicaat = new AdellijkeTitelPredicaatType()
+                    {
+                        Code = "JH",
+                        Omschrijving = "Jonkheer",
+                        Soort = AdellijkeTitelPredicaatSoort.PredicaatEnum
+                    }
+                },
+                Geslacht = new Waardetabel()
+                {
+                    Code = "M",
+                    Omschrijving = "Man"
+                },
+            }
+        };
+
+        private readonly List<GbaPersoon> _gezagPersonen_ZonderAdellijkeTitelPredicaat = new()
+        {
+            new()
+            {
+                Burgerservicenummer = "000000012",
+                Naam = new GbaNaamPersoon()
+                {
+                    Geslachtsnaam = "Jansen",
+                    Voornamen = "Anna",
+                    Voorvoegsel = "van",
+                    AanduidingNaamgebruik = new Waardetabel()
+                    {
+                        Code = "E",
+                        Omschrijving = "Eigen naam"
+                    },
+                },
+                Geboorte = new GbaGeboorte()
+                {
+                    Datum = "20200101",
+                    Land = new Waardetabel()
+                    {
+                        Code = "6030",
+                        Omschrijving = "Nederland"
+                    },
+                    Plaats = new Waardetabel()
+                    {
+                        Code = "6030",
+                        Omschrijving = "Amsterdam"
+                    }
+                },
+                Geslacht = new Waardetabel()
+                {
+                    Code = "V",
+                    Omschrijving = "Vrouw"
+                },
+            },
+            new()
+            {
+                Burgerservicenummer = "000000024",
+                Naam = new GbaNaamPersoon()
+                {
+                    Geslachtsnaam = "Jansen",
+                    Voornamen = "Alex",
+                    Voorvoegsel = "van",
+                    AanduidingNaamgebruik = new Waardetabel()
+                    {
+                        Code = "E",
+                        Omschrijving = "Eigen naam"
+                    },
+                },
+                Geboorte = new GbaGeboorte()
+                {
+                    Datum = "20200101",
+                    Land = new Waardetabel()
+                    {
+                        Code = "6030",
+                        Omschrijving = "Nederland"
+                    },
+                    Plaats = new Waardetabel()
+                    {
+                        Code = "6030",
+                        Omschrijving = "Amsterdam"
+                    }
+                },
+                Geslacht = new Waardetabel()
+                {
+                    Code = "M",
+                    Omschrijving = "Man"
+                },
+            }
+        };
+
         private readonly List<AbstractGezagsrelatie> _expected = new()
         {
             new EenhoofdigOuderlijkGezag
@@ -195,6 +447,69 @@ namespace Personen.Tests
             var gezagsrelaties = GezagsrelatieMapper.Map(_gezagResponse, _gezagPersonen);
 
             gezagsrelaties.Should().BeEquivalentTo(_expected);
+        }
+
+        [Fact]
+        public void MapGezagsrelaties_GezagResponse_Null()
+        {
+            var gezagsrelaties = GezagsrelatieMapper.Map(null, _gezagPersonen);
+
+            gezagsrelaties.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void MapGezagsrelaties_GezagPersonen_Null()
+        {
+            var gezagsrelaties = GezagsrelatieMapper.Map(_gezagResponse, new List<GbaPersoon>());
+
+            gezagsrelaties.Count().Should().Be(_gezagResponse.Personen.Count);
+        }
+
+        [Fact]
+        public void MapGezagsrelaties_GezagPersonen_ZonderNaam()
+        {
+           var gezagsrelaties = GezagsrelatieMapper.Map(_gezagResponse, _gezagPersonen_ZonderNaam);
+
+            var gezag = gezagsrelaties.First() as EenhoofdigOuderlijkGezag;
+
+            gezag.Should().NotBeNull();
+            gezag!.Ouder.Naam.Should().BeNull();
+            gezag.Minderjarige.Naam.Should().BeNull();
+        }
+
+        [Fact]
+        public void MapGezagsrelaties_GezagPersonen_ZonderGeslacht()
+        {
+            var gezagsrelaties = GezagsrelatieMapper.Map(_gezagResponse, _gezagPersonen_ZonderGeslacht);
+
+            var gezag = gezagsrelaties.First() as EenhoofdigOuderlijkGezag;
+
+            gezag.Should().NotBeNull();
+            gezag!.Ouder.Geslacht.Should().BeNull();
+            gezag.Minderjarige.Geslacht.Should().BeNull();
+        }
+
+        [Fact]
+        public void MapGezagsrelaties_GezagPersonen_ZonderGeboorte()
+        {
+            var gezagsrelaties = GezagsrelatieMapper.Map(_gezagResponse, _gezagPersonen_ZonderGeboorte);
+
+            var gezag = gezagsrelaties.First() as EenhoofdigOuderlijkGezag;
+
+            gezag.Should().NotBeNull();
+            gezag!.Minderjarige.Geboorte.Should().BeNull();
+        }
+
+        [Fact]
+        public void MapGezagsrelaties_GezagPersonen_ZonderAdellijkeTitelOfPredicaat()
+        {
+            var gezagsrelaties = GezagsrelatieMapper.Map(_gezagResponse, _gezagPersonen_ZonderAdellijkeTitelPredicaat);
+
+            var gezag = gezagsrelaties.First() as EenhoofdigOuderlijkGezag;
+
+            gezag.Should().NotBeNull();
+            gezag!.Ouder.Naam.AdellijkeTitelPredicaat.Should().BeNull();
+            gezag.Minderjarige.Naam.AdellijkeTitelPredicaat.Should().BeNull();
         }
     }
 }

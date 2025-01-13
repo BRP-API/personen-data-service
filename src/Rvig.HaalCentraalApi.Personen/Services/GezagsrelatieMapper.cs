@@ -9,6 +9,8 @@ namespace Rvig.HaalCentraalApi.Personen.Services
         {
             var result = new List<ApiModels.BRP.AbstractGezagsrelatie>();
 
+            if(gezagResponse == null) return result;
+
             foreach (var persoon in gezagResponse.Personen)
             {
                 foreach (var gezagsrelatie in persoon.Gezag)
