@@ -99,7 +99,16 @@ Functionaliteit: gezagsrelaties van een meerderjarige
   Regel: een meerderjarige die als enige gezag heeft over een minderjarig kind krijgt de gezagsrelatie naar zichzelf geleverd
 
     Scenario: alleen de bevraagde persoon heeft gezag over de minderjarige
-      Gegeven de persoon met burgerservicenummer '000000024' heeft een 'kind' met de volgende gegevens
+      Gegeven de persoon met burgerservicenummer '000000024' heeft de volgende gegevens
+        | naam                                 | waarde           |
+        | geslachtsaanduiding (04.10)          | M                |
+        | voornamen (02.10)                    | Alex             |
+        | adellijke titel of predicaat (02.20) | JH               |
+        | voorvoegsel (02.30)                  | te               |
+        | geslachtsnaam (02.40)                | Hoogh            |
+        | aanduiding naamgebruik (61.10)       | E                |
+        | geboortedatum (03.10)                | morgen - 35 jaar |
+      En de persoon heeft een 'kind' met de volgende gegevens
         | burgerservicenummer (01.20) |
         |                   000000012 |
       En voor de persoon geldt het volgende gezag
@@ -107,21 +116,63 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | type                             | EenhoofdigOuderlijkGezag |
         | minderjarige.burgerservicenummer |                000000012 |
         | ouder.burgerservicenummer        |                000000024 |
+      En de persoon met burgerservicenummer '000000012' heeft de volgende gegevens
+        | naam                                 | waarde           |
+        | geslachtsaanduiding (04.10)          | M                |
+        | voornamen (02.10)                    | Jan Peter        |
+        | adellijke titel of predicaat (02.20) | JH               |
+        | voorvoegsel (02.30)                  | te               |
+        | geslachtsnaam (02.40)                | Hoogh            |
+        | aanduiding naamgebruik (61.10)       | E                |
+        | geboortedatum (03.10)                | morgen - 18 jaar |
+      En de persoon heeft een ouder '1' met de volgende gegevens
+        | burgerservicenummer (01.20) |
+        |                   000000024 |
       Als personen wordt gezocht met de volgende parameters
         | naam                | waarde                          |
         | type                | RaadpleegMetBurgerservicenummer |
         | burgerservicenummer |                       000000024 |
         | fields              | gezag                           |
       Dan heeft de response een persoon met een 'gezag' met de volgende gegevens
-        | naam                             | waarde                   |
-        | type                             | EenhoofdigOuderlijkGezag |
-        | minderjarige.burgerservicenummer |                000000012 |
-        | ouder.burgerservicenummer        |                000000024 |
+        | naam                                                   | waarde                   |
+        | type                                                   | EenhoofdigOuderlijkGezag |
+        | minderjarige.burgerservicenummer                       |                000000012 |
+        | minderjarige.naam.voornamen                            | Jan Peter                |
+        | minderjarige.naam.voorvoegsel                          | te                       |
+        | minderjarige.naam.geslachtsnaam                        | Hoogh                    |
+        | minderjarige.naam.aanduidingNaamgebruik.code           | E                        |
+        | minderjarige.naam.aanduidingNaamgebruik.omschrijving   | eigen geslachtsnaam      |
+        | minderjarige.naam.adellijkeTitelPredicaat.code         | JH                       |
+        | minderjarige.naam.adellijkeTitelPredicaat.omschrijving | jonkheer                 |
+        | minderjarige.naam.adellijkeTitelPredicaat.soort        | predicaat                |
+        | minderjarige.geboorte.datum                            | morgen - 18 jaar         |
+        | minderjarige.geslacht.code                             | M                        |
+        | minderjarige.geslacht.omschrijving                     | man                      |
+        | ouder.burgerservicenummer                              |                000000024 |
+        | ouder.naam.voornamen                                   | Alex                     |
+        | ouder.naam.voorvoegsel                                 | te                       |
+        | ouder.naam.geslachtsnaam                               | Hoogh                    |
+        | ouder.naam.aanduidingNaamgebruik.code                  | E                        |
+        | ouder.naam.aanduidingNaamgebruik.omschrijving          | eigen geslachtsnaam      |
+        | ouder.naam.adellijkeTitelPredicaat.code                | JH                       |
+        | ouder.naam.adellijkeTitelPredicaat.omschrijving        | jonkheer                 |
+        | ouder.naam.adellijkeTitelPredicaat.soort               | predicaat                |
+        | ouder.geslacht.code                                    | M                        |
+        | ouder.geslacht.omschrijving                            | man                      |
 
   Regel: een meerderjarige die samen met diens partner gezag heeft over een minderjarig kind krijgt de gezagsrelatie naar de ouder en de partner geleverd
 
     Scenario: de ouder en diens partner hebben gezag over het kind
-      Gegeven de persoon met burgerservicenummer '000000024' heeft een 'kind' met de volgende gegevens
+      Gegeven de persoon met burgerservicenummer '000000024' heeft de volgende gegevens
+        | naam                                 | waarde           |
+        | geslachtsaanduiding (04.10)          | M                |
+        | voornamen (02.10)                    | Alex             |
+        | adellijke titel of predicaat (02.20) | JH               |
+        | voorvoegsel (02.30)                  | te               |
+        | geslachtsnaam (02.40)                | Hoogh            |
+        | aanduiding naamgebruik (61.10)       | E                |
+        | geboortedatum (03.10)                | morgen - 35 jaar |
+      En de persoon heeft een 'kind' met de volgende gegevens
         | burgerservicenummer (01.20) |
         |                   000000012 |
       En de persoon heeft een 'partner' met de volgende gegevens
@@ -133,20 +184,69 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | minderjarige.burgerservicenummer |        000000012 |
         | ouder.burgerservicenummer        |        000000024 |
         | derde.burgerservicenummer        |        000000048 |
-      En de persoon met burgerservicenummer '000000012' heeft een ouder '1' met de volgende gegevens
+      En de persoon met burgerservicenummer '000000012' heeft de volgende gegevens
+        | naam                                 | waarde           |
+        | geslachtsaanduiding (04.10)          | M                |
+        | voornamen (02.10)                    | Jan Peter        |
+        | adellijke titel of predicaat (02.20) | JH               |
+        | voorvoegsel (02.30)                  | te               |
+        | geslachtsnaam (02.40)                | Hoogh            |
+        | aanduiding naamgebruik (61.10)       | E                |
+        | geboortedatum (03.10)                | morgen - 18 jaar |
+      En de persoon heeft een ouder '1' met de volgende gegevens
         | burgerservicenummer (01.20) |
         |                   000000024 |
+      En de persoon met burgerservicenummer '000000048' heeft de volgende gegevens
+        | naam                                 | waarde           |
+        | geslachtsaanduiding (04.10)          | V                |
+        | voornamen (02.10)                    | Carolina         |
+        | adellijke titel of predicaat (02.20) | JH               |
+        | voorvoegsel (02.30)                  | te               |
+        | geslachtsnaam (02.40)                | Hoogh            |
+        | aanduiding naamgebruik (61.10)       | E                |
+        | geboortedatum (03.10)                | morgen - 35 jaar |
       Als personen wordt gezocht met de volgende parameters
         | naam                | waarde                          |
         | type                | RaadpleegMetBurgerservicenummer |
         | burgerservicenummer |                       000000024 |
         | fields              | gezag                           |
       Dan heeft de response een persoon met een 'gezag' met de volgende gegevens
-        | naam                             | waarde           |
-        | type                             | GezamenlijkGezag |
-        | minderjarige.burgerservicenummer |        000000012 |
-        | ouder.burgerservicenummer        |        000000024 |
-        | derde.burgerservicenummer        |        000000048 |
+        | naam                                                   | waarde              |
+        | type                                                   | GezamenlijkGezag    |
+        | minderjarige.burgerservicenummer                       |           000000012 |
+        | minderjarige.naam.voornamen                            | Jan Peter           |
+        | minderjarige.naam.voorvoegsel                          | te                  |
+        | minderjarige.naam.geslachtsnaam                        | Hoogh               |
+        | minderjarige.naam.aanduidingNaamgebruik.code           | E                   |
+        | minderjarige.naam.aanduidingNaamgebruik.omschrijving   | eigen geslachtsnaam |
+        | minderjarige.naam.adellijkeTitelPredicaat.code         | JH                  |
+        | minderjarige.naam.adellijkeTitelPredicaat.omschrijving | jonkheer            |
+        | minderjarige.naam.adellijkeTitelPredicaat.soort        | predicaat           |
+        | minderjarige.geboorte.datum                            | morgen - 18 jaar    |
+        | minderjarige.geslacht.code                             | M                   |
+        | minderjarige.geslacht.omschrijving                     | man                 |
+        | ouder.burgerservicenummer                              |           000000024 |
+        | ouder.naam.voornamen                                   | Alex                |
+        | ouder.naam.voorvoegsel                                 | te                  |
+        | ouder.naam.geslachtsnaam                               | Hoogh               |
+        | ouder.naam.aanduidingNaamgebruik.code                  | E                   |
+        | ouder.naam.aanduidingNaamgebruik.omschrijving          | eigen geslachtsnaam |
+        | ouder.naam.adellijkeTitelPredicaat.code                | JH                  |
+        | ouder.naam.adellijkeTitelPredicaat.omschrijving        | jonkheer            |
+        | ouder.naam.adellijkeTitelPredicaat.soort               | predicaat           |
+        | ouder.geslacht.code                                    | M                   |
+        | ouder.geslacht.omschrijving                            | man                 |
+        | derde.burgerservicenummer                              |           000000048 |
+        | derde.naam.voornamen                                   | Carolina            |
+        | derde.naam.voorvoegsel                                 | te                  |
+        | derde.naam.geslachtsnaam                               | Hoogh               |
+        | derde.naam.aanduidingNaamgebruik.code                  | E                   |
+        | derde.naam.aanduidingNaamgebruik.omschrijving          | eigen geslachtsnaam |
+        | derde.naam.adellijkeTitelPredicaat.code                | JH                  |
+        | derde.naam.adellijkeTitelPredicaat.omschrijving        | jonkheer            |
+        | derde.naam.adellijkeTitelPredicaat.soort               | predicaat           |
+        | derde.geslacht.code                                    | V                   |
+        | derde.geslacht.omschrijving                            | vrouw               |
 
   Regel: een meerderjarige die gezag heeft over een minderjarig kind van de partner krijgt de gezagsrelatie naar de ouder en zichzelf geleverd
     # de gezagsmodule levert bij het bevragen van de niet-ouder geen gezag
@@ -154,16 +254,43 @@ Functionaliteit: gezagsrelaties van een meerderjarige
     # voor elke gezagsrelatie van de minderjarige kinderen wordt bepaald of de niet-ouder gezamenlijk gezag heeft over het kind
 
     Scenario: persoon heeft van rechtswege gezamenlijk gezag over het minderjarige kind van diens partner
-      Gegeven de persoon met burgerservicenummer '000000024' heeft een 'kind' met de volgende gegevens
+      Gegeven de persoon met burgerservicenummer '000000024' heeft de volgende gegevens
+        | naam                                 | waarde           |
+        | geslachtsaanduiding (04.10)          | M                |
+        | voornamen (02.10)                    | Alex             |
+        | adellijke titel of predicaat (02.20) | JH               |
+        | voorvoegsel (02.30)                  | te               |
+        | geslachtsnaam (02.40)                | Hoogh            |
+        | aanduiding naamgebruik (61.10)       | E                |
+        | geboortedatum (03.10)                | morgen - 35 jaar |
+      En de persoon heeft een 'kind' met de volgende gegevens
         | burgerservicenummer (01.20) |
         |                   000000012 |
       En de persoon heeft een 'partner' met de volgende gegevens
         | burgerservicenummer (01.20) |
         |                   000000048 |
-      En de persoon met burgerservicenummer '000000012' heeft een ouder '1' met de volgende gegevens
+      En de persoon met burgerservicenummer '000000012' heeft de volgende gegevens
+        | naam                                 | waarde           |
+        | geslachtsaanduiding (04.10)          | M                |
+        | voornamen (02.10)                    | Jan Peter        |
+        | adellijke titel of predicaat (02.20) | JH               |
+        | voorvoegsel (02.30)                  | te               |
+        | geslachtsnaam (02.40)                | Hoogh            |
+        | aanduiding naamgebruik (61.10)       | E                |
+        | geboortedatum (03.10)                | morgen - 18 jaar |
+      En de persoon heeft een ouder '1' met de volgende gegevens
         | burgerservicenummer (01.20) |
         |                   000000024 |
-      En de persoon met burgerservicenummer '000000048' heeft een 'partner' met de volgende gegevens
+      En de persoon met burgerservicenummer '000000048' heeft de volgende gegevens
+        | naam                                 | waarde           |
+        | geslachtsaanduiding (04.10)          | V                |
+        | voornamen (02.10)                    | Carolina         |
+        | adellijke titel of predicaat (02.20) | JH               |
+        | voorvoegsel (02.30)                  | te               |
+        | geslachtsnaam (02.40)                | Hoogh            |
+        | aanduiding naamgebruik (61.10)       | E                |
+        | geboortedatum (03.10)                | morgen - 35 jaar |
+      En de persoon heeft een 'partner' met de volgende gegevens
         | burgerservicenummer (01.20) |
         |                   000000024 |
       En voor de persoon geldt het volgende gezag
@@ -178,14 +305,54 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | burgerservicenummer |                       000000048 |
         | fields              | gezag                           |
       Dan heeft de response een persoon met een 'gezag' met de volgende gegevens
-        | naam                             | waarde           |
-        | type                             | GezamenlijkGezag |
-        | minderjarige.burgerservicenummer |        000000012 |
-        | ouder.burgerservicenummer        |        000000024 |
-        | derde.burgerservicenummer        |        000000048 |
+        | naam                                                   | waarde              |
+        | type                                                   | GezamenlijkGezag    |
+        | minderjarige.burgerservicenummer                       |           000000012 |
+        | minderjarige.naam.voornamen                            | Jan Peter           |
+        | minderjarige.naam.voorvoegsel                          | te                  |
+        | minderjarige.naam.geslachtsnaam                        | Hoogh               |
+        | minderjarige.naam.aanduidingNaamgebruik.code           | E                   |
+        | minderjarige.naam.aanduidingNaamgebruik.omschrijving   | eigen geslachtsnaam |
+        | minderjarige.naam.adellijkeTitelPredicaat.code         | JH                  |
+        | minderjarige.naam.adellijkeTitelPredicaat.omschrijving | jonkheer            |
+        | minderjarige.naam.adellijkeTitelPredicaat.soort        | predicaat           |
+        | minderjarige.geboorte.datum                            | morgen - 18 jaar    |
+        | minderjarige.geslacht.code                             | M                   |
+        | minderjarige.geslacht.omschrijving                     | man                 |
+        | ouder.burgerservicenummer                              |           000000024 |
+        | ouder.naam.voornamen                                   | Alex                |
+        | ouder.naam.voorvoegsel                                 | te                  |
+        | ouder.naam.geslachtsnaam                               | Hoogh               |
+        | ouder.naam.aanduidingNaamgebruik.code                  | E                   |
+        | ouder.naam.aanduidingNaamgebruik.omschrijving          | eigen geslachtsnaam |
+        | ouder.naam.adellijkeTitelPredicaat.code                | JH                  |
+        | ouder.naam.adellijkeTitelPredicaat.omschrijving        | jonkheer            |
+        | ouder.naam.adellijkeTitelPredicaat.soort               | predicaat           |
+        | ouder.geslacht.code                                    | M                   |
+        | ouder.geslacht.omschrijving                            | man                 |
+        | derde.burgerservicenummer                              |           000000048 |
+        | derde.naam.voornamen                                   | Carolina            |
+        | derde.naam.voorvoegsel                                 | te                  |
+        | derde.naam.geslachtsnaam                               | Hoogh               |
+        | derde.naam.aanduidingNaamgebruik.code                  | E                   |
+        | derde.naam.aanduidingNaamgebruik.omschrijving          | eigen geslachtsnaam |
+        | derde.naam.adellijkeTitelPredicaat.code                | JH                  |
+        | derde.naam.adellijkeTitelPredicaat.omschrijving        | jonkheer            |
+        | derde.naam.adellijkeTitelPredicaat.soort               | predicaat           |
+        | derde.geslacht.code                                    | V                   |
+        | derde.geslacht.omschrijving                            | vrouw               |
 
     Scenario: persoon heeft van rechtswege gezamenlijk gezag over enkele van de minderjarige kinderen van diens partner
-      Gegeven de persoon met burgerservicenummer '000000048' heeft een 'kind' met de volgende gegevens
+      Gegeven de persoon met burgerservicenummer '000000048' heeft de volgende gegevens
+        | naam                                 | waarde           |
+        | geslachtsaanduiding (04.10)          | V                |
+        | voornamen (02.10)                    | Carolina         |
+        | adellijke titel of predicaat (02.20) | JH               |
+        | voorvoegsel (02.30)                  | te               |
+        | geslachtsnaam (02.40)                | Hoogh            |
+        | aanduiding naamgebruik (61.10)       | E                |
+        | geboortedatum (03.10)                | morgen - 35 jaar |
+      En de persoon heeft een 'kind' met de volgende gegevens
         | burgerservicenummer (01.20) |
         |                   000000012 |
       En de persoon heeft een 'kind' met de volgende gegevens
@@ -197,16 +364,52 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       En de persoon heeft een 'partner' met de volgende gegevens
         | burgerservicenummer (01.20) |
         |                   000000061 |
-      En de persoon met burgerservicenummer '000000012' heeft een ouder '1' met de volgende gegevens
+      En de persoon met burgerservicenummer '000000012' heeft de volgende gegevens
+        | naam                                 | waarde           |
+        | geslachtsaanduiding (04.10)          | M                |
+        | voornamen (02.10)                    | Jan Peter        |
+        | adellijke titel of predicaat (02.20) | JH               |
+        | voorvoegsel (02.30)                  | te               |
+        | geslachtsnaam (02.40)                | Hoogh            |
+        | aanduiding naamgebruik (61.10)       | E                |
+        | geboortedatum (03.10)                | morgen - 12 jaar |
+      En de persoon heeft een ouder '1' met de volgende gegevens
         | burgerservicenummer (01.20) |
         |                   000000048 |
-      En de persoon met burgerservicenummer '000000024' heeft een ouder '1' met de volgende gegevens
+      En de persoon met burgerservicenummer '000000013' heeft de volgende gegevens
+        | naam                                 | waarde          |
+        | geslachtsaanduiding (04.10)          | M               |
+        | voornamen (02.10)                    | Alex            |
+        | adellijke titel of predicaat (02.20) | JH              |
+        | voorvoegsel (02.30)                  | te              |
+        | geslachtsnaam (02.40)                | Hoogh           |
+        | aanduiding naamgebruik (61.10)       | E               |
+        | geboortedatum (03.10)                | morgen - 6 jaar |
+      En de persoon heeft een ouder '1' met de volgende gegevens
         | burgerservicenummer (01.20) |
         |                   000000048 |
-      En de persoon met burgerservicenummer '000000036' heeft een ouder '1' met de volgende gegevens
+      En de persoon met burgerservicenummer '000000014' heeft de volgende gegevens
+        | naam                                 | waarde          |
+        | geslachtsaanduiding (04.10)          | M               |
+        | voornamen (02.10)                    | Arie            |
+        | adellijke titel of predicaat (02.20) | JH              |
+        | voorvoegsel (02.30)                  | te              |
+        | geslachtsnaam (02.40)                | Hoogh           |
+        | aanduiding naamgebruik (61.10)       | E               |
+        | geboortedatum (03.10)                | morgen - 3 jaar |
+      En de persoon heeft een ouder '1' met de volgende gegevens
         | burgerservicenummer (01.20) |
         |                   000000048 |
-      En de persoon met burgerservicenummer '000000061' heeft een 'partner' met de volgende gegevens
+      Gegeven de persoon met burgerservicenummer '000000061' heeft de volgende gegevens
+        | naam                                 | waarde             |
+        | geslachtsaanduiding (04.10)          | M                  |
+        | voornamen (02.10)                    | Karel              |
+        | adellijke titel of predicaat (02.20) | JH                 |
+        | voorvoegsel (02.30)                  | te                 |
+        | geslachtsnaam (02.40)                | Hoogh              |
+        | aanduiding naamgebruik (61.10)       | E                  |
+        | geboortedatum (03.10)                | gisteren - 50 jaar |
+      En de persoon heeft een 'partner' met de volgende gegevens
         | burgerservicenummer (01.20) |
         |                   000000048 |
       En voor de persoon geldt het volgende gezag
@@ -218,7 +421,7 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       En voor de persoon geldt ook het volgende gezag
         | naam                             | waarde           |
         | type                             | GezamenlijkGezag |
-        | minderjarige.burgerservicenummer |        000000024 |
+        | minderjarige.burgerservicenummer |        000000013 |
         | ouder.burgerservicenummer        |        000000048 |
         | derde.burgerservicenummer        |        000000061 |
       Als personen wordt gezocht met de volgende parameters
@@ -227,20 +430,91 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | burgerservicenummer |                       000000061 |
         | fields              | gezag                           |
       Dan heeft de response een persoon met een 'gezag' met de volgende gegevens
-        | naam                             | waarde           |
-        | type                             | GezamenlijkGezag |
-        | minderjarige.burgerservicenummer |        000000012 |
-        | ouder.burgerservicenummer        |        000000048 |
-        | derde.burgerservicenummer        |        000000061 |
+        | naam                                                   | waarde              |
+        | type                                                   | GezamenlijkGezag    |
+        | minderjarige.burgerservicenummer                       |           000000012 |
+        | minderjarige.naam.voornamen                            | Jan Peter           |
+        | minderjarige.naam.voorvoegsel                          | te                  |
+        | minderjarige.naam.geslachtsnaam                        | Hoogh               |
+        | minderjarige.naam.aanduidingNaamgebruik.code           | E                   |
+        | minderjarige.naam.aanduidingNaamgebruik.omschrijving   | eigen geslachtsnaam |
+        | minderjarige.naam.adellijkeTitelPredicaat.code         | JH                  |
+        | minderjarige.naam.adellijkeTitelPredicaat.omschrijving | jonkheer            |
+        | minderjarige.naam.adellijkeTitelPredicaat.soort        | predicaat           |
+        | minderjarige.geboorte.datum                            | morgen - 12 jaar    |
+        | minderjarige.geslacht.code                             | M                   |
+        | minderjarige.geslacht.omschrijving                     | man                 |
+        | ouder.burgerservicenummer                              |           000000048 |
+        | ouder.naam.voornamen                                   | Carolina            |
+        | ouder.naam.voorvoegsel                                 | te                  |
+        | ouder.naam.geslachtsnaam                               | Hoogh               |
+        | ouder.naam.aanduidingNaamgebruik.code                  | E                   |
+        | ouder.naam.aanduidingNaamgebruik.omschrijving          | eigen geslachtsnaam |
+        | ouder.naam.adellijkeTitelPredicaat.code                | JH                  |
+        | ouder.naam.adellijkeTitelPredicaat.omschrijving        | jonkheer            |
+        | ouder.naam.adellijkeTitelPredicaat.soort               | predicaat           |
+        | ouder.geslacht.code                                    | V                   |
+        | ouder.geslacht.omschrijving                            | vrouw               |
+        | derde.burgerservicenummer                              |           000000061 |
+        | derde.naam.voornamen                                   | Karel               |
+        | derde.naam.voorvoegsel                                 | te                  |
+        | derde.naam.geslachtsnaam                               | Hoogh               |
+        | derde.naam.aanduidingNaamgebruik.code                  | E                   |
+        | derde.naam.aanduidingNaamgebruik.omschrijving          | eigen geslachtsnaam |
+        | derde.naam.adellijkeTitelPredicaat.code                | JH                  |
+        | derde.naam.adellijkeTitelPredicaat.omschrijving        | jonkheer            |
+        | derde.naam.adellijkeTitelPredicaat.soort               | predicaat           |
+        | derde.geslacht.code                                    | M                   |
+        | derde.geslacht.omschrijving                            | man                 |
       En heeft de persoon een 'gezag' met de volgende gegevens
-        | naam                             | waarde           |
-        | type                             | GezamenlijkGezag |
-        | minderjarige.burgerservicenummer |        000000024 |
-        | ouder.burgerservicenummer        |        000000048 |
-        | derde.burgerservicenummer        |        000000061 |
+        | naam                                                   | waarde              |
+        | type                                                   | GezamenlijkGezag    |
+        | minderjarige.burgerservicenummer                       |           000000013 |
+        | minderjarige.naam.voornamen                            | Alex                |
+        | minderjarige.naam.voorvoegsel                          | te                  |
+        | minderjarige.naam.geslachtsnaam                        | Hoogh               |
+        | minderjarige.naam.aanduidingNaamgebruik.code           | E                   |
+        | minderjarige.naam.aanduidingNaamgebruik.omschrijving   | eigen geslachtsnaam |
+        | minderjarige.naam.adellijkeTitelPredicaat.code         | JH                  |
+        | minderjarige.naam.adellijkeTitelPredicaat.omschrijving | jonkheer            |
+        | minderjarige.naam.adellijkeTitelPredicaat.soort        | predicaat           |
+        | minderjarige.geboorte.datum                            | morgen - 6 jaar     |
+        | minderjarige.geslacht.code                             | M                   |
+        | minderjarige.geslacht.omschrijving                     | man                 |
+        | ouder.burgerservicenummer                              |           000000048 |
+        | ouder.naam.voornamen                                   | Carolina            |
+        | ouder.naam.voorvoegsel                                 | te                  |
+        | ouder.naam.geslachtsnaam                               | Hoogh               |
+        | ouder.naam.aanduidingNaamgebruik.code                  | E                   |
+        | ouder.naam.aanduidingNaamgebruik.omschrijving          | eigen geslachtsnaam |
+        | ouder.naam.adellijkeTitelPredicaat.code                | JH                  |
+        | ouder.naam.adellijkeTitelPredicaat.omschrijving        | jonkheer            |
+        | ouder.naam.adellijkeTitelPredicaat.soort               | predicaat           |
+        | ouder.geslacht.code                                    | V                   |
+        | ouder.geslacht.omschrijving                            | vrouw               |
+        | derde.burgerservicenummer                              |           000000061 |
+        | derde.naam.voornamen                                   | Karel               |
+        | derde.naam.voorvoegsel                                 | te                  |
+        | derde.naam.geslachtsnaam                               | Hoogh               |
+        | derde.naam.aanduidingNaamgebruik.code                  | E                   |
+        | derde.naam.aanduidingNaamgebruik.omschrijving          | eigen geslachtsnaam |
+        | derde.naam.adellijkeTitelPredicaat.code                | JH                  |
+        | derde.naam.adellijkeTitelPredicaat.omschrijving        | jonkheer            |
+        | derde.naam.adellijkeTitelPredicaat.soort               | predicaat           |
+        | derde.geslacht.code                                    | M                   |
+        | derde.geslacht.omschrijving                            | man                 |
 
     Scenario: persoon heeft geen gezag over het minderjarige kind van diens partner
-      Gegeven de persoon met burgerservicenummer '000000024' heeft een 'kind' met de volgende gegevens
+      Gegeven de persoon met burgerservicenummer '000000024' heeft de volgende gegevens
+        | naam                                 | waarde           |
+        | geslachtsaanduiding (04.10)          | M                |
+        | voornamen (02.10)                    | Alex             |
+        | adellijke titel of predicaat (02.20) | JH               |
+        | voorvoegsel (02.30)                  | te               |
+        | geslachtsnaam (02.40)                | Hoogh            |
+        | aanduiding naamgebruik (61.10)       | E                |
+        | geboortedatum (03.10)                | morgen - 35 jaar |
+      Gegeven de persoon heeft een 'kind' met de volgende gegevens
         | burgerservicenummer (01.20) |
         |                   000000012 |
       En de persoon heeft een 'partner' met de volgende gegevens
@@ -253,7 +527,16 @@ Functionaliteit: gezagsrelaties van een meerderjarige
       En het gezag heeft de volgende ouders
         | burgerservicenummer |
         |           000000024 |
-      En de persoon met burgerservicenummer '000000012' heeft een ouder '1' met de volgende gegevens
+      En de persoon met burgerservicenummer '000000012' heeft de volgende gegevens
+        | naam                                 | waarde           |
+        | geslachtsaanduiding (04.10)          | M                |
+        | voornamen (02.10)                    | Jan Peter        |
+        | adellijke titel of predicaat (02.20) | JH               |
+        | voorvoegsel (02.30)                  | te               |
+        | geslachtsnaam (02.40)                | Hoogh            |
+        | aanduiding naamgebruik (61.10)       | E                |
+        | geboortedatum (03.10)                | morgen - 18 jaar |
+      En de persoon heeft een ouder '1' met de volgende gegevens
         | burgerservicenummer (01.20) |
         |                   000000024 |
       En de persoon heeft een ouder '2' met de volgende gegevens
@@ -267,7 +550,16 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | burgerservicenummer |
         |           000000024 |
         |           000000036 |
-      En de persoon met burgerservicenummer '000000048' heeft een 'partner' met de volgende gegevens
+      En de persoon met burgerservicenummer '000000048' heeft de volgende gegevens
+        | naam                                 | waarde           |
+        | geslachtsaanduiding (04.10)          | V                |
+        | voornamen (02.10)                    | Carolina         |
+        | adellijke titel of predicaat (02.20) | JH               |
+        | voorvoegsel (02.30)                  | te               |
+        | geslachtsnaam (02.40)                | Hoogh            |
+        | aanduiding naamgebruik (61.10)       | E                |
+        | geboortedatum (03.10)                | morgen - 35 jaar |
+      En de persoon heeft een 'partner' met de volgende gegevens
         | burgerservicenummer (01.20) |
         |                   000000024 |
       En voor de persoon geldt geen gezag
