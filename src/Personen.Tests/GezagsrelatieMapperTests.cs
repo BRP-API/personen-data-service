@@ -32,6 +32,46 @@ namespace Personen.Tests
             }
         };
 
+        private readonly Gezag.GezagResponse _gezagResponse_Voogdij_ZonderDerden = new()
+        {
+            Personen = new List<Gezag.Persoon>()
+            {
+                new()
+                {
+                    Gezag = new List<Gezag.AbstractGezagsrelatie>()
+                    {
+                        new Gezag.Voogdij
+                        {
+                            Minderjarige = new Gezag.Minderjarige()
+                            {
+                                Burgerservicenummer = "000000024"
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        private readonly Gezag.GezagResponse _gezagResponse_TweehoofdigOuderlijkGezag_ZonderOuders = new()
+        {
+            Personen = new List<Gezag.Persoon>()
+            {
+                new()
+                {
+                    Gezag = new List<Gezag.AbstractGezagsrelatie>()
+                    {
+                        new Gezag.TweehoofdigOuderlijkGezag
+                        {
+                            Minderjarige = new Gezag.Minderjarige()
+                            {
+                                Burgerservicenummer = "000000024"
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
         private readonly List<GbaPersoon> _gezagPersonen = new()
         {
             new()
@@ -510,6 +550,29 @@ namespace Personen.Tests
             gezag.Should().NotBeNull();
             gezag!.Ouder.Naam.AdellijkeTitelPredicaat.Should().BeNull();
             gezag.Minderjarige.Naam.AdellijkeTitelPredicaat.Should().BeNull();
+        }
+
+        [Fact]
+        public void MapGezagsrelaties_Voogdij_ZonderDerden()
+        {
+            var gezagsrelaties = GezagsrelatieMapper.Map(_gezagResponse_Voogdij_ZonderDerden, new List<GbaPersoon>());
+
+            var gezag = gezagsrelaties.First() as Voogdij;
+
+            gezag.Should().NotBeNull();
+            gezag!.Derden.Should().BeNull();
+        }
+
+
+        [Fact]
+        public void MapGezagsrelaties_TweehoofdigOuderlijkGezag_ZonderOuders()
+        {
+            var gezagsrelaties = GezagsrelatieMapper.Map(_gezagResponse_TweehoofdigOuderlijkGezag_ZonderOuders, new List<GbaPersoon>());
+
+            var gezag = gezagsrelaties.First() as TweehoofdigOuderlijkGezag;
+
+            gezag.Should().NotBeNull();
+            gezag!.Ouders.Should().BeNull();
         }
     }
 }
