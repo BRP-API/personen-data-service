@@ -29,9 +29,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
 
                     if (gezagsrelatie is ApiModels.Gezag.TweehoofdigOuderlijkGezag tweehoofdigOuderlijkGezag)
                     {
-                        var ouders = tweehoofdigOuderlijkGezag.Ouders
-                            .Select(o => MapPersoonToGezagOuder(gezagPersonen, o.Burgerservicenummer))
-                            .ToList();
+                       var ouders = tweehoofdigOuderlijkGezag.Ouders?.Select(o => MapPersoonToGezagOuder(gezagPersonen, o.Burgerservicenummer)).ToList();
 
                         var minderjarige = MapPersoonToMinderjarige(gezagPersonen, tweehoofdigOuderlijkGezag.Minderjarige.Burgerservicenummer);
 
@@ -58,7 +56,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
 
                     if (gezagsrelatie is ApiModels.Gezag.Voogdij voogdij)
                     {
-                        var derden = voogdij.Derden
+                        var derden = voogdij.Derden?
                             .Select(d => MapPersoonToMeerderjarige(gezagPersonen, d.Burgerservicenummer))
                             .ToList();
 
@@ -102,7 +100,10 @@ namespace Rvig.HaalCentraalApi.Personen.Services
         {
             var persoon = personen.FirstOrDefault(p => p.Burgerservicenummer == bsn);
 
-            if (persoon == null) return new ApiModels.BRP.GezagOuder();
+            if (persoon == null) return new ApiModels.BRP.GezagOuder()
+            {
+                Burgerservicenummer = bsn
+            };
 
             return new ApiModels.BRP.GezagOuder
             {
@@ -116,7 +117,10 @@ namespace Rvig.HaalCentraalApi.Personen.Services
         {
             var persoon = personen.FirstOrDefault(p => p.Burgerservicenummer == bsn);
 
-            if (persoon == null) return new ApiModels.BRP.Minderjarige();
+            if (persoon == null) return new ApiModels.BRP.Minderjarige()
+            {
+                Burgerservicenummer = bsn
+            };
 
             return new ApiModels.BRP.Minderjarige
             {
@@ -131,7 +135,10 @@ namespace Rvig.HaalCentraalApi.Personen.Services
         {
             var persoon = personen.FirstOrDefault(p => p.Burgerservicenummer == bsn);
 
-            if (persoon == null) return new ApiModels.BRP.Meerderjarige();
+            if (persoon == null) return new ApiModels.BRP.Meerderjarige()
+            {
+                Burgerservicenummer = bsn
+            };
 
             return new ApiModels.BRP.Meerderjarige
             {
