@@ -574,5 +574,63 @@ namespace Personen.Tests
             gezag.Should().NotBeNull();
             gezag!.Ouders.Should().BeNull();
         }
+
+        [Fact]
+        public void MapGezagsrelaties_Voogdij_ShouldReturn_Minderjarige_WhenMinderjarigeIsNull()
+        {
+            var gezagResponse = new Gezag.GezagResponse
+            {
+                Personen = new List<Gezag.Persoon>
+                {
+                    new() {
+                        Gezag = new List<Gezag.AbstractGezagsrelatie>
+                        {
+                            new Gezag.Voogdij
+                            {
+                                 Derden = new List<Gezag.Meerderjarige>
+                                 {
+                                     new() { Burgerservicenummer = "000000012" },
+                                     new() { Burgerservicenummer = "000000013" }
+                                 }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var gezagsrelaties = GezagsrelatieMapper.Map(gezagResponse, _gezagPersonen);
+
+            gezagsrelaties.First().Minderjarige.Should().BeOfType<Minderjarige>();
+        }
+
+        [Theory]
+        [InlineData(typeof(Gezag.EenhoofdigOuderlijkGezag))]
+        [InlineData(typeof(Gezag.TweehoofdigOuderlijkGezag))]
+        [InlineData(typeof(Gezag.GezamenlijkGezag))]
+        [InlineData(typeof(Gezag.Voogdij))]
+        [InlineData(typeof(Gezag.GezagNietTeBepalen))]
+        [InlineData(typeof(Gezag.TijdelijkGeenGezag))]
+        public void MapGezagsrelaties_ShouldReturn_Minderjarige_WhenMinderjarigeIsNull(Type gezagType)
+        {
+            Gezag.AbstractGezagsrelatie? gezagsrelatie = (Gezag.AbstractGezagsrelatie)Activator.CreateInstance(gezagType)!;
+
+            var gezagResponse = new Gezag.GezagResponse
+            {
+                Personen = new List<Gezag.Persoon>
+                {
+                    new() {
+                        Gezag = new List<Gezag.AbstractGezagsrelatie>
+                        {
+                           gezagsrelatie
+                        }
+                    }
+                }
+            };
+
+            var gezagsrelaties = GezagsrelatieMapper.Map(gezagResponse, _gezagPersonen);
+
+            gezagsrelaties.First().Minderjarige.Should().BeOfType<Minderjarige>();
+        }
+
     }
 }

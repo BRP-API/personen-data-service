@@ -17,7 +17,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
                 {
                     if (gezagsrelatie is ApiModels.Gezag.EenhoofdigOuderlijkGezag eenhoofdigOuderlijkGezag)
                     {
-                        var ouder = MapPersoonToGezagOuder(gezagPersonen, eenhoofdigOuderlijkGezag.Ouder.Burgerservicenummer);
+                        var ouder = eenhoofdigOuderlijkGezag.Ouder != null ? MapPersoonToGezagOuder(gezagPersonen, eenhoofdigOuderlijkGezag.Ouder.Burgerservicenummer) : new ApiModels.BRP.GezagOuder();
                         var minderjarige = eenhoofdigOuderlijkGezag.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, eenhoofdigOuderlijkGezag.Minderjarige.Burgerservicenummer) : new ApiModels.BRP.Minderjarige();
 
                         result.Add(new ApiModels.BRP.EenhoofdigOuderlijkGezag
@@ -42,8 +42,8 @@ namespace Rvig.HaalCentraalApi.Personen.Services
 
                     if (gezagsrelatie is ApiModels.Gezag.GezamenlijkGezag gezamenlijkGezag)
                     {
-                        var ouder = MapPersoonToGezagOuder(gezagPersonen, gezamenlijkGezag.Ouder.Burgerservicenummer);
-                        var derde = MapPersoonToMeerderjarige(gezagPersonen, gezamenlijkGezag.Derde.Burgerservicenummer);
+                        var ouder = gezamenlijkGezag.Ouder != null ? MapPersoonToGezagOuder(gezagPersonen, gezamenlijkGezag.Ouder.Burgerservicenummer) : new ApiModels.BRP.GezagOuder();
+                        var derde = gezamenlijkGezag.Derde != null ? MapPersoonToMeerderjarige(gezagPersonen, gezamenlijkGezag.Derde.Burgerservicenummer) : new ApiModels.BRP.Meerderjarige();
                         var minderjarige = gezamenlijkGezag.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, gezamenlijkGezag.Minderjarige.Burgerservicenummer) : new ApiModels.BRP.Minderjarige();
 
                         result.Add(new ApiModels.BRP.GezamenlijkGezag
