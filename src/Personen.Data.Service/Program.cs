@@ -17,6 +17,7 @@ var servicesDictionary = new Dictionary<Type, Type>
 	{ typeof(IRvigPersoonBeperktRepo), typeof(RvigPersoonBeperktRepo) },
 	{ typeof(IRvIGDataPersonenMapper), typeof(RvIGDataPersonenMapper) },
 	{ typeof(IGetAndMapGbaPersonenService), typeof(GetAndMapGbaPersonenService) },
+	{ typeof(IGezagService), typeof(GezagService) },
 
 	// BRP API
 	{ typeof(IGbaPersonenApiService), typeof(GbaPersonenApiService) },
