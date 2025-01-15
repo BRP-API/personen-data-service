@@ -18,7 +18,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
                     if (gezagsrelatie is ApiModels.Gezag.EenhoofdigOuderlijkGezag eenhoofdigOuderlijkGezag)
                     {
                         var ouder = MapPersoonToGezagOuder(gezagPersonen, eenhoofdigOuderlijkGezag.Ouder.Burgerservicenummer);
-                        var minderjarige = MapPersoonToMinderjarige(gezagPersonen, eenhoofdigOuderlijkGezag.Minderjarige.Burgerservicenummer);
+                        var minderjarige = eenhoofdigOuderlijkGezag.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, eenhoofdigOuderlijkGezag.Minderjarige.Burgerservicenummer) : new ApiModels.BRP.Minderjarige();
 
                         result.Add(new ApiModels.BRP.EenhoofdigOuderlijkGezag
                         {
@@ -31,7 +31,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
                     {
                        var ouders = tweehoofdigOuderlijkGezag.Ouders?.Select(o => MapPersoonToGezagOuder(gezagPersonen, o.Burgerservicenummer)).ToList();
 
-                        var minderjarige = MapPersoonToMinderjarige(gezagPersonen, tweehoofdigOuderlijkGezag.Minderjarige.Burgerservicenummer);
+                        var minderjarige = tweehoofdigOuderlijkGezag.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, tweehoofdigOuderlijkGezag.Minderjarige.Burgerservicenummer) : new ApiModels.BRP.Minderjarige();
 
                         result.Add(new ApiModels.BRP.TweehoofdigOuderlijkGezag
                         {
@@ -44,7 +44,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
                     {
                         var ouder = MapPersoonToGezagOuder(gezagPersonen, gezamenlijkGezag.Ouder.Burgerservicenummer);
                         var derde = MapPersoonToMeerderjarige(gezagPersonen, gezamenlijkGezag.Derde.Burgerservicenummer);
-                        var minderjarige = MapPersoonToMinderjarige(gezagPersonen, gezamenlijkGezag.Minderjarige.Burgerservicenummer);
+                        var minderjarige = gezamenlijkGezag.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, gezamenlijkGezag.Minderjarige.Burgerservicenummer) : new ApiModels.BRP.Minderjarige();
 
                         result.Add(new ApiModels.BRP.GezamenlijkGezag
                         {
@@ -60,7 +60,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
                             .Select(d => MapPersoonToMeerderjarige(gezagPersonen, d.Burgerservicenummer))
                             .ToList();
 
-                        var minderjarige = MapPersoonToMinderjarige(gezagPersonen, voogdij.Minderjarige.Burgerservicenummer);
+                        var minderjarige = voogdij.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, voogdij.Minderjarige.Burgerservicenummer) : new ApiModels.BRP.Minderjarige();
 
                         result.Add(new ApiModels.BRP.Voogdij
                         {
@@ -71,7 +71,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
 
                     if (gezagsrelatie is ApiModels.Gezag.TijdelijkGeenGezag tijdelijkGeenGezag)
                     {
-                        var minderjarige = MapPersoonToMinderjarige(gezagPersonen, tijdelijkGeenGezag.Minderjarige.Burgerservicenummer);
+                        var minderjarige = tijdelijkGeenGezag.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, tijdelijkGeenGezag.Minderjarige.Burgerservicenummer) : new ApiModels.BRP.Minderjarige();
 
                         result.Add(new ApiModels.BRP.TijdelijkGeenGezag
                         {
@@ -82,7 +82,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
 
                     if (gezagsrelatie is ApiModels.Gezag.GezagNietTeBepalen gezagNietTeBepalen)
                     {
-                        var minderjarige = MapPersoonToMinderjarige(gezagPersonen, gezagNietTeBepalen.Minderjarige.Burgerservicenummer);
+                        var minderjarige = gezagNietTeBepalen.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, gezagNietTeBepalen.Minderjarige.Burgerservicenummer) : new ApiModels.BRP.Minderjarige();
 
                         result.Add(new ApiModels.BRP.GezagNietTeBepalen
                         {
