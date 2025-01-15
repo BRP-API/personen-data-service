@@ -115,7 +115,6 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 			IEnumerable<Persoon> persoonGezagsrelaties = await GetGezagIfRequested(model.fields, bsns);
 
 			List<ApiModels.Gezag.AbstractGezagsrelatie> gezagsrelaties;
-			List<string> gezagBsns;
 			List<GbaPersoon> gezagPersonen = new();
 
 			if (GezagIsRequested(model.fields))
@@ -124,9 +123,8 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 
 				if (gezagsrelaties.Count != 0)
 				{
-					gezagBsns = GetGezagBsns(gezagsrelaties);
-					gezagPersonen = await GetGezagPersonen(gezagBsns);
-				}
+                    gezagPersonen = await GetGezagPersonen(gezagsrelaties);
+                }
 			}
 
 			foreach (var x in personenPlIds!.Where(x => x.persoon != null))
@@ -185,9 +183,15 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 		return (new RaadpleegMetBurgerservicenummerResponse { Personen = result.ConvertAll(gbaPersoon => gbaPersoon.persoon) ?? new List<GbaPersoon>() }, result.Select(x => x.pl_id).ToList());
 	}
 
-    private async Task<List<GbaPersoon>> GetGezagPersonen(List<string> gezagBsns)
+    private async Task<List<GbaPersoon>> GetGezagPersonen(List<ApiModels.Gezag.AbstractGezagsrelatie> gezagsrelaties)
     {
-        (IEnumerable<(GbaPersoon persoon, long pl_id)>? personenData, int _) = await _getAndMapPersoonService.GetPersonenMapByBsns(gezagBsns, null, new List<string> { "naam", "geslacht", "geboorte.datum" }, _protocolleringAuthorizationOptions.Value.UseAuthorizationChecks);
+		var gezagBsns = GezagHelper.GetGezagBsns(gezagsrelaties);
+
+        (IEnumerable<(GbaPersoon persoon, long pl_id)>? personenData, int _) = await _getAndMapPersoonService.GetPersonenMapByBsns(
+			gezagBsns, 
+			null, 
+			new List<string> { "naam", "geslacht", "geboorte.datum" }, 
+			_protocolleringAuthorizationOptions.Value.UseAuthorizationChecks);
 
         List<GbaPersoon> gezagPersonen = new();
         if (personenData != null)
@@ -196,48 +200,6 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
         }
 
 		return gezagPersonen;
-    }
-
-    private static List<string> GetGezagBsns(List<ApiModels.Gezag.AbstractGezagsrelatie> gezagsrelaties)
-    {
-        var gezagBsns = new List<string>();
-
-        foreach (var x in gezagsrelaties)
-        {
-            if (x is ApiModels.Gezag.TweehoofdigOuderlijkGezag y)
-            {
-                gezagBsns.AddRange(from z in y.Ouders
-                                   select z.Burgerservicenummer);
-                gezagBsns.Add(y.Minderjarige.Burgerservicenummer);
-            }
-            if (x is ApiModels.Gezag.EenhoofdigOuderlijkGezag y2)
-            {
-                gezagBsns.Add(y2.Ouder.Burgerservicenummer);
-                gezagBsns.Add(y2.Minderjarige.Burgerservicenummer);
-            }
-            if (x is ApiModels.Gezag.Voogdij v)
-            {
-                gezagBsns.AddRange(from z in v.Derden
-                                   select z.Burgerservicenummer);
-                gezagBsns.Add(v.Minderjarige.Burgerservicenummer);
-            }
-            if (x is ApiModels.Gezag.GezamenlijkGezag gz)
-            {
-                gezagBsns.Add(gz.Derde.Burgerservicenummer);
-                gezagBsns.Add(gz.Ouder.Burgerservicenummer);
-                gezagBsns.Add(gz.Minderjarige.Burgerservicenummer);
-            }
-			if (x is ApiModels.Gezag.GezagNietTeBepalen gn && gn.Minderjarige != null)
-			{
-				gezagBsns.Add(gn.Minderjarige.Burgerservicenummer);
-			}
-			if (x is ApiModels.Gezag.TijdelijkGeenGezag tg && tg.Minderjarige != null)
-			{
-				gezagBsns.Add(tg.Minderjarige.Burgerservicenummer);
-			}
-		}
-
-        return gezagBsns.Distinct().ToList();
     }
 
     /// <summary>
@@ -276,7 +238,6 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 				: new List<Persoon>();
 
             List<ApiModels.Gezag.AbstractGezagsrelatie> gezagsrelaties;
-            List<string> gezagBsns;
             List<GbaPersoon> gezagPersonen = new();
 
             if (GezagIsRequested(model.fields))
@@ -284,8 +245,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
                 gezagsrelaties = persoonGezagsrelaties.Where(p => p.Gezag != null).SelectMany(p => p.Gezag).ToList();
                 if (gezagsrelaties.Count != 0)
                 {
-                    gezagBsns = GetGezagBsns(gezagsrelaties);
-                    gezagPersonen = await GetGezagPersonen(gezagBsns);
+                    gezagPersonen = await GetGezagPersonen(gezagsrelaties);
                 }
             }
 
