@@ -3,13 +3,11 @@ using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
 using Rvig.HaalCentraalApi.Personen.Interfaces;
 using Rvig.HaalCentraalApi.Personen.Repositories;
-using Rvig.HaalCentraalApi.Personen.RequestModels.BRP;
 using Rvig.HaalCentraalApi.Shared.Fields;
 using Rvig.HaalCentraalApi.Shared.Helpers;
 using Rvig.HaalCentraalApi.Shared.Interfaces;
 using Rvig.HaalCentraalApi.Shared.Options;
 using Rvig.HaalCentraalApi.Shared.Services;
-using System.Reflection;
 
 namespace Rvig.HaalCentraalApi.Personen.Services
 {

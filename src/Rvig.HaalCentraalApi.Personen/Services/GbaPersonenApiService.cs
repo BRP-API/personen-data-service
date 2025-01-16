@@ -15,7 +15,6 @@ using Rvig.HaalCentraalApi.Shared.Helpers;
 using Rvig.HaalCentraalApi.Shared.Interfaces;
 using Rvig.HaalCentraalApi.Shared.Options;
 using Rvig.HaalCentraalApi.Shared.Services;
-using AbstractGezagsrelatie = Rvig.HaalCentraalApi.Personen.ApiModels.BRP.AbstractGezagsrelatie;
 
 namespace Rvig.HaalCentraalApi.Personen.Services;
 public interface IGbaPersonenApiService
@@ -42,7 +41,6 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 		IDomeinTabellenRepo domeinTabellenRepo, 
 		IProtocolleringService protocolleringService,
 		ILoggingHelper loggingHelper, 
-		IRepoGezagsrelatie gezagsrelatieRepo,
 		IGezagService gezagService,
 		IOptions<ProtocolleringAuthorizationOptions> protocolleringAuthorizationOptions)
 		: base(domeinTabellenRepo, protocolleringService, loggingHelper, protocolleringAuthorizationOptions)
@@ -179,7 +177,6 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
             var bsns = personenPlIds.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
 
             var gezag = await _gezagService.GetGezagIfRequested(model.fields, bsns);
-
             var gezagPersonen = await _gezagService.GetGezagPersonenIfRequested(model.fields, gezag);
 
             foreach (var x in personenPlIds.Where(x => x.persoon != null))

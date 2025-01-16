@@ -508,7 +508,7 @@ namespace Personen.Tests
         [Fact]
         public void MapGezagsrelaties_GezagPersonen_ZonderNaam()
         {
-           var gezagsrelaties = GezagsrelatieMapper.Map(_gezagResponse, _gezagPersonen_ZonderNaam);
+            var gezagsrelaties = GezagsrelatieMapper.Map(_gezagResponse, _gezagPersonen_ZonderNaam);
 
             var gezag = gezagsrelaties.First() as EenhoofdigOuderlijkGezag;
 

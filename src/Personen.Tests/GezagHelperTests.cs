@@ -41,12 +41,12 @@ namespace Personen.Tests
                     Minderjarige = new Gezag.Minderjarige { Burgerservicenummer = "11" }
                 },
                 new Gezag.GezagNietTeBepalen
-                { 
-                    Minderjarige = new Gezag.Minderjarige { Burgerservicenummer = "12" } 
+                {
+                    Minderjarige = new Gezag.Minderjarige { Burgerservicenummer = "12" }
                 },
                 new Gezag.TijdelijkGeenGezag
-                { 
-                    Minderjarige = new Gezag.Minderjarige { Burgerservicenummer = "13" } 
+                {
+                    Minderjarige = new Gezag.Minderjarige { Burgerservicenummer = "13" }
                 }
             };
 
