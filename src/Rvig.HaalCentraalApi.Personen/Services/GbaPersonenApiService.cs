@@ -105,7 +105,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 
 			foreach (var x in personenPlIds!.Where(x => x.persoon != null))
             {
-				_gezagService.VerrijkGezagMetPersonenIfRequested(model.fields, gezag, gezagPersonen, x);
+				_gezagService.VerrijkPersonenMetGezagIfRequested(model.fields, gezag, gezagPersonen, x);
 
                 x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.fields, x.persoon.Rni, _persoonFieldsSettings.GbaFieldsSettings);
                 if (x.persoon.Verblijfplaats != null)
@@ -179,7 +179,10 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 
             foreach (var x in personenPlIds.Where(x => x.persoon != null))
 			{
-				_gezagService.VerrijkGezagMetPersonenBeperktIfRequested(model.fields, gezag, gezagPersonen, x);
+				if (x.persoon is IPersoonMetGezag)
+				{
+					_gezagService.VerrijkPersonenMetGezagIfRequested(model.fields, gezag, gezagPersonen, ((IPersoonMetGezag persoon, long pl_id))x);
+				}
 
 				x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.fields, x.persoon.Rni, _persoonBeperktFieldsSettings.GbaFieldsSettings);
 				if (x.persoon.Verblijfplaats != null)

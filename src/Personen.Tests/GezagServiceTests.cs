@@ -215,7 +215,7 @@ namespace Personen.Tests
         }
 
         [Fact]
-        public void VerrijkGezagMetPersonenIfRequested_VerrijktGezag_WhenGezagIsRequested()
+        public void VerrijkPersonenMetGezagIfRequested_VerrijktPersoonMetGezag_WhenGezagIsRequested()
         {
             // Arrange
             var fields = new List<string> { "gezag" };
@@ -263,14 +263,14 @@ namespace Personen.Tests
             };
 
             // Act
-            _gezagService.VerrijkGezagMetPersonenIfRequested(fields, persoonGezagsrelaties, gezagPersonen, inputPersoon);
+            _gezagService.VerrijkPersonenMetGezagIfRequested(fields, persoonGezagsrelaties, gezagPersonen, inputPersoon);
 
             // Assert
             expectedGezag.Should().BeEquivalentTo(inputPersoon.Item1.Gezag);
         }
 
         [Fact]
-        public void VerrijkGezagMetPersonenIfRequested_VerrijktGezagNiet_WhenGezagIsNotRequested()
+        public void VerrijkPersonenMetGezagIfRequested_VerrijktPersoonNietMetGezag_WhenGezagIsNotRequested()
         {
             // Arrange
             var fields = new List<string> { "adressering" };
@@ -301,14 +301,14 @@ namespace Personen.Tests
             var inputPersoon = (new GbaPersoon { Burgerservicenummer = bsn }, 1L);
 
             // Act
-            _gezagService.VerrijkGezagMetPersonenIfRequested(fields, persoonGezagsrelaties, gezagPersonen, inputPersoon);
+            _gezagService.VerrijkPersonenMetGezagIfRequested(fields, persoonGezagsrelaties, gezagPersonen, inputPersoon);
 
             // Assert
             inputPersoon.Item1.Gezag.Should().BeNull();
         }
 
         [Fact]
-        public void VerrijkGezagMetPersonenBeperktIfRequested_VerrijktGezag_WhenGezagIsRequested()
+        public void VerrijkPersonenMetGezagIfRequested_VerrijktPersoonBeperktMetGezag_WhenGezagIsRequested()
         {
             // Arrange
             var fields = new List<string> { "gezag" };
@@ -356,14 +356,14 @@ namespace Personen.Tests
             };
 
             // Act
-            _gezagService.VerrijkGezagMetPersonenBeperktIfRequested(fields, persoonGezagsrelaties, gezagPersonen, inputPersoon);
+            _gezagService.VerrijkPersonenMetGezagIfRequested(fields, persoonGezagsrelaties, gezagPersonen, inputPersoon);
 
             // Assert
             expectedGezag.Should().BeEquivalentTo(inputPersoon.Item1.Gezag);
         }
 
         [Fact]
-        public void VerrijkGezagMetPersonenBeperktIfRequested_VerrijktGezagNiet_WhenGezagIsNotRequested()
+        public void VerrijkPersonenMetGezagIfRequested_VerrijktPersoonBeperktNietMetGezag_WhenGezagIsNotRequested()
         {
             // Arrange
             var fields = new List<string> { "adressering" };
@@ -394,7 +394,7 @@ namespace Personen.Tests
             var inputPersoon = (new GbaGezagPersoonBeperkt { Burgerservicenummer = bsn }, 1L);
 
             // Act
-            _gezagService.VerrijkGezagMetPersonenBeperktIfRequested(fields, persoonGezagsrelaties, gezagPersonen, inputPersoon);
+            _gezagService.VerrijkPersonenMetGezagIfRequested(fields, persoonGezagsrelaties, gezagPersonen, inputPersoon);
 
             // Assert
             inputPersoon.Item1.Gezag.Should().BeNull();

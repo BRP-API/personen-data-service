@@ -15,8 +15,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
     {
         public Task<IEnumerable<Persoon>> GetGezagIfRequested(List<string> fields, List<string?> bsns);
         public Task<List<GbaPersoon>> GetGezagPersonenIfRequested(List<string> fields, IEnumerable<Persoon> gezag, List<string> personenFields);
-        public void VerrijkGezagMetPersonenIfRequested(List<string> fields, IEnumerable<Persoon> persoonGezagsrelaties, List<GbaPersoon> gezagPersonen, (GbaPersoon persoon, long pl_id) x);
-        public void VerrijkGezagMetPersonenBeperktIfRequested(List<string> fields, IEnumerable<Persoon> persoonGezagsrelaties, List<GbaPersoon> gezagPersonen, (GbaPersoonBeperkt persoon, long pl_id) x);
+        public void VerrijkPersonenMetGezagIfRequested(List<string> fields, IEnumerable<Persoon> persoonGezagsrelaties, List<GbaPersoon> gezagPersonen, (IPersoonMetGezag persoon, long pl_id) x);
     }
 
     public class GezagService : BaseApiService, IGezagService
@@ -68,9 +67,10 @@ namespace Rvig.HaalCentraalApi.Personen.Services
             return new List<GbaPersoon>();
         }
 
-        public void VerrijkGezagMetPersonenIfRequested(List<string> fields, IEnumerable<Persoon> persoonGezagsrelaties, List<GbaPersoon> gezagPersonen, (GbaPersoon persoon, long pl_id) x)
+        public void VerrijkPersonenMetGezagIfRequested(List<string> fields, IEnumerable<Persoon> persoonGezagsrelaties, List<GbaPersoon> gezagPersonen, (IPersoonMetGezag persoon, long pl_id) x)
         {
-            if (GezagIsRequested(fields))
+            if (GezagIsRequested(fields) &&
+                !string.IsNullOrWhiteSpace(x.persoon.Burgerservicenummer))
             {
                 var persoonGezagsrelatie = persoonGezagsrelaties
                     .Where(pgr => pgr.Burgerservicenummer == x.persoon.Burgerservicenummer);
@@ -89,29 +89,6 @@ namespace Rvig.HaalCentraalApi.Personen.Services
             }
         }
         
-        public void VerrijkGezagMetPersonenBeperktIfRequested(List<string> fields, IEnumerable<Persoon> persoonGezagsrelaties, List<GbaPersoon> gezagPersonen, (GbaPersoonBeperkt persoon, long pl_id) x)
-        {
-            if (x.persoon is GbaGezagPersoonBeperkt persoonBeperkt &&
-                    GezagIsRequested(fields) &&
-                    !string.IsNullOrWhiteSpace(x.persoon.Burgerservicenummer))
-            {
-                var persoonGezagsrelatie = persoonGezagsrelaties
-                    .Where(pgr => pgr.Burgerservicenummer == x.persoon.Burgerservicenummer);
-
-                if (persoonGezagsrelatie.Any())
-                {
-                    persoonBeperkt.Gezag = new List<ApiModels.BRP.AbstractGezagsrelatie>();
-                }
-                foreach (var pg in persoonGezagsrelatie)
-                {
-                    var gezagResponse = new GezagResponse { Personen = new List<Persoon>() { pg } };
-                    var gezag = GezagsrelatieMapper.Map(gezagResponse, gezagPersonen);
-
-                    persoonBeperkt.Gezag?.AddRange(gezag);
-                }
-            }
-        }
-
         private static bool GezagIsRequested(List<string> fields) =>
             fields.Any(field =>
                 field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) &&

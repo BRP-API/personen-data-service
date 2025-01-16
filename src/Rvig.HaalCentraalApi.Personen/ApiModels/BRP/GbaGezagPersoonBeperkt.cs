@@ -3,7 +3,7 @@
 namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP
 {
 	[DataContract]
-	public class GbaGezagPersoonBeperkt : GbaPersoonBeperkt
+	public class GbaGezagPersoonBeperkt : GbaPersoonBeperkt, IPersoonMetGezag
 	{
 		/// <summary>
 		/// Gets or Sets Gezag
