@@ -14,7 +14,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
     public interface IGezagService
     {
         public Task<IEnumerable<Persoon>> GetGezagIfRequested(List<string> fields, List<string?> bsns);
-        public Task<List<GbaPersoon>> GetGezagPersonenIfRequested(List<string> fields, IEnumerable<Persoon> gezag);
+        public Task<List<GbaPersoon>> GetGezagPersonenIfRequested(List<string> fields, IEnumerable<Persoon> gezag, List<string> personenFields);
         public void VerrijkGezagMetPersonenIfRequested(List<string> fields, IEnumerable<Persoon> persoonGezagsrelaties, List<GbaPersoon> gezagPersonen, (GbaPersoon persoon, long pl_id) x);
         public void VerrijkGezagMetPersonenBeperktIfRequested(List<string> fields, IEnumerable<Persoon> persoonGezagsrelaties, List<GbaPersoon> gezagPersonen, (GbaPersoonBeperkt persoon, long pl_id) x);
     }
@@ -49,7 +49,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
             return new List<Persoon>();
         }
 
-        public async Task<List<GbaPersoon>> GetGezagPersonenIfRequested(List<string> fields, IEnumerable<Persoon> gezag)
+        public async Task<List<GbaPersoon>> GetGezagPersonenIfRequested(List<string> fields, IEnumerable<Persoon> gezag, List<string> personenFields)
         {
             var gezagsrelaties = gezag.Where(p => p.Gezag != null).SelectMany(p => p.Gezag).ToList();
 
@@ -59,7 +59,9 @@ namespace Rvig.HaalCentraalApi.Personen.Services
 
                 if (gezagsrelaties.Count != 0)
                 {
-                    return await GetGezagPersonen(gezagsrelaties);
+                    var gezagBsns = GezagHelper.GetGezagBsns(gezagsrelaties);
+                    
+                    return await GetGezagPersonen(gezagBsns, personenFields);
                 }
             }
 
@@ -115,14 +117,12 @@ namespace Rvig.HaalCentraalApi.Personen.Services
                 field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) &&
                 !field.StartsWith("indicatieGezagMinderjarige"));
 
-        private async Task<List<GbaPersoon>> GetGezagPersonen(List<ApiModels.Gezag.AbstractGezagsrelatie> gezagsrelaties)
+        private async Task<List<GbaPersoon>> GetGezagPersonen(List<string> gezagBsns, List<string> personenFields)
         {
-            var gezagBsns = GezagHelper.GetGezagBsns(gezagsrelaties);
-
             (IEnumerable<(GbaPersoon persoon, long pl_id)>? personenData, int _) = await _getAndMapPersoonService.GetPersonenMapByBsns(
                 gezagBsns,
                 null,
-                new List<string> { "naam", "geslacht", "geboorte.datum" },
+                personenFields,
                 _protocolleringAuthorizationOptions.Value.UseAuthorizationChecks);
 
             List<GbaPersoon> gezagPersonen = new();

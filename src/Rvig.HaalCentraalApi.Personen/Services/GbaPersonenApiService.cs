@@ -1,11 +1,9 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
-using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
 using Rvig.HaalCentraalApi.Personen.Fields;
 using Rvig.HaalCentraalApi.Personen.Helpers;
 using Rvig.HaalCentraalApi.Personen.Interfaces;
-using Rvig.HaalCentraalApi.Personen.Repositories;
 using Rvig.HaalCentraalApi.Personen.RequestModels.BRP;
 using Rvig.HaalCentraalApi.Personen.ResponseModels.BRP;
 using Rvig.HaalCentraalApi.Personen.Validation;
@@ -103,7 +101,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 
 			var gezag = await _gezagService.GetGezagIfRequested(model.fields, bsns);
 
-            var gezagPersonen = await _gezagService.GetGezagPersonenIfRequested(model.fields, gezag);
+            var gezagPersonen = await _gezagService.GetGezagPersonenIfRequested(model.fields, gezag, new List<string>() { "naam", "geslacht", "geboorte.datum" });
 
 			foreach (var x in personenPlIds!.Where(x => x.persoon != null))
             {
@@ -177,7 +175,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
             var bsns = personenPlIds.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
 
             var gezag = await _gezagService.GetGezagIfRequested(model.fields, bsns);
-            var gezagPersonen = await _gezagService.GetGezagPersonenIfRequested(model.fields, gezag);
+            var gezagPersonen = await _gezagService.GetGezagPersonenIfRequested(model.fields, gezag, new List<string>() { "naam", "geslacht", "geboorte.datum" });
 
             foreach (var x in personenPlIds.Where(x => x.persoon != null))
 			{
