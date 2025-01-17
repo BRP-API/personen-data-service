@@ -537,7 +537,7 @@ namespace Personen.Tests
             var gezag = gezagsrelaties.First() as EenhoofdigOuderlijkGezag;
 
             gezag.Should().NotBeNull();
-            gezag!.Minderjarige.Geboorte.Datum.Should().BeNull();
+            gezag!.Minderjarige.Geboorte.Should().BeNull();
         }
 
         [Fact]

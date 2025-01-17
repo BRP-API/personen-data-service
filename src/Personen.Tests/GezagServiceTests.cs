@@ -254,8 +254,7 @@ namespace Personen.Tests
                             Voorvoegsel = "voorvoegsel",
                             Geslachtsnaam = "geslachtsnaam",
                             AdellijkeTitelPredicaat = null
-                        },
-                        Geboorte = new()
+                        }
                     }
                 }
             };
@@ -349,8 +348,7 @@ namespace Personen.Tests
                             Voornamen = "voornamen",
                             Voorvoegsel = "voorvoegsel",
                             Geslachtsnaam = "geslachtsnaam"
-                        },
-                        Geboorte = new()
+                        }
                     }
                 }
             };
@@ -359,7 +357,7 @@ namespace Personen.Tests
             _gezagService.VerrijkPersonenMetGezagIfRequested(fields, persoonGezagsrelaties, gezagPersonen, inputPersoon);
 
             // Assert
-            expectedGezag.Should().BeEquivalentTo(inputPersoon.Item1.Gezag);
+            inputPersoon.Item1.Gezag.Should().BeEquivalentTo(expectedGezag);
         }
 
         [Fact]
