@@ -17,10 +17,11 @@ var servicesDictionary = new Dictionary<Type, Type>
 	{ typeof(IRvigPersoonBeperktRepo), typeof(RvigPersoonBeperktRepo) },
 	{ typeof(IRvIGDataPersonenMapper), typeof(RvIGDataPersonenMapper) },
 	{ typeof(IGetAndMapGbaPersonenService), typeof(GetAndMapGbaPersonenService) },
-	{ typeof(IGezagService), typeof(GezagService) },
-
+	{ typeof(IGezagPersonenService), typeof(GezagPersonenService) },
+	
 	// BRP API
 	{ typeof(IGbaPersonenApiService), typeof(GbaPersonenApiService) },
+	{ typeof(IGezagService), typeof(GezagService) },
 
 	// Gezag Data
 	{ typeof(IRepoGezagsrelatie), typeof(RepoGezagsrelatie) }

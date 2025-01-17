@@ -35,7 +35,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 	private static PersonenBeperktFieldsSettings _persoonBeperktFieldsSettings => new();
 
 	public GbaPersonenApiService(
-		IGetAndMapGbaPersonenService getAndMapPersoonService, 
+        IGetAndMapGbaPersonenService getAndMapPersoonService, 
 		IDomeinTabellenRepo domeinTabellenRepo, 
 		IProtocolleringService protocolleringService,
 		ILoggingHelper loggingHelper, 
@@ -101,7 +101,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 
 			var gezag = await _gezagService.GetGezagIfRequested(model.fields, bsns);
 
-            var gezagPersonen = await _gezagService.GetGezagPersonenIfRequested(model.fields, gezag, new List<string>() { "naam", "geslacht", "geboorte.datum" });
+            var gezagPersonen = await _gezagService.GetGezagPersonenIfRequested(model.fields, gezag);
 
 			foreach (var x in personenPlIds!.Where(x => x.persoon != null))
             {
@@ -175,7 +175,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
             var bsns = personenPlIds.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
 
             var gezag = await _gezagService.GetGezagIfRequested(model.fields, bsns);
-            var gezagPersonen = await _gezagService.GetGezagPersonenIfRequested(model.fields, gezag, new List<string>() { "naam", "geslacht", "geboorte.datum" });
+            var gezagPersonen = await _gezagService.GetGezagPersonenIfRequested(model.fields, gezag);
 
             foreach (var x in personenPlIds.Where(x => x.persoon != null))
 			{

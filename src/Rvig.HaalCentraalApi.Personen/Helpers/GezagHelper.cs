@@ -1,4 +1,4 @@
-﻿namespace Rvig.HaalCentraalApi.Personen.Services
+﻿namespace Rvig.HaalCentraalApi.Personen.Helpers
 {
     public static class GezagHelper
     {

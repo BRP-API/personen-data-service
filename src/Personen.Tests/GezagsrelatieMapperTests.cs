@@ -1,5 +1,5 @@
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
-using Rvig.HaalCentraalApi.Personen.Services;
+using Rvig.HaalCentraalApi.Personen.Mappers;
 using Rvig.HaalCentraalApi.Shared.ApiModels.PersonenHistorieBase;
 using Rvig.HaalCentraalApi.Shared.ApiModels.Universal;
 using Gezag = Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
@@ -537,7 +537,7 @@ namespace Personen.Tests
             var gezag = gezagsrelaties.First() as EenhoofdigOuderlijkGezag;
 
             gezag.Should().NotBeNull();
-            gezag!.Minderjarige.Geboorte.Should().BeNull();
+            gezag!.Minderjarige.Geboorte.Datum.Should().BeNull();
         }
 
         [Fact]

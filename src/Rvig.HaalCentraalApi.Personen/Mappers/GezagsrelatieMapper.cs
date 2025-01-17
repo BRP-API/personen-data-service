@@ -1,7 +1,7 @@
 ﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
 
-namespace Rvig.HaalCentraalApi.Personen.Services
+namespace Rvig.HaalCentraalApi.Personen.Mappers
 {
     public static class GezagsrelatieMapper
     {
@@ -9,7 +9,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
         {
             var result = new List<ApiModels.BRP.AbstractGezagsrelatie>();
 
-            if(gezagResponse == null) return result;
+            if (gezagResponse == null) return result;
 
             foreach (var persoon in gezagResponse.Personen)
             {
@@ -29,7 +29,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
 
                     if (gezagsrelatie is ApiModels.Gezag.TweehoofdigOuderlijkGezag tweehoofdigOuderlijkGezag)
                     {
-                       var ouders = tweehoofdigOuderlijkGezag.Ouders?.Select(o => MapPersoonToGezagOuder(gezagPersonen, o.Burgerservicenummer)).ToList();
+                        var ouders = tweehoofdigOuderlijkGezag.Ouders?.Select(o => MapPersoonToGezagOuder(gezagPersonen, o.Burgerservicenummer)).ToList();
 
                         var minderjarige = tweehoofdigOuderlijkGezag.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, tweehoofdigOuderlijkGezag.Minderjarige.Burgerservicenummer) : new ApiModels.BRP.Minderjarige();
 
@@ -126,7 +126,11 @@ namespace Rvig.HaalCentraalApi.Personen.Services
             {
                 Burgerservicenummer = persoon.Burgerservicenummer,
                 Naam = persoon.Naam,
-                Geboorte = persoon.Geboorte,
+                Geboorte = new Shared.ApiModels.PersonenHistorieBase.GbaGeboorteBeperkt()
+                {
+                    Datum = persoon.Geboorte?.Datum
+
+                },
                 Geslacht = persoon.Geslacht
             };
         }

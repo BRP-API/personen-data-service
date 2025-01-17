@@ -15,12 +15,12 @@ namespace Personen.Tests
     {
         private readonly GezagService _gezagService;
         private readonly IRepoGezagsrelatie _gezagRepositoryMock;
-        private readonly IGetAndMapGbaPersonenService _personenServiceMock;
+        private readonly IGezagPersonenService _personenServiceMock;
         private readonly IOptions<ProtocolleringAuthorizationOptions> _optionsMock;
 
         public GezagServiceTests()
         {
-            _personenServiceMock = Substitute.For<IGetAndMapGbaPersonenService>();
+            _personenServiceMock = Substitute.For<IGezagPersonenService>();
             _gezagRepositoryMock = Substitute.For<IRepoGezagsrelatie>();
             _optionsMock = Substitute.For<IOptions<ProtocolleringAuthorizationOptions>>();
             _optionsMock.Value.Returns(new ProtocolleringAuthorizationOptions { UseAuthorizationChecks = false });
@@ -120,22 +120,21 @@ namespace Personen.Tests
                 gezagOuder
             };
 
-            var mockGezagPersonen = new List<(GbaPersoon, long pl_id)>()
+            var mockGezagPersonen = new List<GbaPersoon>()
             {
-                (new GbaPersoon() { Burgerservicenummer = bsnMinderjarige }, 1),
-                (new GbaPersoon() { Burgerservicenummer = bsnOuder }, 2)
+                new GbaPersoon() { Burgerservicenummer = bsnMinderjarige },
+                new GbaPersoon() { Burgerservicenummer = bsnOuder }
             };
 
-            var mockAfnemerCode = 0;
 
             var fieldsPersonen = new List<string>() { "naam", "geslacht", "geboorte.datum" };
 
             _personenServiceMock
-                .GetPersonenMapByBsns(Arg.Any<List<string>>(), null, fieldsPersonen, _optionsMock.Value.UseAuthorizationChecks)
-                .Returns((mockGezagPersonen, mockAfnemerCode));
+                .GetGezagPersonen(Arg.Any<List<string>>())
+                .Returns(mockGezagPersonen);
 
             // Act
-            var result = await _gezagService.GetGezagPersonenIfRequested(fields, gezag, fieldsPersonen);
+            var result = await _gezagService.GetGezagPersonenIfRequested(fields, gezag);
 
             // Assert
             result[0].Burgerservicenummer.Should().Be(bsnMinderjarige);
@@ -193,22 +192,18 @@ namespace Personen.Tests
                 gezagOuder
             };
 
-            var mockGezagPersonen = new List<(GbaPersoon, long pl_id)>()
+            var mockGezagPersonen = new List<GbaPersoon>()
             {
-                (new GbaPersoon() { Burgerservicenummer = bsnMinderjarige }, 1),
-                (new GbaPersoon() { Burgerservicenummer = bsnOuder }, 2)
+                new GbaPersoon() { Burgerservicenummer = bsnMinderjarige },
+                new GbaPersoon() { Burgerservicenummer = bsnOuder }
             };
 
-            var mockAfnemerCode = 0;
-
-            var fieldsPersonen = new List<string>() { "naam", "geslacht", "geboorte.datum" };
-
             _personenServiceMock
-                .GetPersonenMapByBsns(Arg.Any<List<string>>(), null, fieldsPersonen, _optionsMock.Value.UseAuthorizationChecks)
-                .Returns((mockGezagPersonen, mockAfnemerCode));
+                .GetGezagPersonen(Arg.Any<List<string>>())
+                .Returns(mockGezagPersonen);
 
             // Act
-            var result = await _gezagService.GetGezagPersonenIfRequested(fields, gezag, fieldsPersonen);
+            var result = await _gezagService.GetGezagPersonenIfRequested(fields, gezag);
 
             // Assert
             result.Count.Should().Be(0);
@@ -249,15 +244,17 @@ namespace Personen.Tests
             {
                 new Rvig.HaalCentraalApi.Personen.ApiModels.BRP.EenhoofdigOuderlijkGezag()
                 {
-                    Minderjarige = new()
+                    Minderjarige = new Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Minderjarige()
                     {
                         Burgerservicenummer = bsn,
-                        Naam = new()
+                        Naam = new Rvig.HaalCentraalApi.Shared.ApiModels.PersonenHistorieBase.GbaNaamBasis()
                         {
                             Voornamen = "voornamen",
                             Voorvoegsel = "voorvoegsel",
-                            Geslachtsnaam = "geslachtsnaam"
-                        }
+                            Geslachtsnaam = "geslachtsnaam",
+                            AdellijkeTitelPredicaat = null
+                        },
+                        Geboorte = new()
                     }
                 }
             };
@@ -266,7 +263,8 @@ namespace Personen.Tests
             _gezagService.VerrijkPersonenMetGezagIfRequested(fields, persoonGezagsrelaties, gezagPersonen, inputPersoon);
 
             // Assert
-            expectedGezag.Should().BeEquivalentTo(inputPersoon.Item1.Gezag);
+            inputPersoon.Item1.Gezag.Should().BeEquivalentTo(expectedGezag);
+            inputPersoon.Item1.Gezag![0].Minderjarige.Should().BeEquivalentTo(expectedGezag[0].Minderjarige);
         }
 
         [Fact]
@@ -350,7 +348,8 @@ namespace Personen.Tests
                             Voornamen = "voornamen",
                             Voorvoegsel = "voorvoegsel",
                             Geslachtsnaam = "geslachtsnaam"
-                        }
+                        },
+                        Geboorte = new()
                     }
                 }
             };

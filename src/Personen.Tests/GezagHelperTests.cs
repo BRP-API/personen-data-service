@@ -1,4 +1,4 @@
-﻿using Rvig.HaalCentraalApi.Personen.Services;
+﻿using Rvig.HaalCentraalApi.Personen.Helpers;
 using Gezag = Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
 
 namespace Personen.Tests

@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Options;
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
+using Rvig.HaalCentraalApi.Personen.Helpers;
 using Rvig.HaalCentraalApi.Personen.Interfaces;
+using Rvig.HaalCentraalApi.Personen.Mappers;
 using Rvig.HaalCentraalApi.Personen.Repositories;
 using Rvig.HaalCentraalApi.Shared.Fields;
 using Rvig.HaalCentraalApi.Shared.Helpers;
@@ -14,19 +16,19 @@ namespace Rvig.HaalCentraalApi.Personen.Services
     public interface IGezagService
     {
         public Task<IEnumerable<Persoon>> GetGezagIfRequested(List<string> fields, List<string?> bsns);
-        public Task<List<GbaPersoon>> GetGezagPersonenIfRequested(List<string> fields, IEnumerable<Persoon> gezag, List<string> personenFields);
+        public Task<List<GbaPersoon>> GetGezagPersonenIfRequested(List<string> fields, IEnumerable<Persoon> gezag);
         public void VerrijkPersonenMetGezagIfRequested(List<string> fields, IEnumerable<Persoon> persoonGezagsrelaties, List<GbaPersoon> gezagPersonen, (IPersoonMetGezag persoon, long pl_id) x);
     }
 
     public class GezagService : BaseApiService, IGezagService
     {
         private readonly IRepoGezagsrelatie _gezagsrelatieRepo;
-        private readonly IGetAndMapGbaPersonenService _getAndMapPersoonService;
+        private readonly IGezagPersonenService _gezagPersonenService;
 
         protected override FieldsSettings _fieldsSettings => throw new NotImplementedException();
 
         public GezagService(
-            IGetAndMapGbaPersonenService getAndMapPersoonService,
+            IGezagPersonenService getAndMapPersoonService,
             IDomeinTabellenRepo domeinTabellenRepo,
             IProtocolleringService protocolleringService,
             ILoggingHelper loggingHelper,
@@ -35,7 +37,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
         : base(domeinTabellenRepo, protocolleringService, loggingHelper, protocolleringAuthorizationOptions)
         {
             _gezagsrelatieRepo = gezagsrelatieRepo;
-            _getAndMapPersoonService = getAndMapPersoonService;
+            _gezagPersonenService = getAndMapPersoonService;
         }
 
         public async Task<IEnumerable<Persoon>> GetGezagIfRequested(List<string> fields, List<string?> bsns)
@@ -48,7 +50,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
             return new List<Persoon>();
         }
 
-        public async Task<List<GbaPersoon>> GetGezagPersonenIfRequested(List<string> fields, IEnumerable<Persoon> gezag, List<string> personenFields)
+        public async Task<List<GbaPersoon>> GetGezagPersonenIfRequested(List<string> fields, IEnumerable<Persoon> gezag)
         {
             var gezagsrelaties = gezag.Where(p => p.Gezag != null).SelectMany(p => p.Gezag).ToList();
 
@@ -60,7 +62,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
                 {
                     var gezagBsns = GezagHelper.GetGezagBsns(gezagsrelaties);
                     
-                    return await GetGezagPersonen(gezagBsns, personenFields);
+                    return await GetGezagPersonen(gezagBsns);
                 }
             }
 
@@ -94,21 +96,11 @@ namespace Rvig.HaalCentraalApi.Personen.Services
                 field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) &&
                 !field.StartsWith("indicatieGezagMinderjarige"));
 
-        private async Task<List<GbaPersoon>> GetGezagPersonen(List<string> gezagBsns, List<string> personenFields)
+        private async Task<List<GbaPersoon>> GetGezagPersonen(List<string> gezagBsns)
         {
-            (IEnumerable<(GbaPersoon persoon, long pl_id)>? personenData, int _) = await _getAndMapPersoonService.GetPersonenMapByBsns(
-                gezagBsns,
-                null,
-                personenFields,
-                _protocolleringAuthorizationOptions.Value.UseAuthorizationChecks);
+            var gezagPersonen = await _gezagPersonenService.GetGezagPersonen(gezagBsns);
 
-            List<GbaPersoon> gezagPersonen = new();
-            if (personenData != null)
-            {
-                gezagPersonen = personenData.Select(x => x.persoon).ToList();
-            }
-
-            return gezagPersonen;
+            return gezagPersonen.ToList();
         }
 
     }
