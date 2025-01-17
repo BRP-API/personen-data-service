@@ -361,6 +361,77 @@ namespace Personen.Tests
         }
 
         [Fact]
+        public void VerrijkPersonenMetGezagIfRequested_VerrijktPersoonBeperktMetGezagRange_WhenGezagIsRequested()
+        {
+            // Arrange
+            var fields = new List<string> { "gezag" };
+            var bsnMinderjarige = "000000013";
+            var bsnOuder = "000000012";
+
+            var persoonGezagsrelaties = new List<Persoon>
+            {
+                new() {
+                    Burgerservicenummer = bsnOuder,
+                    Gezag = new List<Gezag.AbstractGezagsrelatie>
+                    {
+                        new Gezag.EenhoofdigOuderlijkGezag()
+                        {
+                            Minderjarige = new()
+                            {
+                                Burgerservicenummer = bsnMinderjarige
+                            },
+                            Ouder = new()
+                            {
+                                Burgerservicenummer = bsnOuder
+                            }
+                        }
+                    }
+                }
+            };
+
+            var gezagPersonen = new List<GbaPersoon>
+            {
+                new() { Burgerservicenummer = bsnOuder, Naam = new() { Voornamen = "voornamen", Voorvoegsel = "voorvoegsel", Geslachtsnaam = "geslachtsnaam" } },
+                new() { Burgerservicenummer = bsnMinderjarige, Naam = new() { Voornamen = "voornamen", Voorvoegsel = "voorvoegsel", Geslachtsnaam = "geslachtsnaam" } }
+            };
+
+            var inputPersoon = (new GbaGezagPersoonBeperkt { Burgerservicenummer = bsnOuder }, 1L);
+
+            var expectedGezag = new List<Rvig.HaalCentraalApi.Personen.ApiModels.BRP.AbstractGezagsrelatie>
+            {
+                new Rvig.HaalCentraalApi.Personen.ApiModels.BRP.EenhoofdigOuderlijkGezag()
+                {
+                    Minderjarige = new()
+                    {
+                        Burgerservicenummer = bsnMinderjarige,
+                        Naam = new()
+                        {
+                            Voornamen = "voornamen",
+                            Voorvoegsel = "voorvoegsel",
+                            Geslachtsnaam = "geslachtsnaam"
+                        }
+                    },
+                    Ouder = new()
+                    {
+                        Burgerservicenummer = bsnOuder,
+                         Naam = new()
+                        {
+                            Voornamen = "voornamen",
+                            Voorvoegsel = "voorvoegsel",
+                            Geslachtsnaam = "geslachtsnaam"
+                        }
+                    }
+                }
+            };
+
+            // Act
+            _gezagService.VerrijkPersonenMetGezagIfRequested(fields, persoonGezagsrelaties, gezagPersonen, inputPersoon);
+
+            // Assert
+            inputPersoon.Item1.Gezag.Should().BeEquivalentTo(expectedGezag);
+        }
+
+        [Fact]
         public void VerrijkPersonenMetGezagIfRequested_VerrijktPersoonBeperktNietMetGezag_WhenGezagIsNotRequested()
         {
             // Arrange
