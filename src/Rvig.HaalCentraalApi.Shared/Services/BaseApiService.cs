@@ -15,7 +15,7 @@ namespace Rvig.HaalCentraalApi.Shared.Services
 		private readonly IProtocolleringService _protocolleringService;
 		private readonly ILoggingHelper _loggingHelper;
 
-		protected abstract FieldsSettings _fieldsSettings { get; }
+		protected FieldsSettings? _fieldsSettings { get; }
 		protected readonly FieldsFilterService _fieldsExpandFilterService = new();
 
 		protected BaseApiService(IDomeinTabellenRepo domeinTabellenRepo, IProtocolleringService protocolleringService, ILoggingHelper loggingHelper, IOptions<ProtocolleringAuthorizationOptions> protocolleringAuthorizationOptions)

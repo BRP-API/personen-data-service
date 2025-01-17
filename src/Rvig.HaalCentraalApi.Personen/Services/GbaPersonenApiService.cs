@@ -27,10 +27,6 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 	private readonly GbaPersonenApiHelper _gbaPersonenApiHelper;
 	private readonly GbaPersonenBeperktApiHelper _gbaPersonenBeperktApiHelper;
 
-	// We didn't want to split personen and beperkt because they use the same operation. Too much of a hassle.
-	// Because of this we ignored this abstract class implementation in favor for two seperate fields to make things easier.
-	protected override FieldsSettings _fieldsSettings => throw new CustomNotImplementedException();
-
 	private static PersonenFieldsSettings _persoonFieldsSettings => new();
 	private static PersonenBeperktFieldsSettings _persoonBeperktFieldsSettings => new();
 

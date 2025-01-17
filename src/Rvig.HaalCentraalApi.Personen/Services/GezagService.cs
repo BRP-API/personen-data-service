@@ -25,8 +25,6 @@ namespace Rvig.HaalCentraalApi.Personen.Services
         private readonly IRepoGezagsrelatie _gezagsrelatieRepo;
         private readonly IGezagPersonenService _gezagPersonenService;
 
-        protected override FieldsSettings _fieldsSettings => throw new NotImplementedException();
-
         public GezagService(
             IGezagPersonenService getAndMapPersoonService,
             IDomeinTabellenRepo domeinTabellenRepo,
@@ -54,16 +52,11 @@ namespace Rvig.HaalCentraalApi.Personen.Services
         {
             var gezagsrelaties = gezag.Where(p => p.Gezag != null).SelectMany(p => p.Gezag).ToList();
 
-            if (GezagIsRequested(fields))
+            if (GezagIsRequested(fields) && gezagsrelaties.Count != 0)
             {
-                gezagsrelaties = gezagsrelaties.Where(gr => gr != null).ToList();
+                var gezagBsns = GezagHelper.GetGezagBsns(gezagsrelaties);
 
-                if (gezagsrelaties.Count != 0)
-                {
-                    var gezagBsns = GezagHelper.GetGezagBsns(gezagsrelaties);
-                    
-                    return await GetGezagPersonen(gezagBsns);
-                }
+                return await GetGezagPersonen(gezagBsns);
             }
 
             return new List<GbaPersoon>();
@@ -86,7 +79,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
                     var gezagResponse = new GezagResponse { Personen = new List<Persoon>() { pg } };
                     var gezag = GezagsrelatieMapper.Map(gezagResponse, gezagPersonen);
 
-                    x.persoon.Gezag?.AddRange(gezag);
+                    x.persoon.Gezag!.AddRange(gezag);
                 }
             }
         }
