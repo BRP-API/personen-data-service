@@ -126,11 +126,11 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             {
                 Burgerservicenummer = persoon.Burgerservicenummer,
                 Naam = persoon.Naam,
-                Geboorte = new Shared.ApiModels.PersonenHistorieBase.GbaGeboorteBeperkt()
+                Geboorte = persoon.Geboorte != null ? new Shared.ApiModels.PersonenHistorieBase.GbaGeboorteBeperkt()
                 {
                     Datum = persoon.Geboorte?.Datum
 
-                },
+                } : null,
                 Geslacht = persoon.Geslacht
             };
         }
