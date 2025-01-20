@@ -20,7 +20,7 @@ public class GetAndMapGbaPersonenService : GetAndMapGbaServiceBase, IGetAndMapGb
 		_persoonMapper = persoonMapper;
 	}
 
-	public async Task<(IEnumerable<(GbaPersoon persoon, long pl_id)>? personenPlIds, int afnemerCode)> GetPersonenMapByBsns(IEnumerable<string>? burgerservicenummers, string? gemeenteVanInschrijving, List<string> fields, bool checkAuthorization)
+	public async Task<(IEnumerable<(GbaPersoon persoon, long pl_id)>? personenPlIds, int afnemerCode)> GetPersonenMapByBsns(IEnumerable<string>? burgerservicenummers, string? gemeenteVanInschrijving, List<string> fields)
 	{
 
 		// It is impossible to have an empty or null array of bsns because the API request models already validate this and reject all non valid values.
@@ -45,7 +45,7 @@ public class GetAndMapGbaPersonenService : GetAndMapGbaServiceBase, IGetAndMapGb
         return (personenPlIds.Select(x => (x.gbaPersoon, x.pl_id)), 0);
     }
 
-	public async Task<(IEnumerable<(T persoon, long pl_id)>? personenPlIds, int afnemerCode)> GetMapZoekPersonen<T>(PersonenQuery model, List<string> fields, bool checkAuthorization) where T : GbaPersoonBeperkt
+	public async Task<(IEnumerable<(T persoon, long pl_id)>? personenPlIds, int afnemerCode)> GetMapZoekPersonen<T>(PersonenQuery model, List<string> fields) where T : GbaPersoonBeperkt
     {
         return model switch
         {

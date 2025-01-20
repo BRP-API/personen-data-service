@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Personen.Fields;
 using Rvig.HaalCentraalApi.Personen.Helpers;
@@ -8,10 +7,7 @@ using Rvig.HaalCentraalApi.Personen.RequestModels.BRP;
 using Rvig.HaalCentraalApi.Personen.ResponseModels.BRP;
 using Rvig.HaalCentraalApi.Personen.Validation;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
-using Rvig.HaalCentraalApi.Shared.Fields;
-using Rvig.HaalCentraalApi.Shared.Helpers;
 using Rvig.HaalCentraalApi.Shared.Interfaces;
-using Rvig.HaalCentraalApi.Shared.Options;
 using Rvig.HaalCentraalApi.Shared.Services;
 
 namespace Rvig.HaalCentraalApi.Personen.Services;
@@ -33,11 +29,8 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 	public GbaPersonenApiService(
         IGetAndMapGbaPersonenService getAndMapPersoonService, 
 		IDomeinTabellenRepo domeinTabellenRepo, 
-		IProtocolleringService protocolleringService,
-		ILoggingHelper loggingHelper, 
-		IGezagService gezagService,
-		IOptions<ProtocolleringAuthorizationOptions> protocolleringAuthorizationOptions)
-		: base(domeinTabellenRepo, protocolleringService, loggingHelper, protocolleringAuthorizationOptions)
+		IGezagService gezagService)
+		: base(domeinTabellenRepo)
 	{
 		_getAndMapPersoonService = getAndMapPersoonService;
 		_gezagService = gezagService;
@@ -86,7 +79,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 			: field);
 
         List<(GbaPersoon persoon, long pl_id)> result = new List<(GbaPersoon persoon, long pl_id)>();
-        (IEnumerable<(GbaPersoon persoon, long pl_id)>? personenPlIds, int afnemerCode) = await _getAndMapPersoonService.GetPersonenMapByBsns(model.burgerservicenummer, model.gemeenteVanInschrijving, fieldsToUseForAuthorisations, _protocolleringAuthorizationOptions.Value.UseAuthorizationChecks);
+        (IEnumerable<(GbaPersoon persoon, long pl_id)>? personenPlIds, int afnemerCode) = await _getAndMapPersoonService.GetPersonenMapByBsns(model.burgerservicenummer, model.gemeenteVanInschrijving, fieldsToUseForAuthorisations);
 
 		// Filter response by fields
 		if (model?.fields?.Any() == true && personenPlIds != null)
@@ -120,20 +113,6 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
                 _gbaPersonenApiHelper.RemoveInOnderzoekFromGezagsverhoudingCategoryIfNoFieldsAreRequested(model.fields, target);
                 result.Add((target, x.pl_id));
             }
-
-            if (_protocolleringAuthorizationOptions.Value.UseProtocollering)
-			{
-				await LogProtocolleringInDb(afnemerCode, result.Select(x => x.pl_id).ToList(),
-								PersonenApiToRubriekCategoryHelper.ConvertModelParamsToRubrieken(model)
-									.Where(x => !string.IsNullOrWhiteSpace(x))
-									.OrderBy(rubriek => rubriek.Substring(0))
-									.ToList(),
-								PersonenApiToRubriekCategoryHelper.ConvertFieldsToRubriekCategory(fieldsToUseForAuthorisations, false)
-									.ConvertAll(x => x.rubriek)
-									.Where(x => !string.IsNullOrWhiteSpace(x))
-									.OrderBy(rubriek => rubriek.Substring(0))
-									.ToList());
-			}
 		}
 
 		return (new RaadpleegMetBurgerservicenummerResponse { Personen = result.ConvertAll(gbaPersoon => gbaPersoon.persoon) ?? new List<GbaPersoon>() }, result.Select(x => x.pl_id).ToList());
@@ -154,7 +133,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 			? _persoonBeperktFieldsSettings.GbaFieldsSettings.ShortHandMappings[field]
 			: field);
 
-		(IEnumerable<(T persoon, long pl_id)>? personenPlIds, int afnemerCode) = await _getAndMapPersoonService.GetMapZoekPersonen<T>(model, fieldsToUseForAuthorisations, _protocolleringAuthorizationOptions.Value.UseAuthorizationChecks);
+		(IEnumerable<(T persoon, long pl_id)>? personenPlIds, int afnemerCode) = await _getAndMapPersoonService.GetMapZoekPersonen<T>(model, fieldsToUseForAuthorisations);
         List<(T persoon, long pl_id)> result = new List<(T persoon, long pl_id)>();
 
         // Filter response by fields
@@ -190,20 +169,6 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 				T target = ApplyGbaPersoonBeperktScope(x.persoon, model.fields);
 				_gbaPersonenBeperktApiHelper.RemoveBeperktInOnderzoekFromPersonCategoryIfNoFieldsAreRequested(model.fields, target);
 				result.Add((target, x.pl_id));
-			}
-
-			if (_protocolleringAuthorizationOptions.Value.UseProtocollering)
-			{
-				await LogProtocolleringInDb(afnemerCode, result.Select(x => x.pl_id).ToList(),
-								PersonenApiToRubriekCategoryHelper.ConvertModelParamsToRubrieken(model)
-									.Where(x => !string.IsNullOrWhiteSpace(x))
-									.OrderBy(rubriek => rubriek.Substring(0))
-									.ToList(),
-								PersonenApiToRubriekCategoryHelper.ConvertFieldsToRubriekCategory(fieldsToUseForAuthorisations, true)
-									.ConvertAll(x => x.rubriek)
-									.Where(x => !string.IsNullOrWhiteSpace(x))
-									.OrderBy(rubriek => rubriek.Substring(0))
-									.ToList());
 			}
 		}
 

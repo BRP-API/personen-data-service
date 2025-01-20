@@ -1,12 +1,9 @@
-﻿using Microsoft.Extensions.Options;
-using NSubstitute;
+﻿using NSubstitute;
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
 using Rvig.HaalCentraalApi.Personen.Interfaces;
 using Rvig.HaalCentraalApi.Personen.Repositories;
 using Rvig.HaalCentraalApi.Personen.Services;
-using Rvig.HaalCentraalApi.Shared.Interfaces;
-using Rvig.HaalCentraalApi.Shared.Options;
 using Gezag = Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
 
 namespace Personen.Tests
@@ -17,15 +14,12 @@ namespace Personen.Tests
         private readonly GezagService _gezagService;
         private readonly IRepoGezagsrelatie _gezagRepositoryMock;
         private readonly IGezagPersonenService _personenServiceMock;
-        private readonly IOptions<ProtocolleringAuthorizationOptions> _optionsMock;
 
         public GezagServiceTests()
         {
             _personenServiceMock = Substitute.For<IGezagPersonenService>();
             _gezagRepositoryMock = Substitute.For<IRepoGezagsrelatie>();
-            _optionsMock = Substitute.For<IOptions<ProtocolleringAuthorizationOptions>>();
-            _optionsMock.Value.Returns(new ProtocolleringAuthorizationOptions { UseAuthorizationChecks = false });
-            _gezagService = new GezagService(_personenServiceMock, null, null, null, _gezagRepositoryMock, _optionsMock);
+            _gezagService = new GezagService(_personenServiceMock, null, _gezagRepositoryMock);
         }
 
         [Fact]
@@ -123,12 +117,9 @@ namespace Personen.Tests
 
             var mockGezagPersonen = new List<GbaPersoon>()
             {
-                new GbaPersoon() { Burgerservicenummer = bsnMinderjarige },
-                new GbaPersoon() { Burgerservicenummer = bsnOuder }
+                new() { Burgerservicenummer = bsnMinderjarige },
+                new() { Burgerservicenummer = bsnOuder }
             };
-
-
-            var fieldsPersonen = new List<string>() { "naam", "geslacht", "geboorte.datum" };
 
             _personenServiceMock
                 .GetGezagPersonen(Arg.Any<List<string>>())
@@ -195,8 +186,8 @@ namespace Personen.Tests
 
             var mockGezagPersonen = new List<GbaPersoon>()
             {
-                new GbaPersoon() { Burgerservicenummer = bsnMinderjarige },
-                new GbaPersoon() { Burgerservicenummer = bsnOuder }
+                new() { Burgerservicenummer = bsnMinderjarige },
+                new() { Burgerservicenummer = bsnOuder }
             };
 
             _personenServiceMock

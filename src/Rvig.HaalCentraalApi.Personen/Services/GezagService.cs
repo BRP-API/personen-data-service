@@ -1,14 +1,10 @@
-﻿using Microsoft.Extensions.Options;
-using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
+﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
 using Rvig.HaalCentraalApi.Personen.Helpers;
 using Rvig.HaalCentraalApi.Personen.Interfaces;
 using Rvig.HaalCentraalApi.Personen.Mappers;
 using Rvig.HaalCentraalApi.Personen.Repositories;
-using Rvig.HaalCentraalApi.Shared.Fields;
-using Rvig.HaalCentraalApi.Shared.Helpers;
 using Rvig.HaalCentraalApi.Shared.Interfaces;
-using Rvig.HaalCentraalApi.Shared.Options;
 using Rvig.HaalCentraalApi.Shared.Services;
 
 namespace Rvig.HaalCentraalApi.Personen.Services
@@ -28,11 +24,8 @@ namespace Rvig.HaalCentraalApi.Personen.Services
         public GezagService(
             IGezagPersonenService getAndMapPersoonService,
             IDomeinTabellenRepo domeinTabellenRepo,
-            IProtocolleringService protocolleringService,
-            ILoggingHelper loggingHelper,
-            IRepoGezagsrelatie gezagsrelatieRepo,
-            IOptions<ProtocolleringAuthorizationOptions> protocolleringAuthorizationOptions)
-        : base(domeinTabellenRepo, protocolleringService, loggingHelper, protocolleringAuthorizationOptions)
+            IRepoGezagsrelatie gezagsrelatieRepo)
+        : base(domeinTabellenRepo)
         {
             _gezagsrelatieRepo = gezagsrelatieRepo;
             _gezagPersonenService = getAndMapPersoonService;
