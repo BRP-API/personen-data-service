@@ -31,15 +31,9 @@ public class GetAndMapGbaPersonenService : GetAndMapGbaServiceBase, IGetAndMapGb
 			{
 				return default;
 			}
-			var persoonFiltered = dbPersoon;
 
-			if (persoonFiltered != null)
-			{
-				return (gbaPersoon: await _persoonMapper.MapFrom(persoonFiltered), dbPersoon.Persoon.pl_id);
-			}
-
-			return default;
-		})))
+            return (gbaPersoon: await _persoonMapper.MapFrom(dbPersoon), dbPersoon.Persoon.pl_id);
+        })))
         .Where(x => !x.gbaPersoon.Equals(default));
 
 		if (!personenPlIds.Any())
@@ -81,15 +75,9 @@ public class GetAndMapGbaPersonenService : GetAndMapGbaServiceBase, IGetAndMapGb
 			{
 				return default;
 			}
-			var persoonFiltered = dbPersoon;
 
-			if (persoonFiltered != null)
-			{
-				return (gbaPersoon: await _persoonMapper.MapGbaPersoonBeperkt<T>(persoonFiltered), dbPersoon.Persoon.pl_id);
-			}
-
-			return default;
-		})))
+            return (gbaPersoon: await _persoonMapper.MapGbaPersoonBeperkt<T>(dbPersoon), dbPersoon.Persoon.pl_id);
+        })))
 		.Where(x => !x.gbaPersoon.Equals(default));
 
 		if (!personenPlIds.Any())
