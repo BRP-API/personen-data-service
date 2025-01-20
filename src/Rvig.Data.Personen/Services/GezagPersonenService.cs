@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Rvig.Data.Personen.Mappers;
+﻿using Rvig.Data.Personen.Mappers;
 using Rvig.Data.Personen.Repositories;
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Personen.Interfaces;
-using Rvig.HaalCentraalApi.Shared.Interfaces;
 using Rvig.Data.Base.Postgres.Services;
-using Rvig.Data.Base.Postgres.Repositories;
 
 namespace Rvig.Data.Personen.Services;
 public class GezagPersonenService : GetAndMapGbaServiceBase, IGezagPersonenService
@@ -13,9 +10,7 @@ public class GezagPersonenService : GetAndMapGbaServiceBase, IGezagPersonenServi
 	private readonly IRvigPersoonRepo _dbPersoonRepo;
     private readonly IRvIGDataPersonenMapper _persoonMapper;
 
-    public GezagPersonenService(IAutorisationRepo autorisationRepo, IRvigPersoonRepo dbPersoonRepo, IRvigPersoonBeperktRepo dbPersoonBeperktRepo, IRvIGDataPersonenMapper persoonMapper,
-		IHttpContextAccessor httpContextAccessor, IProtocolleringService protocolleringService)
-		: base(httpContextAccessor, autorisationRepo, protocolleringService)
+    public GezagPersonenService(IRvigPersoonRepo dbPersoonRepo, IRvIGDataPersonenMapper persoonMapper)
 	{
 		_dbPersoonRepo = dbPersoonRepo;
         _persoonMapper = persoonMapper;
