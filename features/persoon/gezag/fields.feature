@@ -34,9 +34,10 @@ Functionaliteit: gezagsrelaties vragen met fields
         | ouder.burgerservicenummer        |        000000061 |
         | derde.burgerservicenummer        |        000000048 |
       En voor de persoon geldt ook het volgende gezag
-        | naam        | waarde             |
-        | type        | GezagNietTeBepalen |
-        | toelichting | test               |
+        | naam                             | waarde             |
+        | type                             | GezagNietTeBepalen |
+        | toelichting                      | test               |
+        | minderjarige.burgerservicenummer |          000000052 |
       En voor de persoon geldt ook het volgende gezag
         | naam                             | waarde    |
         | type                             | Voogdij   |
@@ -45,8 +46,10 @@ Functionaliteit: gezagsrelaties vragen met fields
         | burgerservicenummer |
         |           000000048 |
       En voor de persoon geldt ook het volgende gezag
-        | naam | waarde             |
-        | type | TijdelijkGeenGezag |
+        | naam                             | waarde             |
+        | type                             | TijdelijkGeenGezag |
+        | toelichting                      | test               |
+        | minderjarige.burgerservicenummer |          000000063 |
       Als personen wordt gezocht met de volgende parameters
         | naam                | waarde                          |
         | type                | RaadpleegMetBurgerservicenummer |
@@ -74,9 +77,10 @@ Functionaliteit: gezagsrelaties vragen met fields
         | ouder.burgerservicenummer        |        000000061 |
         | derde.burgerservicenummer        |        000000048 |
       En heeft de persoon een 'gezag' met de volgende gegevens
-        | naam        | waarde             |
-        | type        | GezagNietTeBepalen |
-        | toelichting | test               |
+        | naam                             | waarde             |
+        | type                             | GezagNietTeBepalen |
+        | toelichting                      | test               |
+        | minderjarige.burgerservicenummer |          000000052 |
       En heeft de persoon een 'gezag' met de volgende gegevens
         | naam                             | waarde    |
         | type                             | Voogdij   |
@@ -85,8 +89,10 @@ Functionaliteit: gezagsrelaties vragen met fields
         | naam                | waarde    |
         | burgerservicenummer | 000000048 |
       En heeft de persoon een 'gezag' met de volgende gegevens
-        | naam | waarde             |
-        | type | TijdelijkGeenGezag |
+        | naam                             | waarde             |
+        | type                             | TijdelijkGeenGezag |
+        | toelichting                      | test               |
+        | minderjarige.burgerservicenummer |          000000063 |
 
       Voorbeelden:
         | fields                                     |
@@ -185,15 +191,17 @@ Functionaliteit: gezagsrelaties vragen met fields
         | burgerservicenummer (01.20) |
         |                   000000012 |
       En voor de persoon geldt het volgende gezag
-        | naam        | waarde             |
-        | type        | GezagNietTeBepalen |
-        | toelichting | test               |
+        | naam                             | waarde             |
+        | type                             | GezagNietTeBepalen |
+        | toelichting                      | test               |
+        | minderjarige.burgerservicenummer |          000000052 |
       Als personen wordt gezocht met de volgende parameters
         | naam                | waarde                          |
         | type                | RaadpleegMetBurgerservicenummer |
         | burgerservicenummer |                       000000048 |
         | fields              | gezag                           |
       Dan heeft de response een persoon met een 'gezag' met de volgende gegevens
-        | naam        | waarde             |
-        | type        | GezagNietTeBepalen |
-        | toelichting | test               |
+        | naam                             | waarde             |
+        | type                             | GezagNietTeBepalen |
+        | toelichting                      | test               |
+        | minderjarige.burgerservicenummer |          000000052 |
