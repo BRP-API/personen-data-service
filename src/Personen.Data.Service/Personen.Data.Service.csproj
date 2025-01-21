@@ -5,7 +5,7 @@
     <RootNamespace>Personen.Data.Service</RootNamespace>
     <Nullable>enable</Nullable>
     <UserSecretsId>caf32bce-cb0b-4c54-bc7b-c165686bdcd1</UserSecretsId>
-  	<Version>2.4.1</Version>
+  	<Version>2.5.0</Version>
   	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
