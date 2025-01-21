@@ -176,7 +176,7 @@ jobs:
         with:
           file: ${{ env.APP_PROJECT_PATH }}/Dockerfile
           context: src
-          push: false
+          push: true
           platforms: linux/arm64,linux/amd64
           tags: |
             ${{ env.APP_CONTAINER_IMAGE }}:latest
