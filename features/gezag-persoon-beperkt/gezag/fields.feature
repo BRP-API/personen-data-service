@@ -224,15 +224,17 @@ Functionaliteit: gezagsrelaties vragen met fields bij zoeken op adresseerbaar ob
         | gemeente van inschrijving (09.10) |
         |                              0518 |
       En voor de persoon geldt het volgende gezag
-        | naam        | waarde             |
-        | type        | GezagNietTeBepalen |
-        | toelichting | test               |
+        | naam                             | waarde             |
+        | type                             | GezagNietTeBepalen |
+        | toelichting                      | test               |
+        | minderjarige.burgerservicenummer |          000000012 |
       Als personen wordt gezocht met de volgende parameters
         | naam                             | waarde                                  |
         | type                             | ZoekMetAdresseerbaarObjectIdentificatie |
         | adresseerbaarObjectIdentificatie |                        0518010051001502 |
         | fields                           | gezag                                   |
       Dan heeft de response een persoon met een 'gezag' met de volgende gegevens
-        | naam        | waarde             |
-        | type        | GezagNietTeBepalen |
-        | toelichting | test               |
+        | naam                             | waarde             |
+        | type                             | GezagNietTeBepalen |
+        | toelichting                      | test               |
+        | minderjarige.burgerservicenummer |          000000012 |

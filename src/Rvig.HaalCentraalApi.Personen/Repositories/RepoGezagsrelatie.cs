@@ -3,10 +3,9 @@ using Rvig.Data.Base.WebApi.Options;
 using Rvig.HaalCentraalApi.Shared.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
-using Rvig.HaalCentraalApi.Personen.RequestModels.BRP;
 using System.Net.Http;
 using Rvig.Data.Base.Gezag.Repositories;
-using Rvig.HaalCentraalApi.Personen.ResponseModels.BRP;
+using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
 
 namespace Rvig.HaalCentraalApi.Personen.Repositories;
 
@@ -28,7 +27,7 @@ public class RepoGezagsrelatie : RepoWebApiBase, IRepoGezagsrelatie
 		}
 		var requestBody = new GezagRequest
 		{
-			burgerservicenummer = burgerservicenummer.ToList()
+			Burgerservicenummer = burgerservicenummer.ToList()
 		};
         // http://localhost:8080/api/v1/opvragenBevoegdheidTotGezag
         var url = _webApiOptions.Value.Url + "/opvragenBevoegdheidTotGezag";

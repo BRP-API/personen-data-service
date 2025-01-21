@@ -1,20 +1,14 @@
-﻿using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Personen.Fields;
 using Rvig.HaalCentraalApi.Personen.Helpers;
 using Rvig.HaalCentraalApi.Personen.Interfaces;
-using Rvig.HaalCentraalApi.Personen.Repositories;
 using Rvig.HaalCentraalApi.Personen.RequestModels.BRP;
 using Rvig.HaalCentraalApi.Personen.ResponseModels.BRP;
 using Rvig.HaalCentraalApi.Personen.Validation;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
-using Rvig.HaalCentraalApi.Shared.Fields;
-using Rvig.HaalCentraalApi.Shared.Helpers;
 using Rvig.HaalCentraalApi.Shared.Interfaces;
-using Rvig.HaalCentraalApi.Shared.Options;
 using Rvig.HaalCentraalApi.Shared.Services;
-using Rvig.HaalCentraalApi.Shared.Util;
 
 namespace Rvig.HaalCentraalApi.Personen.Services;
 public interface IGbaPersonenApiService
@@ -25,23 +19,21 @@ public interface IGbaPersonenApiService
 public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 {
 	protected IGetAndMapGbaPersonenService _getAndMapPersoonService;
-	private readonly IRepoGezagsrelatie _gezagsrelatieRepo;
+	private readonly IGezagService _gezagService;
 	private readonly GbaPersonenApiHelper _gbaPersonenApiHelper;
 	private readonly GbaPersonenBeperktApiHelper _gbaPersonenBeperktApiHelper;
-
-	// We didn't want to split personen and beperkt because they use the same operation. Too much of a hassle.
-	// Because of this we ignored this abstract class implementation in favor for two seperate fields to make things easier.
-	protected override FieldsSettings _fieldsSettings => throw new CustomNotImplementedException();
 
 	private static PersonenFieldsSettings _persoonFieldsSettings => new();
 	private static PersonenBeperktFieldsSettings _persoonBeperktFieldsSettings => new();
 
-	public GbaPersonenApiService(IGetAndMapGbaPersonenService getAndMapPersoonService, IDomeinTabellenRepo domeinTabellenRepo, IProtocolleringService protocolleringService
-		, ILoggingHelper loggingHelper, IRepoGezagsrelatie gezagsrelatieRepo, IOptions<ProtocolleringAuthorizationOptions> protocolleringAuthorizationOptions)
-		: base(domeinTabellenRepo, protocolleringService, loggingHelper, protocolleringAuthorizationOptions)
+	public GbaPersonenApiService(
+        IGetAndMapGbaPersonenService getAndMapPersoonService, 
+		IDomeinTabellenRepo domeinTabellenRepo, 
+		IGezagService gezagService)
+		: base(domeinTabellenRepo)
 	{
 		_getAndMapPersoonService = getAndMapPersoonService;
-		_gezagsrelatieRepo = gezagsrelatieRepo;
+		_gezagService = gezagService;
 		_gbaPersonenApiHelper = new GbaPersonenApiHelper(_fieldsExpandFilterService, _persoonFieldsSettings);
 		_gbaPersonenBeperktApiHelper = new GbaPersonenBeperktApiHelper(_persoonBeperktFieldsSettings);
 	}
@@ -67,19 +59,6 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 		};
 	}
 
-	private static bool GezagIsRequested(List<string> fields) =>
-		fields.Any(field => field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) &&
-						  	!field.StartsWith("indicatieGezagMinderjarige"));
-
-	private async Task<List<GbaPersoon>> GetGezagIfRequested(List<string> fields, List<string?> bsns){
-		if(GezagIsRequested(fields))
-		{
-			GezagResponse response = (await _gezagsrelatieRepo.GetGezag(bsns!)) ?? new GezagResponse();
-			return response.personen;
-		}
-		return new List<GbaPersoon>();
-	}
-
 	/// <summary>
 	/// Get personen via bsn(s).
 	/// </summary>
@@ -100,7 +79,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 			: field);
 
         List<(GbaPersoon persoon, long pl_id)> result = new List<(GbaPersoon persoon, long pl_id)>();
-        (IEnumerable<(GbaPersoon persoon, long pl_id)>? personenPlIds, int afnemerCode) = await _getAndMapPersoonService.GetPersonenMapByBsns(model.burgerservicenummer, model.gemeenteVanInschrijving, fieldsToUseForAuthorisations, _protocolleringAuthorizationOptions.Value.UseAuthorizationChecks);
+        (IEnumerable<(GbaPersoon persoon, long pl_id)>? personenPlIds, int afnemerCode) = await _getAndMapPersoonService.GetPersonenMapByBsns(model.burgerservicenummer, model.gemeenteVanInschrijving, fieldsToUseForAuthorisations);
 
 		// Filter response by fields
 		if (model?.fields?.Any() == true && personenPlIds != null)
@@ -109,66 +88,42 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 
 			var bsns = personenPlIds!.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
 
-			IEnumerable<GbaPersoon> persoonGezagsrelaties = await GetGezagIfRequested(model.fields, bsns);
+			var gezag = await _gezagService.GetGezagIfRequested(model.fields, bsns);
+
+            var gezagPersonen = await _gezagService.GetGezagPersonenIfRequested(model.fields, gezag);
+
 			foreach (var x in personenPlIds!.Where(x => x.persoon != null))
-			{
-				if(GezagIsRequested(model.fields))
-				{
-					var persoonGezagsrelatie = persoonGezagsrelaties
-						.Where(pgr => pgr.Burgerservicenummer == x.persoon.Burgerservicenummer);
+            {
+				_gezagService.VerrijkPersonenMetGezagIfRequested(model.fields, gezag, gezagPersonen, x);
 
-					if (persoonGezagsrelatie.Any())
-					{
-						x.persoon.Gezag = new List<AbstractGezagsrelatie>();
-					}
-					foreach(var pg in persoonGezagsrelatie)
-					{
-						x.persoon.Gezag?.AddRange(pg.Gezag!);
-					}
-				}
-			
-				x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.fields, x.persoon.Rni, _persoonFieldsSettings.GbaFieldsSettings);
-				if (x.persoon.Verblijfplaats != null)
-				{
-					GbaPersonenApiHelper.AddVerblijfplaatsInOnderzoek(model.fields, x.persoon.Verblijfplaats);
-				}
-				if (x.persoon.Immigratie != null)
-				{
-					GbaPersonenApiHelper.AddLandVanwaarIngeschreven(model.fields, x.persoon.Immigratie);
-				}
+                x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.fields, x.persoon.Rni, _persoonFieldsSettings.GbaFieldsSettings);
+                if (x.persoon.Verblijfplaats != null)
+                {
+                    GbaPersonenApiHelper.AddVerblijfplaatsInOnderzoek(model.fields, x.persoon.Verblijfplaats);
+                }
+                if (x.persoon.Immigratie != null)
+                {
+                    GbaPersonenApiHelper.AddLandVanwaarIngeschreven(model.fields, x.persoon.Immigratie);
+                }
 
-				model.fields = GbaPersonenApiHelper.OpschortingBijhoudingLogicRaadplegen(model.fields, x.persoon.OpschortingBijhouding);
+                model.fields = GbaPersonenApiHelper.OpschortingBijhoudingLogicRaadplegen(model.fields, x.persoon.OpschortingBijhouding);
 
-				GbaPersoon target = _fieldsExpandFilterService.ApplyScope(x.persoon, string.Join(",", model.fields), _persoonFieldsSettings.GbaFieldsSettings);
-				_gbaPersonenApiHelper.RemoveInOnderzoekFromPersonCategoryIfNoFieldsAreRequested(model.fields, target);
-				_gbaPersonenApiHelper.RemoveInOnderzoekFromGezagsverhoudingCategoryIfNoFieldsAreRequested(model.fields, target);
-				result.Add((target, x.pl_id));
-			}
-
-			if (_protocolleringAuthorizationOptions.Value.UseProtocollering)
-			{
-				await LogProtocolleringInDb(afnemerCode, result.Select(x => x.pl_id).ToList(),
-								PersonenApiToRubriekCategoryHelper.ConvertModelParamsToRubrieken(model)
-									.Where(x => !string.IsNullOrWhiteSpace(x))
-									.OrderBy(rubriek => rubriek.Substring(0))
-									.ToList(),
-								PersonenApiToRubriekCategoryHelper.ConvertFieldsToRubriekCategory(fieldsToUseForAuthorisations, false)
-									.ConvertAll(x => x.rubriek)
-									.Where(x => !string.IsNullOrWhiteSpace(x))
-									.OrderBy(rubriek => rubriek.Substring(0))
-									.ToList());
-			}
+                GbaPersoon target = _fieldsExpandFilterService.ApplyScope(x.persoon, string.Join(",", model.fields), _persoonFieldsSettings.GbaFieldsSettings);
+                _gbaPersonenApiHelper.RemoveInOnderzoekFromPersonCategoryIfNoFieldsAreRequested(model.fields, target);
+                _gbaPersonenApiHelper.RemoveInOnderzoekFromGezagsverhoudingCategoryIfNoFieldsAreRequested(model.fields, target);
+                result.Add((target, x.pl_id));
+            }
 		}
 
 		return (new RaadpleegMetBurgerservicenummerResponse { Personen = result.ConvertAll(gbaPersoon => gbaPersoon.persoon) ?? new List<GbaPersoon>() }, result.Select(x => x.pl_id).ToList());
 	}
 
-	/// <summary>
-	/// Get personen via search params (child of PersonenQuery)
-	/// </summary>
-	/// <param name="model"></param>
-	/// <returns>Response object with list of restricted person data</returns>
-	private async Task<(List<T>? personen, List<long>? plIds)> GetPersonenBeperktBase<T>(PersonenQuery model, bool? inclusiefOverledenPersonen = false) where T : GbaPersoonBeperkt
+    /// <summary>
+    /// Get personen via search params (child of PersonenQuery)
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns>Response object with list of restricted person data</returns>
+    private async Task<(List<T>? personen, List<long>? plIds)> GetPersonenBeperktBase<T>(PersonenQuery model, bool? inclusiefOverledenPersonen = false) where T : GbaPersoonBeperkt
 	{
 		// Validation
 		_fieldsExpandFilterService.ValidateScope(typeof(T), _persoonBeperktFieldsSettings.GbaFieldsSettings, model.fields);
@@ -178,7 +133,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 			? _persoonBeperktFieldsSettings.GbaFieldsSettings.ShortHandMappings[field]
 			: field);
 
-		(IEnumerable<(T persoon, long pl_id)>? personenPlIds, int afnemerCode) = await _getAndMapPersoonService.GetMapZoekPersonen<T>(model, fieldsToUseForAuthorisations, _protocolleringAuthorizationOptions.Value.UseAuthorizationChecks);
+		(IEnumerable<(T persoon, long pl_id)>? personenPlIds, int afnemerCode) = await _getAndMapPersoonService.GetMapZoekPersonen<T>(model, fieldsToUseForAuthorisations);
         List<(T persoon, long pl_id)> result = new List<(T persoon, long pl_id)>();
 
         // Filter response by fields
@@ -194,28 +149,15 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 
             var bsns = personenPlIds.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
 
-            IEnumerable<GbaPersoon> persoonGezagsrelaties = personenPlIds.FirstOrDefault().persoon is GbaGezagPersoonBeperkt
-				? await GetGezagIfRequested(model.fields, bsns)
-				: new List<GbaPersoon>();
+            var gezag = await _gezagService.GetGezagIfRequested(model.fields, bsns);
+            var gezagPersonen = await _gezagService.GetGezagPersonenIfRequested(model.fields, gezag);
 
             foreach (var x in personenPlIds.Where(x => x.persoon != null))
 			{
-				if (x.persoon is GbaGezagPersoonBeperkt persoonBeperkt &&
-					GezagIsRequested(model.fields) &&
-					!string.IsNullOrWhiteSpace(x.persoon.Burgerservicenummer))
+				if (x.persoon is IPersoonMetGezag)
 				{
-					var persoonGezagsrelatie = persoonGezagsrelaties
-						.Where(pgr => pgr.Burgerservicenummer == x.persoon.Burgerservicenummer);
-
-                    if (persoonGezagsrelatie.Any())
-                    {
-                        persoonBeperkt.Gezag = new List<AbstractGezagsrelatie>();
-                    }
-                    foreach (var pg in persoonGezagsrelatie)
-                    {
-                        persoonBeperkt.Gezag?.AddRange(pg.Gezag!);
-                    }
-                }
+					_gezagService.VerrijkPersonenMetGezagIfRequested(model.fields, gezag, gezagPersonen, ((IPersoonMetGezag persoon, long pl_id))x);
+				}
 
 				x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.fields, x.persoon.Rni, _persoonBeperktFieldsSettings.GbaFieldsSettings);
 				if (x.persoon.Verblijfplaats != null)
@@ -227,20 +169,6 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 				T target = ApplyGbaPersoonBeperktScope(x.persoon, model.fields);
 				_gbaPersonenBeperktApiHelper.RemoveBeperktInOnderzoekFromPersonCategoryIfNoFieldsAreRequested(model.fields, target);
 				result.Add((target, x.pl_id));
-			}
-
-			if (_protocolleringAuthorizationOptions.Value.UseProtocollering)
-			{
-				await LogProtocolleringInDb(afnemerCode, result.Select(x => x.pl_id).ToList(),
-								PersonenApiToRubriekCategoryHelper.ConvertModelParamsToRubrieken(model)
-									.Where(x => !string.IsNullOrWhiteSpace(x))
-									.OrderBy(rubriek => rubriek.Substring(0))
-									.ToList(),
-								PersonenApiToRubriekCategoryHelper.ConvertFieldsToRubriekCategory(fieldsToUseForAuthorisations, true)
-									.ConvertAll(x => x.rubriek)
-									.Where(x => !string.IsNullOrWhiteSpace(x))
-									.OrderBy(rubriek => rubriek.Substring(0))
-									.ToList());
 			}
 		}
 

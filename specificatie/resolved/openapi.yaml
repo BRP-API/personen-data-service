@@ -744,6 +744,10 @@ components:
       properties:
         burgerservicenummer:
           $ref: '#/components/schemas/Burgerservicenummer'
+        naam:
+          $ref: '#/components/schemas/NaamBasis'
+        geslacht:
+          $ref: '#/components/schemas/Geslachtsaanduiding'
       required:
         - burgerservicenummer
     TweehoofdigOuderlijkGezag:
@@ -769,6 +773,10 @@ components:
       properties:
         burgerservicenummer:
           $ref: '#/components/schemas/Burgerservicenummer'
+        naam:
+          $ref: '#/components/schemas/NaamBasis'
+        geslacht:
+          $ref: '#/components/schemas/Geslachtsaanduiding'
     GezamenlijkGezag:
       allOf:
         - $ref: '#/components/schemas/AbstractGezagsrelatie'
@@ -811,6 +819,12 @@ components:
       properties:
         burgerservicenummer:
           $ref: '#/components/schemas/Burgerservicenummer'
+        naam:
+          $ref: '#/components/schemas/NaamBasis'
+        geslacht:
+          $ref: '#/components/schemas/Geslachtsaanduiding'
+        geboorte:
+          $ref: '#/components/schemas/GeboorteBasis'
       required:
         - burgerservicenummer
     Gezag:
