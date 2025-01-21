@@ -11,10 +11,8 @@ components:
         burgerservicenummer:
           $ref: '../../brp/identificatienummers/burgerservicenummer-v1.yaml#/components/schemas/Burgerservicenummer'
         naam:
-          $ref: '../../brp/naam/naam-basis-v1.yaml#/components/schemas/NaamBasis'
-        geslacht:
-          $ref: '../../brp/geslacht/geslachtsaanduiding-v1.yaml#/components/schemas/Geslachtsaanduiding'
-        geboorte:
-          $ref: '../../brp/geboorte/geboorte-basis-v1.yaml#/components/schemas/GeboorteBasis'
+          $ref: '../naam/volledige-naam-v1.yaml#/components/schemas/NaamVolledigeNaam'
+        leeftijd:
+          $ref: '../geboorte/leeftijd-v1.yaml#/components/schemas/Leeftijd'
       required: 
         - burgerservicenummer

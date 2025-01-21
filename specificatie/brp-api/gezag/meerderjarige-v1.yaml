@@ -11,6 +11,4 @@ components:
         burgerservicenummer:
           $ref: '../../brp/identificatienummers/burgerservicenummer-v1.yaml#/components/schemas/Burgerservicenummer'
         naam:
-          $ref: '../../brp/naam/naam-basis-v1.yaml#/components/schemas/NaamBasis'
-        geslacht:
-          $ref: '../../brp/geslacht/geslachtsaanduiding-v1.yaml#/components/schemas/Geslachtsaanduiding'
+          $ref: '../naam/volledige-naam-v1.yaml#/components/schemas/NaamVolledigeNaam'
