@@ -158,7 +158,7 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
                 Burgerservicenummer = persoon.Burgerservicenummer,
                 Geboorte = MapGeboorte(persoon),
                 Geslacht = persoon.Geslacht,
-                Naam = MapNaam(persoon),
+                Naam = MapNaam(persoon)
             };
         }
 
@@ -175,7 +175,7 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             {
                 Burgerservicenummer = persoon.Burgerservicenummer,
                 Geslacht = persoon.Geslacht,
-                Naam = MapNaam(persoon),
+                Naam = MapNaam(persoon)
             };
         }
 
