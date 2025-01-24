@@ -52,8 +52,6 @@ Functionaliteit: gezagsrelaties van een minderjarige(n)
         | minderjarige.naam.voornamen                            | Jan Peter                 |
         | minderjarige.naam.voorvoegsel                          | te                        |
         | minderjarige.naam.geslachtsnaam                        | Hoogh                     |
-        | minderjarige.naam.aanduidingNaamgebruik.code           | E                         |
-        | minderjarige.naam.aanduidingNaamgebruik.omschrijving   | eigen geslachtsnaam       |
         | minderjarige.naam.adellijkeTitelPredicaat.code         | JH                        |
         | minderjarige.naam.adellijkeTitelPredicaat.omschrijving | jonkheer                  |
         | minderjarige.naam.adellijkeTitelPredicaat.soort        | predicaat                 |
@@ -66,8 +64,6 @@ Functionaliteit: gezagsrelaties van een minderjarige(n)
         | naam.voornamen                            | Alex                |
         | naam.voorvoegsel                          | te                  |
         | naam.geslachtsnaam                        | Hoogh               |
-        | naam.aanduidingNaamgebruik.code           | E                   |
-        | naam.aanduidingNaamgebruik.omschrijving   | eigen geslachtsnaam |
         | naam.adellijkeTitelPredicaat.code         | JH                  |
         | naam.adellijkeTitelPredicaat.omschrijving | jonkheer            |
         | naam.adellijkeTitelPredicaat.soort        | predicaat           |
@@ -79,8 +75,6 @@ Functionaliteit: gezagsrelaties van een minderjarige(n)
         | naam.voornamen                            | Carolina            |
         | naam.voorvoegsel                          | te                  |
         | naam.geslachtsnaam                        | Hoogh               |
-        | naam.aanduidingNaamgebruik.code           | E                   |
-        | naam.aanduidingNaamgebruik.omschrijving   | eigen geslachtsnaam |
         | naam.adellijkeTitelPredicaat.code         | JH                  |
         | naam.adellijkeTitelPredicaat.omschrijving | jonkheer            |
         | naam.adellijkeTitelPredicaat.soort        | predicaat           |
@@ -125,8 +119,6 @@ Functionaliteit: gezagsrelaties van een minderjarige(n)
         | minderjarige.naam.voornamen                            | Jan Peter                |
         | minderjarige.naam.voorvoegsel                          | te                       |
         | minderjarige.naam.geslachtsnaam                        | Hoogh                    |
-        | minderjarige.naam.aanduidingNaamgebruik.code           | E                        |
-        | minderjarige.naam.aanduidingNaamgebruik.omschrijving   | eigen geslachtsnaam      |
         | minderjarige.naam.adellijkeTitelPredicaat.code         | JH                       |
         | minderjarige.naam.adellijkeTitelPredicaat.omschrijving | jonkheer                 |
         | minderjarige.naam.adellijkeTitelPredicaat.soort        | predicaat                |
@@ -137,8 +129,6 @@ Functionaliteit: gezagsrelaties van een minderjarige(n)
         | ouder.naam.voornamen                                   | Alex                     |
         | ouder.naam.voorvoegsel                                 | te                       |
         | ouder.naam.geslachtsnaam                               | Hoogh                    |
-        | ouder.naam.aanduidingNaamgebruik.code                  | E                        |
-        | ouder.naam.aanduidingNaamgebruik.omschrijving          | eigen geslachtsnaam      |
         | ouder.naam.adellijkeTitelPredicaat.code                | JH                       |
         | ouder.naam.adellijkeTitelPredicaat.omschrijving        | jonkheer                 |
         | ouder.naam.adellijkeTitelPredicaat.soort               | predicaat                |
@@ -202,8 +192,6 @@ Functionaliteit: gezagsrelaties van een minderjarige(n)
         | minderjarige.naam.voornamen                            | Jan Peter           |
         | minderjarige.naam.voorvoegsel                          | te                  |
         | minderjarige.naam.geslachtsnaam                        | Hoogh               |
-        | minderjarige.naam.aanduidingNaamgebruik.code           | E                   |
-        | minderjarige.naam.aanduidingNaamgebruik.omschrijving   | eigen geslachtsnaam |
         | minderjarige.naam.adellijkeTitelPredicaat.code         | JH                  |
         | minderjarige.naam.adellijkeTitelPredicaat.omschrijving | jonkheer            |
         | minderjarige.naam.adellijkeTitelPredicaat.soort        | predicaat           |
@@ -214,8 +202,6 @@ Functionaliteit: gezagsrelaties van een minderjarige(n)
         | ouder.naam.voornamen                                   | Alex                |
         | ouder.naam.voorvoegsel                                 | te                  |
         | ouder.naam.geslachtsnaam                               | Hoogh               |
-        | ouder.naam.aanduidingNaamgebruik.code                  | E                   |
-        | ouder.naam.aanduidingNaamgebruik.omschrijving          | eigen geslachtsnaam |
         | ouder.naam.adellijkeTitelPredicaat.code                | JH                  |
         | ouder.naam.adellijkeTitelPredicaat.omschrijving        | jonkheer            |
         | ouder.naam.adellijkeTitelPredicaat.soort               | predicaat           |
@@ -225,8 +211,6 @@ Functionaliteit: gezagsrelaties van een minderjarige(n)
         | derde.naam.voornamen                                   | Carolina            |
         | derde.naam.voorvoegsel                                 | te                  |
         | derde.naam.geslachtsnaam                               | Hoogh               |
-        | derde.naam.aanduidingNaamgebruik.code                  | E                   |
-        | derde.naam.aanduidingNaamgebruik.omschrijving          | eigen geslachtsnaam |
         | derde.naam.adellijkeTitelPredicaat.code                | JH                  |
         | derde.naam.adellijkeTitelPredicaat.omschrijving        | jonkheer            |
         | derde.naam.adellijkeTitelPredicaat.soort               | predicaat           |
@@ -316,8 +300,6 @@ Functionaliteit: gezagsrelaties van een minderjarige(n)
         | minderjarige.naam.voornamen                            | Ali                 |
         | minderjarige.naam.voorvoegsel                          | te                  |
         | minderjarige.naam.geslachtsnaam                        | Hoogh               |
-        | minderjarige.naam.aanduidingNaamgebruik.code           | E                   |
-        | minderjarige.naam.aanduidingNaamgebruik.omschrijving   | eigen geslachtsnaam |
         | minderjarige.naam.adellijkeTitelPredicaat.code         | JH                  |
         | minderjarige.naam.adellijkeTitelPredicaat.omschrijving | jonkheer            |
         | minderjarige.naam.adellijkeTitelPredicaat.soort        | predicaat           |
@@ -355,8 +337,6 @@ Functionaliteit: gezagsrelaties van een minderjarige(n)
         | minderjarige.naam.voornamen                            | Ali                 |
         | minderjarige.naam.voorvoegsel                          | te                  |
         | minderjarige.naam.geslachtsnaam                        | Hoogh               |
-        | minderjarige.naam.aanduidingNaamgebruik.code           | E                   |
-        | minderjarige.naam.aanduidingNaamgebruik.omschrijving   | eigen geslachtsnaam |
         | minderjarige.naam.adellijkeTitelPredicaat.code         | JH                  |
         | minderjarige.naam.adellijkeTitelPredicaat.omschrijving | jonkheer            |
         | minderjarige.naam.adellijkeTitelPredicaat.soort        | predicaat           |
@@ -404,8 +384,6 @@ Functionaliteit: gezagsrelaties van een minderjarige(n)
         | minderjarige.naam.voornamen                            | Jan Peter           |
         | minderjarige.naam.voorvoegsel                          | te                  |
         | minderjarige.naam.geslachtsnaam                        | Hoogh               |
-        | minderjarige.naam.aanduidingNaamgebruik.code           | E                   |
-        | minderjarige.naam.aanduidingNaamgebruik.omschrijving   | eigen geslachtsnaam |
         | minderjarige.naam.adellijkeTitelPredicaat.code         | JH                  |
         | minderjarige.naam.adellijkeTitelPredicaat.omschrijving | jonkheer            |
         | minderjarige.naam.adellijkeTitelPredicaat.soort        | predicaat           |
@@ -419,8 +397,6 @@ Functionaliteit: gezagsrelaties van een minderjarige(n)
         | naam.voornamen                            | Alex                |
         | naam.voorvoegsel                          | te                  |
         | naam.geslachtsnaam                        | Hoogh               |
-        | naam.aanduidingNaamgebruik.code           | E                   |
-        | naam.aanduidingNaamgebruik.omschrijving   | eigen geslachtsnaam |
         | naam.adellijkeTitelPredicaat.code         | JH                  |
         | naam.adellijkeTitelPredicaat.omschrijving | jonkheer            |
         | naam.adellijkeTitelPredicaat.soort        | predicaat           |
@@ -459,8 +435,6 @@ Functionaliteit: gezagsrelaties van een minderjarige(n)
         | minderjarige.naam.voornamen                            | Jan Peter           |
         | minderjarige.naam.voorvoegsel                          | te                  |
         | minderjarige.naam.geslachtsnaam                        | Hoogh               |
-        | minderjarige.naam.aanduidingNaamgebruik.code           | E                   |
-        | minderjarige.naam.aanduidingNaamgebruik.omschrijving   | eigen geslachtsnaam |
         | minderjarige.naam.adellijkeTitelPredicaat.code         | JH                  |
         | minderjarige.naam.adellijkeTitelPredicaat.omschrijving | jonkheer            |
         | minderjarige.naam.adellijkeTitelPredicaat.soort        | predicaat           |

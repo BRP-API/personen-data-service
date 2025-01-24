@@ -1,5 +1,6 @@
 ﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
+using Rvig.HaalCentraalApi.Shared.ApiModels.PersonenHistorieBase;
 
 namespace Rvig.HaalCentraalApi.Personen.Mappers
 {
@@ -88,9 +89,9 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
 
                 result.Add(new ApiModels.BRP.GezamenlijkGezag
                 {
-                    Ouder = ouder,
                     Derde = derde,
-                    Minderjarige = minderjarige
+                    Minderjarige = minderjarige,
+                    Ouder = ouder
                 });
             }
         }
@@ -105,8 +106,8 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
 
                 result.Add(new ApiModels.BRP.TweehoofdigOuderlijkGezag
                 {
-                    Ouders = ouders,
-                    Minderjarige = minderjarige
+                    Minderjarige = minderjarige,
+                    Ouders = ouders
                 });
             }
         }
@@ -120,8 +121,8 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
 
                 result.Add(new ApiModels.BRP.EenhoofdigOuderlijkGezag
                 {
-                    Ouder = ouder,
-                    Minderjarige = minderjarige
+                    Minderjarige = minderjarige,
+                    Ouder = ouder
                 });
             }
         }
@@ -138,8 +139,8 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             return new ApiModels.BRP.GezagOuder
             {
                 Burgerservicenummer = persoon.Burgerservicenummer,
-                Naam = persoon.Naam,
-                Geslacht = persoon.Geslacht
+                Geslacht = persoon.Geslacht,
+                Naam = MapNaam(persoon)
             };
         }
 
@@ -155,13 +156,9 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             return new ApiModels.BRP.Minderjarige
             {
                 Burgerservicenummer = persoon.Burgerservicenummer,
-                Naam = persoon.Naam,
-                Geboorte = persoon.Geboorte != null ? new Shared.ApiModels.PersonenHistorieBase.GbaGeboorteBeperkt()
-                {
-                    Datum = persoon.Geboorte?.Datum
-
-                } : null,
-                Geslacht = persoon.Geslacht
+                Geboorte = MapGeboorte(persoon),
+                Geslacht = persoon.Geslacht,
+                Naam = MapNaam(persoon),
             };
         }
 
@@ -171,15 +168,34 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
 
             if (persoon == null) return new ApiModels.BRP.Meerderjarige()
             {
-                Burgerservicenummer = bsn
+                Burgerservicenummer = bsn,
             };
 
             return new ApiModels.BRP.Meerderjarige
             {
                 Burgerservicenummer = persoon.Burgerservicenummer,
-                Naam = persoon.Naam,
-                Geslacht = persoon.Geslacht
+                Geslacht = persoon.Geslacht,
+                Naam = MapNaam(persoon),
             };
+        }
+
+        private static GbaNaamBasis? MapNaam(GbaPersoon persoon)
+        {
+            return persoon.Naam != null ? new GbaNaamBasis
+            {
+                Voornamen = persoon.Naam?.Voornamen,
+                AdellijkeTitelPredicaat = persoon.Naam?.AdellijkeTitelPredicaat,
+                Voorvoegsel = persoon.Naam?.Voorvoegsel,
+                Geslachtsnaam = persoon.Naam?.Geslachtsnaam
+            } : null;
+        }
+
+        private static GbaGeboorteBeperkt? MapGeboorte(GbaPersoon persoon)
+        {
+            return persoon.Geboorte != null ? new GbaGeboorteBeperkt()
+            {
+                Datum = persoon.Geboorte?.Datum
+            } : null;
         }
     }
 }
