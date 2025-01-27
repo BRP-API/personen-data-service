@@ -34,8 +34,6 @@ Functionaliteit: gezagsrelaties van een minderjarige
         | minderjarige.naam.voornamen                            | Jan Peter           |
         | minderjarige.naam.voorvoegsel                          | te                  |
         | minderjarige.naam.geslachtsnaam                        | Hoogh               |
-        | minderjarige.naam.aanduidingNaamgebruik.code           | E                   |
-        | minderjarige.naam.aanduidingNaamgebruik.omschrijving   | eigen geslachtsnaam |
         | minderjarige.naam.adellijkeTitelPredicaat.code         | JH                  |
         | minderjarige.naam.adellijkeTitelPredicaat.omschrijving | jonkheer            |
         | minderjarige.naam.adellijkeTitelPredicaat.soort        | predicaat           |
