@@ -5,7 +5,8 @@ namespace Rvig.HaalCentraalApi.Personen.Validation.RequestModelValidators;
 
 public class ZoekMetPostcodeEnHuisnummerValidator : HuisnummerValidatorBase<ZoekMetPostcodeEnHuisnummer>
 {
-	protected const string _postcodePattern = @"^[1-9]{1}[0-9]{3}[ ]?[A-Za-z]{2}$";
+    protected string _geslachtsnaamPattern = @"^[a-zA-Z0-9À-ž \.\-\']{1,200}$|^[a-zA-Z0-9À-ž \.\-\']{3,199}\*{1}$";
+    protected const string _postcodePattern = @"^[1-9]{1}[0-9]{3}[ ]?[A-Za-z]{2}$";
 
 	public ZoekMetPostcodeEnHuisnummerValidator()
 	{
@@ -30,5 +31,10 @@ public class ZoekMetPostcodeEnHuisnummerValidator : HuisnummerValidatorBase<Zoek
 
 		RuleFor(x => x.geboortedatum)
 			.Matches(_datePattern).WithMessage(_dateErrorMessage);
-	}
+
+        RuleFor(x => x.geslachtsnaam)
+           .Cascade(CascadeMode.Stop)
+           .Matches(_geslachtsnaamPattern).WithMessage(GetPatternErrorMessage(_geslachtsnaamPattern))
+           .When(x => !string.IsNullOrWhiteSpace(x.geslachtsnaam));
+    }
 }
