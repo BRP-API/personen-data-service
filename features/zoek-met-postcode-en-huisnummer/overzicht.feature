@@ -8,8 +8,8 @@ Functionaliteit: Zoek personen met postcode en huisnummer
     | gemeentecode (92.10) | postcode (11.60) | huisnummer (11.20) |
     | 0599                 | 2628HJ           | 2                  |
     En de persoon met burgerservicenummer '000000024' heeft de volgende gegevens
-    | geboortedatum (03.10) |
-    | 19900101              |
+    | geboortedatum (03.10) | geslachtsnaam (02.40) |
+    | 19900101              | Jansen                |
     En de persoon is ingeschreven op adres 'A1' met de volgende gegevens
     | gemeente van inschrijving (09.10) |
     | 0599                              |
@@ -206,3 +206,53 @@ Functionaliteit: Zoek personen met postcode en huisnummer
       En heeft de response een persoon met de volgende gegevens
       | naam                | waarde    |
       | burgerservicenummer | 000000025 |
+
+  Regel: Optionele 'geslachtsnaam' parameter kan worden toegevoegd om de zoek criteria aan te scherpen.
+
+  Abstract Scenario: Zoek een persoon met een deel van zijn geslachtsnaam
+      Als personen wordt gezocht met de volgende parameters
+        | naam          | waarde                      |
+        | type          | ZoekMetPostcodeEnHuisnummer |
+        | postcode      |                      2628HJ |
+        | huisnummer    |                           2 |
+        | geslachtsnaam | <geslachtsnaam>             |
+        | fields        | burgerservicenummer         |
+      Dan heeft de response 0 personen
+
+      Voorbeelden:
+        | geslachtsnaam |
+        | Maas          |
+        | jans          |
+        | MAAS          |
+
+    Scenario: Zoek personen met postcode, huisnummer en geslachtsnaam
+      Als personen wordt gezocht met de volgende parameters
+        | naam          | waarde                      |
+        | type          | ZoekMetPostcodeEnHuisnummer |
+        | postcode      |                      2628HJ |
+        | huisnummer    |                           2 |
+        | geslachtsnaam | Jansen                      |
+        | fields        | burgerservicenummer         |
+      Dan heeft de response 1 persoon
+      En heeft de response een persoon met de volgende gegevens
+        | naam                | waarde    |
+        | burgerservicenummer | 000000024 |
+
+    Abstract Scenario: Zoek personen met "*" wildcard matching in geslachtsnaam
+      Als personen wordt gezocht met de volgende parameters
+        | naam          | waarde                      |
+        | type          | ZoekMetPostcodeEnHuisnummer |
+        | postcode      |                      2628HJ |
+        | huisnummer    |                           2 |
+        | geslachtsnaam | <geslachtsnaam filter>      |
+        | fields        | burgerservicenummer         |
+      Dan heeft de response 1 persoon
+      En heeft de response een persoon met de volgende gegevens
+        | naam                | waarde    |
+        | burgerservicenummer | 000000024 |
+
+      Voorbeelden:
+        | geslachtsnaam filter |
+        | Jan*                 |
+        | jan*                 |
+        | JAN*                 |
