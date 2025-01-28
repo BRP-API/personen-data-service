@@ -5,7 +5,7 @@ info:
     API voor het bevragen van personen uit de basisregistratie personen (BRP), inclusief de registratie niet-ingezeten (RNI). Met deze API kun je personen zoeken en actuele gegevens over personen, kinderen, partners en ouders raadplegen.
 
     Gegevens die er niet zijn of niet actueel zijn krijg je niet terug. Had een persoon bijvoorbeeld een verblijfstitel die nu niet meer geldig is, dan wordt die verblijfstitel niet opgenomen. In partners wordt alleen de actuele of de laatst ontbonden partner geleverd.
-  version: 2.4.1
+  version: 2.6.0
   contact:
     url: https://github.com/VNG-Realisatie/Haal-Centraal-BRP-bevragen
   license:
@@ -741,15 +741,24 @@ components:
           - burgerservicenummer: '999998882'
         minderjarige:
           burgerservicenummer: '999998894'
+    VolledigeNaam:
+      type: string
+      pattern: ^[a-zA-Z0-9À-ž \.\-\']{1,450}$
+      description: |
+        Combinatie van predicaat, voornamen, adellijke titel, voorvoegsels en geslachtsnaam, zonder toevoeging van een eventuele partnernaam.
+      example: Pieter Jan de Vries
+    NaamVolledigeNaam:
+      type: object
+      properties:
+        volledigeNaam:
+          $ref: '#/components/schemas/VolledigeNaam'
     GezagOuder:
       type: object
       properties:
         burgerservicenummer:
           $ref: '#/components/schemas/Burgerservicenummer'
         naam:
-          $ref: '#/components/schemas/NaamBasis'
-        geslacht:
-          $ref: '#/components/schemas/Geslachtsaanduiding'
+          $ref: '#/components/schemas/NaamVolledigeNaam'
       required:
         - burgerservicenummer
     TweehoofdigOuderlijkGezag:
@@ -776,9 +785,7 @@ components:
         burgerservicenummer:
           $ref: '#/components/schemas/Burgerservicenummer'
         naam:
-          $ref: '#/components/schemas/NaamBasis'
-        geslacht:
-          $ref: '#/components/schemas/Geslachtsaanduiding'
+          $ref: '#/components/schemas/NaamVolledigeNaam'
     GezamenlijkGezag:
       allOf:
         - $ref: '#/components/schemas/AbstractGezagsrelatie'
@@ -816,17 +823,22 @@ components:
           properties:
             toelichting:
               $ref: '#/components/schemas/Toelichting'
+    Leeftijd:
+      type: integer
+      description: |
+        Leeftijd in jaren op het moment van bevragen.
+      example: 34
+      minimum: 0
+      maximum: 150
     Minderjarige:
       type: object
       properties:
         burgerservicenummer:
           $ref: '#/components/schemas/Burgerservicenummer'
         naam:
-          $ref: '#/components/schemas/NaamBasis'
-        geslacht:
-          $ref: '#/components/schemas/Geslachtsaanduiding'
-        geboorte:
-          $ref: '#/components/schemas/GeboorteBasis'
+          $ref: '#/components/schemas/NaamVolledigeNaam'
+        leeftijd:
+          $ref: '#/components/schemas/Leeftijd'
       required:
         - burgerservicenummer
     Gezag:
