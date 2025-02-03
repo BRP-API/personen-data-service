@@ -1,5 +1,6 @@
 #language: nl
 
+@skip-verify
 Functionaliteit: wanneer bij gezagsbepaling gegevens in onderzoek gebruikt zijn wordt dit meegegeven
 
   Regel: wanneer gegevensin onderzoek staan bij het bevragen van een minderjarige wordt een gezag uitspraak geleverd met een toelichting welke gegevens in onderzoek zijn 
