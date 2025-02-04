@@ -741,24 +741,15 @@ components:
           - burgerservicenummer: '999998882'
         minderjarige:
           burgerservicenummer: '999998894'
-    VolledigeNaam:
-      type: string
-      pattern: ^[a-zA-Z0-9À-ž \.\-\']{1,450}$
-      description: |
-        Combinatie van predicaat, voornamen, adellijke titel, voorvoegsels en geslachtsnaam, zonder toevoeging van een eventuele partnernaam.
-      example: Pieter Jan de Vries
-    NaamVolledigeNaam:
-      type: object
-      properties:
-        volledigeNaam:
-          $ref: '#/components/schemas/VolledigeNaam'
     GezagOuder:
       type: object
       properties:
         burgerservicenummer:
           $ref: '#/components/schemas/Burgerservicenummer'
         naam:
-          $ref: '#/components/schemas/NaamVolledigeNaam'
+          $ref: '#/components/schemas/NaamBasis'
+        geslacht:
+          $ref: '#/components/schemas/Geslachtsaanduiding'
       required:
         - burgerservicenummer
     TweehoofdigOuderlijkGezag:
@@ -785,7 +776,9 @@ components:
         burgerservicenummer:
           $ref: '#/components/schemas/Burgerservicenummer'
         naam:
-          $ref: '#/components/schemas/NaamVolledigeNaam'
+          $ref: '#/components/schemas/NaamBasis'
+        geslacht:
+          $ref: '#/components/schemas/Geslachtsaanduiding'
     GezamenlijkGezag:
       allOf:
         - $ref: '#/components/schemas/AbstractGezagsrelatie'
@@ -823,22 +816,17 @@ components:
           properties:
             toelichting:
               $ref: '#/components/schemas/Toelichting'
-    Leeftijd:
-      type: integer
-      description: |
-        Leeftijd in jaren op het moment van bevragen.
-      example: 34
-      minimum: 0
-      maximum: 150
     Minderjarige:
       type: object
       properties:
         burgerservicenummer:
           $ref: '#/components/schemas/Burgerservicenummer'
         naam:
-          $ref: '#/components/schemas/NaamVolledigeNaam'
-        leeftijd:
-          $ref: '#/components/schemas/Leeftijd'
+          $ref: '#/components/schemas/NaamBasis'
+        geslacht:
+          $ref: '#/components/schemas/Geslachtsaanduiding'
+        geboorte:
+          $ref: '#/components/schemas/GeboorteBasis'
       required:
         - burgerservicenummer
     Gezag:
