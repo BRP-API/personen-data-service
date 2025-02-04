@@ -95,6 +95,9 @@ components:
       properties:
         type:
           type: string
+        inOnderzoek:
+          type: boolean
+          description: Geeft aan dat de gezagsrelatie in onderzoek is.
       discriminator:
         propertyName: type
         mapping:

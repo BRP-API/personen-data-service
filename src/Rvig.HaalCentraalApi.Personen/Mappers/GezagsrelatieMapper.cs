@@ -42,7 +42,8 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
                 result.Add(new ApiModels.BRP.GezagNietTeBepalen
                 {
                     Minderjarige = minderjarige,
-                    Toelichting = gezagNietTeBepalen.Toelichting
+                    Toelichting = gezagNietTeBepalen.Toelichting,
+                    InOnderzoek = gezagNietTeBepalen.InOnderzoek
                 });
             }
         }
@@ -56,7 +57,8 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
                 result.Add(new ApiModels.BRP.TijdelijkGeenGezag
                 {
                     Minderjarige = minderjarige,
-                    Toelichting = tijdelijkGeenGezag.Toelichting
+                    Toelichting = tijdelijkGeenGezag.Toelichting,
+                    InOnderzoek = tijdelijkGeenGezag.InOnderzoek
                 });
             }
         }
@@ -74,7 +76,8 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
                 result.Add(new ApiModels.BRP.Voogdij
                 {
                     Derden = derden,
-                    Minderjarige = minderjarige
+                    Minderjarige = minderjarige,
+                    InOnderzoek = voogdij.InOnderzoek
                 });
             }
         }
@@ -91,7 +94,8 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
                 {
                     Derde = derde,
                     Minderjarige = minderjarige,
-                    Ouder = ouder
+                    Ouder = ouder,
+                    InOnderzoek = gezamenlijkGezag.InOnderzoek
                 });
             }
         }
@@ -107,7 +111,8 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
                 result.Add(new ApiModels.BRP.TweehoofdigOuderlijkGezag
                 {
                     Minderjarige = minderjarige,
-                    Ouders = ouders
+                    Ouders = ouders,
+                    InOnderzoek = tweehoofdigOuderlijkGezag.InOnderzoek
                 });
             }
         }
@@ -122,7 +127,8 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
                 result.Add(new ApiModels.BRP.EenhoofdigOuderlijkGezag
                 {
                     Minderjarige = minderjarige,
-                    Ouder = ouder
+                    Ouder = ouder,
+                    InOnderzoek = eenhoofdigOuderlijkGezag.InOnderzoek
                 });
             }
         }
