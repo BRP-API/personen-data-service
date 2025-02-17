@@ -69,3 +69,24 @@ Functionaliteit: RaadpleegMetBurgerservicenummer van persoonslijst met opschorti
       | burgerservicenummer | 000000024                       |
       | fields              | burgerservicenummer             |
       Dan heeft de response 0 personen
+
+    Scenario: persoonslijst heeft opschorting bijhouding reden "F" en zelfde burgerservicenummer is gebruikt op andere persoonslijst
+      Gegeven de persoon met burgerservicenummer '000000024' heeft de volgende gegevens
+      | geslachtsnaam (02.40) |
+      | Malus                 |
+      En de persoon heeft de volgende 'inschrijving' gegevens
+      | datum opschorting bijhouding (67.10) | reden opschorting bijhouding (67.20) |
+      | 20220829                             | F                                    |
+      En de persoon met burgerservicenummer '000000024' heeft de volgende gegevens
+      | geslachtsnaam (02.40) |
+      | Bonus                 |
+      Als personen wordt gezocht met de volgende parameters
+      | naam                | waarde                                 |
+      | type                | RaadpleegMetBurgerservicenummer        |
+      | burgerservicenummer | 000000024                              |
+      | fields              | burgerservicenummer,naam.geslachtsnaam |
+      Dan heeft de response 1 persoon
+      En heeft de response een persoon met de volgende gegevens
+      | naam                | waarde    |
+      | burgerservicenummer | 000000024 |
+      | naam.geslachtsnaam  | Bonus     |
