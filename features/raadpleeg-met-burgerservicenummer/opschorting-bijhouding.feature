@@ -57,3 +57,15 @@ Functionaliteit: RaadpleegMetBurgerservicenummer van persoonslijst met opschorti
       | R           | pl is aangelegd in de rni |
       | .           | onbekend                  |
 
+  Regel: Een persoonslijst met reden opschorting bijhouding "F" (fout - afgevoerde persoonslijst) wordt niet geleverd
+
+    Scenario: persoonslijst heeft opschorting bijhouding reden "F"
+      Gegeven de persoon met burgerservicenummer '000000024' heeft de volgende 'inschrijving' gegevens
+      | datum opschorting bijhouding (67.10) | reden opschorting bijhouding (67.20) |
+      | 20220829                             | F                                    |
+      Als personen wordt gezocht met de volgende parameters
+      | naam                | waarde                          |
+      | type                | RaadpleegMetBurgerservicenummer |
+      | burgerservicenummer | 000000024                       |
+      | fields              | burgerservicenummer             |
+      Dan heeft de response 0 personen
