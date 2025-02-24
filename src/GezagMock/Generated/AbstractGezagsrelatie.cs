@@ -20,6 +20,8 @@ public partial class AbstractGezagsrelatie
         set { _additionalProperties = value; }
     }
 
+    [Newtonsoft.Json.JsonProperty("inOnderzoek", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+    public Boolean? InOnderzoek { get; set; }
 }
 
 public partial class TijdelijkGeenGezag : AbstractGezagsrelatie
