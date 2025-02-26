@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.1.0
 info:
   title: Gezag definities
   version: 2.0.0
@@ -13,8 +13,17 @@ components:
           properties:
             gezag:
               $ref: "#/components/schemas/Gezag"
+              deprecated: true
+            gezagsrelaties:
+              $ref: "#/components/schemas/Gezagsrelaties"
     Gezag:
       type: array
       items: 
         $ref: 'brp/gezag/gezagsrelatie-v1.yaml#/components/schemas/AbstractGezagsrelatie'
+      minItems: 0
+
+    Gezagsrelaties:
+      type: array
+      items: 
+        $ref: 'brp/gezag/gezagsrelatie-v2.yaml#/components/schemas/Gezagsrelatie'
       minItems: 0
