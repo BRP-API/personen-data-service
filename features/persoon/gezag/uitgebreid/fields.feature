@@ -41,6 +41,7 @@ Functionaliteit: gezagsrelaties vragen met fields
         | type                             | GezamenlijkGezag |
         | minderjarige.burgerservicenummer |        000000014 |
         | ouder.burgerservicenummer        |        000000061 |
+        | derde.type                       | BekendeDerde     |
         | derde.burgerservicenummer        |        000000048 |
       En voor de persoon geldt ook het volgende gezag
         | naam                             | waarde             |
@@ -52,8 +53,8 @@ Functionaliteit: gezagsrelaties vragen met fields
         | type                             | Voogdij   |
         | minderjarige.burgerservicenummer | 000000060 |
       En het gezag heeft de volgende derden
-        | burgerservicenummer |
-        |           000000048 |
+        | type         | burgerservicenummer |
+        | BekendeDerde |           000000048 |
       En voor de persoon geldt ook het volgende gezag
         | naam                             | waarde             |
         | type                             | TijdelijkGeenGezag |
@@ -205,6 +206,7 @@ Functionaliteit: gezagsrelaties vragen met fields
         | ouder.naam.adellijkeTitelPredicaat.soort               | predicaat           |
         | ouder.geslacht.code                                    | M                   |
         | ouder.geslacht.omschrijving                            | man                 |
+        | derde.type                                             | BekendeDerde        |
         | derde.burgerservicenummer                              |           000000048 |
         | derde.naam.voornamen                                   | Carolina            |
         | derde.naam.voorvoegsel                                 | te                  |
@@ -243,6 +245,7 @@ Functionaliteit: gezagsrelaties vragen met fields
         | minderjarige.geslacht.omschrijving                     | man                 |
       En heeft 'gezag' een 'derde' met de volgende gegevens
         | naam                                      | waarde              |
+        | type                                      | BekendeDerde        |
         | burgerservicenummer                       |           000000048 |
         | naam.voornamen                            | Carolina            |
         | naam.voorvoegsel                          | te                  |

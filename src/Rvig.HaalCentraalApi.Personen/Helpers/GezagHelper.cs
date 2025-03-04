@@ -27,7 +27,10 @@
                 }
                 if (x is ApiModels.Gezag.GezamenlijkGezag gz)
                 {
-                    gezagBsns.Add(gz.Derde.Burgerservicenummer);
+                    if(gz.Derde is ApiModels.Gezag.BekendeDerde bekendeDerde)
+                    {
+                        gezagBsns.Add(bekendeDerde.Burgerservicenummer);
+                    }
                     gezagBsns.Add(gz.Ouder.Burgerservicenummer);
                     gezagBsns.Add(gz.Minderjarige.Burgerservicenummer);
                 }
