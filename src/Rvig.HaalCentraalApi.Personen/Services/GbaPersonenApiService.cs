@@ -5,7 +5,6 @@ using Rvig.HaalCentraalApi.Personen.Helpers;
 using Rvig.HaalCentraalApi.Personen.Interfaces;
 using Rvig.HaalCentraalApi.Personen.RequestModels.BRP;
 using Rvig.HaalCentraalApi.Personen.ResponseModels.BRP;
-using Rvig.HaalCentraalApi.Personen.Validation;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
 using Rvig.HaalCentraalApi.Shared.Interfaces;
 using Rvig.HaalCentraalApi.Shared.Services;
@@ -67,10 +66,6 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 	private async Task<(RaadpleegMetBurgerservicenummerResponse personenResponse, List<long>? plIds)> GetPersonen(RaadpleegMetBurgerservicenummer model)
 	{
 		// Validation
-		ValidationHelper.ValidateBurgerservicenummers(model.burgerservicenummer);
-
-		await ValidationHelper.ValidateGemeenteInschrijving(model.gemeenteVanInschrijving, _domeinTabellenRepo);
-
 		_fieldsExpandFilterService.ValidateScope(typeof(GbaPersoon), _persoonFieldsSettings.GbaFieldsSettings, model.fields);
 
 		// Get personen
@@ -183,8 +178,6 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 	private async Task<(ZoekMetGeslachtsnaamEnGeboortedatumResponse personenResponse, List<long>? plIds)> GetPersonenBeperkt(ZoekMetGeslachtsnaamEnGeboortedatum model)
 	{
 		// Validation
-		await ValidationHelper.ValidateGemeenteInschrijving(model.gemeenteVanInschrijving, _domeinTabellenRepo);
-		ValidationHelper.ValidateWildcards(model);
 		var personenPlIds = await GetPersonenBeperktBase<GbaPersoonBeperkt>(model, model.inclusiefOverledenPersonen);
 
 		// Get personen + Filter response by fields
@@ -199,8 +192,6 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 	private async Task<(ZoekMetNaamEnGemeenteVanInschrijvingResponse personenResponse, List<long>? plIds)> GetPersonenBeperkt(ZoekMetNaamEnGemeenteVanInschrijving model)
 	{
 		// Validation
-		await ValidationHelper.ValidateGemeenteInschrijving(model.gemeenteVanInschrijving, _domeinTabellenRepo);
-		ValidationHelper.ValidateWildcards(model);
 		var personenPlIds = await GetPersonenBeperktBase<GbaPersoonBeperkt>(model, model.inclusiefOverledenPersonen);
 
 		// Get personen + Filter response by fields
@@ -228,7 +219,6 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 	private async Task<(ZoekMetPostcodeEnHuisnummerResponse personenResponse, List<long>? plIds)> GetPersonenBeperkt(ZoekMetPostcodeEnHuisnummer model)
 	{
 		// Validation
-		await ValidationHelper.ValidateGemeenteInschrijving(model.gemeenteVanInschrijving, _domeinTabellenRepo);
 		var personenPlIds = await GetPersonenBeperktBase<GbaPersoonBeperkt>(model, model.inclusiefOverledenPersonen);
 
 		// Get personen + Filter response by fields
@@ -243,8 +233,6 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 	private async Task<(ZoekMetStraatHuisnummerEnGemeenteVanInschrijvingResponse personenResponse, List<long>? plIds)> GetPersonenBeperkt(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving model)
 	{
 		// Validation
-		await ValidationHelper.ValidateGemeenteInschrijving(model.gemeenteVanInschrijving, _domeinTabellenRepo);
-		ValidationHelper.ValidateWildcards(model);
 		var personenPlIds = await GetPersonenBeperktBase<GbaPersoonBeperkt>(model, model.inclusiefOverledenPersonen);
 
 		// Get personen + Filter response by fields

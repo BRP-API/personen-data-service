@@ -28,12 +28,12 @@ namespace Personen.Tests
                 new Gezag.GezamenlijkGezag
                 {
                     Ouder = new Gezag.GezagOuder { Burgerservicenummer = "6" },
-                    Derde = new Gezag.Meerderjarige { Burgerservicenummer = "7" },
+                    Derde = new Gezag.BekendeDerde { Burgerservicenummer = "7" },
                     Minderjarige = new Gezag.Minderjarige { Burgerservicenummer = "8" }
                 },
                 new Gezag.Voogdij
                 {
-                    Derden = new List<Gezag.Meerderjarige>
+                    Derden = new List<Gezag.BekendeDerde>
                     {
                         new() { Burgerservicenummer = "9" },
                         new() { Burgerservicenummer = "10" }
@@ -95,7 +95,7 @@ namespace Personen.Tests
         {
             new Gezag.Voogdij
             {
-                Derden = new List<Gezag.Meerderjarige>
+                Derden = new List<Gezag.BekendeDerde>
                 {
                     new() { Burgerservicenummer = "111" },
                     new() { Burgerservicenummer = "222" }
@@ -104,7 +104,7 @@ namespace Personen.Tests
             },
             new Gezag.GezamenlijkGezag
             {
-                Derde = new Gezag.Meerderjarige { Burgerservicenummer = "444" },
+                Derde = new Gezag.BekendeDerde { Burgerservicenummer = "444" },
                 Ouder = new Gezag.GezagOuder { Burgerservicenummer = "555" },
                 Minderjarige = new Gezag.Minderjarige { Burgerservicenummer = "666" }
             }
