@@ -160,7 +160,11 @@ namespace Rvig.Data.Personen.Repositories.Queries.Helper
 				parameters.Add(geboorteDatumPart.pgsqlParam);
 			}
 
-			whereParts = whereParts.Where(x => x != null).ToList();
+            (string where, NpgsqlParameter pgsqlParam) geslachtsnaamPart = CreateGeslachtsnaamPart(model.geslachtsnaam);
+            whereParts.Add(geslachtsnaamPart.where);
+            parameters.Add(geslachtsnaamPart.pgsqlParam);
+
+            whereParts = whereParts.Where(x => x != null).ToList();
 			parameters = parameters.Where(x => x != null).ToList();
 
 			return CreatePersoonSearchBase(whereParts, parameters);
