@@ -5,7 +5,7 @@ info:
     API voor het bevragen van personen uit de basisregistratie personen (BRP), inclusief de registratie niet-ingezeten (RNI). Met deze API kun je personen zoeken en actuele gegevens over personen, kinderen, partners en ouders raadplegen.
 
     Gegevens die er niet zijn of niet actueel zijn krijg je niet terug. Had een persoon bijvoorbeeld een verblijfstitel die nu niet meer geldig is, dan wordt die verblijfstitel niet opgenomen. In partners wordt alleen de actuele of de laatst ontbonden partner geleverd.
-  version: 2.4.1
+  version: 2.6.0
   contact:
     url: https://github.com/VNG-Realisatie/Haal-Centraal-BRP-bevragen
   license:
@@ -248,6 +248,8 @@ components:
               type: string
               format: date
               example: '1964-09-24'
+            geslachtsnaam:
+              $ref: '#/components/schemas/GeslachtsnaamFilter'
     StraatFilter:
       description: |
         Een naam die door de gemeente aan een openbare ruimte is gegeven. **Gebruik van de wildcard is toegestaan bij invoer van ten minste 7 letters.** **Zoeken met tekstvelden is case-insensitive.** 
@@ -723,6 +725,9 @@ components:
           type: string
         minderjarige:
           $ref: '#/components/schemas/Minderjarige'
+        inOnderzoek:
+          type: boolean
+          description: Geeft aan dat de gezagsrelatie in onderzoek is.
       discriminator:
         propertyName: type
         mapping:
@@ -768,15 +773,32 @@ components:
           properties:
             ouder:
               $ref: '#/components/schemas/GezagOuder'
-    Meerderjarige:
+    Derde:
       type: object
+      required:
+        - type
       properties:
-        burgerservicenummer:
-          $ref: '#/components/schemas/Burgerservicenummer'
-        naam:
-          $ref: '#/components/schemas/NaamBasis'
-        geslacht:
-          $ref: '#/components/schemas/Geslachtsaanduiding'
+        type:
+          type: string
+      discriminator:
+        propertyName: type
+        mapping:
+          BekendeDerde: '#/components/schemas/BekendeDerde'
+          OnbekendeDerde: '#/components/schemas/OnbekendeDerde'
+    BekendeDerde:
+      allOf:
+        - $ref: '#/components/schemas/Derde'
+        - type: object
+          properties:
+            burgerservicenummer:
+              $ref: '#/components/schemas/Burgerservicenummer'
+            naam:
+              $ref: '#/components/schemas/NaamBasis'
+            geslacht:
+              $ref: '#/components/schemas/Geslachtsaanduiding'
+    OnbekendeDerde:
+      allOf:
+        - $ref: '#/components/schemas/Derde'
     GezamenlijkGezag:
       allOf:
         - $ref: '#/components/schemas/AbstractGezagsrelatie'
@@ -785,7 +807,7 @@ components:
             ouder:
               $ref: '#/components/schemas/GezagOuder'
             derde:
-              $ref: '#/components/schemas/Meerderjarige'
+              $ref: '#/components/schemas/Derde'
     Voogdij:
       allOf:
         - $ref: '#/components/schemas/AbstractGezagsrelatie'
@@ -794,7 +816,7 @@ components:
             derden:
               type: array
               items:
-                $ref: '#/components/schemas/Meerderjarige'
+                $ref: '#/components/schemas/BekendeDerde'
               minItems: 0
               maxItems: 2
     Toelichting:

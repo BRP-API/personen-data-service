@@ -56,6 +56,7 @@ Functionaliteit: gezagsrelaties van de bewoners van een adresseerbaar object
       | type                             | GezamenlijkGezag |
       | minderjarige.burgerservicenummer | 000000036        |
       | ouder.burgerservicenummer        | 000000061        |
+      | derde.type                       | BekendeDerde     |
       | derde.burgerservicenummer        | 000000048        |
       En de persoon met burgerservicenummer '000000036' is ingeschreven op adres 'A2' met de volgende gegevens
       | gemeente van inschrijving (09.10) |
@@ -68,6 +69,7 @@ Functionaliteit: gezagsrelaties van de bewoners van een adresseerbaar object
       | type                             | GezamenlijkGezag |
       | minderjarige.burgerservicenummer | 000000036        |
       | ouder.burgerservicenummer        | 000000061        |
+      | derde.type                       | BekendeDerde     |
       | derde.burgerservicenummer        | 000000048        |
       En de persoon met burgerservicenummer '000000061' is ingeschreven op adres 'A2' met de volgende gegevens
       | gemeente van inschrijving (09.10) |
@@ -139,4 +141,5 @@ Functionaliteit: gezagsrelaties van de bewoners van een adresseerbaar object
       | type                             | GezamenlijkGezag |
       | minderjarige.burgerservicenummer | 000000036        |
       | ouder.burgerservicenummer        | 000000061        |
+      | derde.type                       | BekendeDerde     |
       | derde.burgerservicenummer        | 000000048        |
