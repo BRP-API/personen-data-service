@@ -4,7 +4,6 @@ using Rvig.Data.Personen.Repositories;
 using Rvig.Data.Personen.Services;
 using Rvig.HaalCentraalApi.Personen.Interfaces;
 using Rvig.HaalCentraalApi.Personen.Services;
-using Rvig.HaalCentraalApi.Personen.Validation.RequestModelValidators;
 using Microsoft.AspNetCore.Builder;
 using Rvig.HaalCentraalApi.Personen.Repositories;
 using System.Collections.Generic;
@@ -29,12 +28,6 @@ var servicesDictionary = new Dictionary<Type, Type>
 
 var validatorList = new List<Type>
 {
-	typeof(RaadpleegMetBurgerservicenummerValidator),
-	typeof(ZoekMetGeslachtsnaamEnGeboortedatumValidator),
-	typeof(ZoekMetNaamEnGemeenteVanInschrijvingValidator),
-	typeof(ZoekMetNummeraanduidingIdentificatieValidator),
-	typeof(ZoekMetPostcodeEnHuisnummerValidator),
-	typeof(ZoekMetStraatHuisnummerEnGemeenteVanInschrijvingValidator)
 };
 
 // This is used to give configurable options to deactive the authorization layer. This was determined by the Haal Centraal crew and the RvIG to be required.

@@ -16,5 +16,5 @@ components:
     Gezag:
       type: array
       items: 
-        $ref: 'brp-api/gezag/gezagsrelatie-v1.yaml#/components/schemas/AbstractGezagsrelatie'
+        $ref: 'brp/gezag/gezagsrelatie-v1.yaml#/components/schemas/AbstractGezagsrelatie'
       minItems: 0

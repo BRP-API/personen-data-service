@@ -179,6 +179,7 @@ Functionaliteit: gezagsrelaties van een minderjarige(n)
         | type                             | GezamenlijkGezag |
         | minderjarige.burgerservicenummer |        000000012 |
         | ouder.burgerservicenummer        |        000000024 |
+        | derde.type                       | BekendeDerde     |
         | derde.burgerservicenummer        |        000000048 |
       Als personen wordt gezocht met de volgende parameters
         | naam                | waarde                          |
@@ -207,6 +208,7 @@ Functionaliteit: gezagsrelaties van een minderjarige(n)
         | ouder.naam.adellijkeTitelPredicaat.soort               | predicaat           |
         | ouder.geslacht.code                                    | M                   |
         | ouder.geslacht.omschrijving                            | man                 |
+        | derde.type                                             | BekendeDerde        |
         | derde.burgerservicenummer                              |           000000048 |
         | derde.naam.voornamen                                   | Carolina            |
         | derde.naam.voorvoegsel                                 | te                  |
@@ -361,8 +363,8 @@ Functionaliteit: gezagsrelaties van een minderjarige(n)
         | type                             | Voogdij   |
         | minderjarige.burgerservicenummer | 000000012 |
       En het gezag heeft de volgende derden
-        | burgerservicenummer |
-        |           000000024 |
+        | type         | burgerservicenummer |
+        | BekendeDerde |           000000024 |
       Gegeven de persoon met burgerservicenummer '000000024' heeft de volgende gegevens
         | naam                                 | waarde           |
         | geslachtsaanduiding (04.10)          | M                |
@@ -391,17 +393,17 @@ Functionaliteit: gezagsrelaties van een minderjarige(n)
         | minderjarige.geslacht.code                             | M                   |
         | minderjarige.geslacht.omschrijving                     | man                 |
       En heeft 'gezag' een 'derde' met de volgende gegevens
-        | naam                                      | waarde              |
-        | burgerservicenummer                       |           000000024 |
-        | burgerservicenummer                       |           000000024 |
-        | naam.voornamen                            | Alex                |
-        | naam.voorvoegsel                          | te                  |
-        | naam.geslachtsnaam                        | Hoogh               |
-        | naam.adellijkeTitelPredicaat.code         | JH                  |
-        | naam.adellijkeTitelPredicaat.omschrijving | jonkheer            |
-        | naam.adellijkeTitelPredicaat.soort        | predicaat           |
-        | geslacht.code                             | M                   |
-        | geslacht.omschrijving                     | man                 |
+        | naam                                      | waarde       |
+        | type                                      | BekendeDerde |
+        | burgerservicenummer                       |    000000024 |
+        | naam.voornamen                            | Alex         |
+        | naam.voorvoegsel                          | te           |
+        | naam.geslachtsnaam                        | Hoogh        |
+        | naam.adellijkeTitelPredicaat.code         | JH           |
+        | naam.adellijkeTitelPredicaat.omschrijving | jonkheer     |
+        | naam.adellijkeTitelPredicaat.soort        | predicaat    |
+        | geslacht.code                             | M            |
+        | geslacht.omschrijving                     | man          |
 
   Regel: wanneer met een gerechtelijke uitspraak gezag is toegewezen aan een voogd dan is de voogd niet bekend en wordt gezag geleverd zonder de voogd(en)
 

@@ -27,6 +27,7 @@ Functionaliteit: gezagsrelaties vragen met fields bij zoeken op adresseerbaar ob
       | type                             | GezamenlijkGezag |
       | minderjarige.burgerservicenummer |        000000036 |
       | ouder.burgerservicenummer        |        000000061 |
+      | derde.type                       | BekendeDerde     |
       | derde.burgerservicenummer        |        000000048 |
     En de persoon met burgerservicenummer '000000061' is ingeschreven op adres 'A1' met de volgende gegevens
       | gemeente van inschrijving (09.10) |
@@ -44,6 +45,7 @@ Functionaliteit: gezagsrelaties vragen met fields bij zoeken op adresseerbaar ob
       | type                             | GezamenlijkGezag |
       | minderjarige.burgerservicenummer |        000000036 |
       | ouder.burgerservicenummer        |        000000061 |
+      | derde.type                       | BekendeDerde     |
       | derde.burgerservicenummer        |        000000048 |
     En de persoon met burgerservicenummer '000000012' is ingeschreven op adres 'A1' met de volgende gegevens
       | gemeente van inschrijving (09.10) |
@@ -72,6 +74,7 @@ Functionaliteit: gezagsrelaties vragen met fields bij zoeken op adresseerbaar ob
       | type                             | GezamenlijkGezag |
       | minderjarige.burgerservicenummer |        000000036 |
       | ouder.burgerservicenummer        |        000000061 |
+      | derde.type                       | BekendeDerde     |
       | derde.burgerservicenummer        |        000000048 |
 
   Regel: Het vragen van één of meerdere velden van 'gezag' levert alle velden van 'gezag' die van toepassing zijn op de persoon
@@ -105,6 +108,7 @@ Functionaliteit: gezagsrelaties vragen met fields bij zoeken op adresseerbaar ob
         | type                             | GezamenlijkGezag |
         | minderjarige.burgerservicenummer |        000000036 |
         | ouder.burgerservicenummer        |        000000061 |
+        | derde.type                       | BekendeDerde     |
         | derde.burgerservicenummer        |        000000048 |
       En heeft de response een persoon met de volgende gegevens
         | naam                | waarde    |
@@ -124,6 +128,7 @@ Functionaliteit: gezagsrelaties vragen met fields bij zoeken op adresseerbaar ob
         | type                             | GezamenlijkGezag |
         | minderjarige.burgerservicenummer |        000000036 |
         | ouder.burgerservicenummer        |        000000061 |
+        | derde.type                       | BekendeDerde     |
         | derde.burgerservicenummer        |        000000048 |
       En heeft de response een persoon met de volgende gegevens
         | naam                | waarde    |
@@ -154,6 +159,7 @@ Functionaliteit: gezagsrelaties vragen met fields bij zoeken op adresseerbaar ob
         | type                             | GezamenlijkGezag |
         | minderjarige.burgerservicenummer |        000000036 |
         | ouder.burgerservicenummer        |        000000061 |
+        | derde.type                       | BekendeDerde     |
         | derde.burgerservicenummer        |        000000048 |
 
       Voorbeelden:

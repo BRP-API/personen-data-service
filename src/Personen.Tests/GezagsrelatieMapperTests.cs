@@ -587,7 +587,7 @@ namespace Personen.Tests
                         {
                             new Gezag.Voogdij
                             {
-                                 Derden = new List<Gezag.Meerderjarige>
+                                 Derden = new List<Gezag.BekendeDerde>
                                  {
                                      new() { Burgerservicenummer = "000000012" },
                                      new() { Burgerservicenummer = "000000013" }
@@ -632,5 +632,105 @@ namespace Personen.Tests
             gezagsrelaties.First().Minderjarige.Should().BeOfType<Minderjarige>();
         }
 
+        [Fact]
+        public void MapGezagsrelaties_GezamenlijkGezagMetBekendeDerde()
+        {
+            var personen = new List<GbaPersoon>
+            {
+                new()
+                {
+                    Burgerservicenummer = "000000036",
+                    Naam = new GbaNaamPersoon()
+                    {
+                        Geslachtsnaam = "Jansen",
+                        Voornamen = "Anna",
+                        Voorvoegsel = "van",
+                        AdellijkeTitelPredicaat = new AdellijkeTitelPredicaatType()
+                        {
+                            Code = "JH",
+                            Omschrijving = "Jonkheer",
+                            Soort = AdellijkeTitelPredicaatSoort.PredicaatEnum
+                        }
+                    },
+                    Geslacht = new Waardetabel()
+                    {
+                        Code = "V",
+                        Omschrijving = "Vrouw"
+                    },
+                },
+            };
+            var input = new Gezag.GezagResponse
+            {
+                Personen = new[]
+                {
+                    new Gezag.Persoon
+                    {
+                        Gezag = new[]
+                        {
+                            new Gezag.GezamenlijkGezag
+                            {
+                                Ouder = new Gezag.GezagOuder { Burgerservicenummer = "000000012" },
+                                Minderjarige = new Gezag.Minderjarige { Burgerservicenummer = "000000024" },
+                                Derde = new Gezag.BekendeDerde { Burgerservicenummer = "000000036" }
+                            }
+                        }
+                    }
+                }
+            };
+            var expected = new List<AbstractGezagsrelatie>{
+                new GezamenlijkGezag
+                {
+                    Ouder = new GezagOuder { Burgerservicenummer = "000000012" },
+                    Minderjarige = new Minderjarige { Burgerservicenummer = "000000024" },
+                    Derde = new BekendeDerde
+                    {
+                        Burgerservicenummer = "000000036",
+                        Naam = new()
+                        {
+                            Geslachtsnaam = "Jansen",
+                            Voornamen = "Anna",
+                            Voorvoegsel = "van",
+                            AdellijkeTitelPredicaat = new() { Code = "JH", Omschrijving = "Jonkheer", Soort = AdellijkeTitelPredicaatSoort.PredicaatEnum }
+                        },
+                        Geslacht = new() { Code = "V", Omschrijving = "Vrouw" },
+                    },
+                }
+            };
+
+            GezagsrelatieMapper.Map(input, personen).Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public void MapGezagsrelaties_GezamenlijkGezagMetOnbekendeDerde()
+        {
+            var input = new Gezag.GezagResponse
+            {
+                Personen = new[]
+                {
+                    new Gezag.Persoon
+                    {
+                        Gezag = new[]
+                        {
+                            new Gezag.GezamenlijkGezag
+                            {
+                                Ouder = new Gezag.GezagOuder { Burgerservicenummer = "000000012" },
+                                Minderjarige = new Gezag.Minderjarige { Burgerservicenummer = "000000024" },
+                                Derde = new Gezag.OnbekendeDerde()
+                            }
+                        }
+                    }
+                }
+            };
+            var expected = new List<AbstractGezagsrelatie>{
+                new GezamenlijkGezag
+                {
+                    Ouder = new GezagOuder { Burgerservicenummer = "000000012" },
+                    Minderjarige = new Minderjarige { Burgerservicenummer = "000000024" },
+                    Derde = new OnbekendeDerde()
+                }
+            };
+
+            GezagsrelatieMapper.Map(input, new List<GbaPersoon>()).Should().BeEquivalentTo(expected);
+        }
     }
 }

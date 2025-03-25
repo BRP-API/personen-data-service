@@ -77,6 +77,7 @@ Functionaliteit: gezagsrelaties van een minderjarige(n)
         | type                             | GezamenlijkGezag |
         | minderjarige.burgerservicenummer |        000000012 |
         | ouder.burgerservicenummer        |        000000024 |
+        | derde.type                       | BekendeDerde     |
         | derde.burgerservicenummer        |        000000048 |
       Als personen wordt gezocht met de volgende parameters
         | naam                             | waarde                                  |
@@ -88,6 +89,7 @@ Functionaliteit: gezagsrelaties van een minderjarige(n)
         | type                             | GezamenlijkGezag |
         | minderjarige.burgerservicenummer |        000000012 |
         | ouder.burgerservicenummer        |        000000024 |
+        | derde.type                       | BekendeDerde     |
         | derde.burgerservicenummer        |        000000048 |
 
   Regel: voor een meerderjarige wordt er geen gezagsrelatie naar de ouders geleverd
@@ -190,8 +192,8 @@ Functionaliteit: gezagsrelaties van een minderjarige(n)
         | type                             | Voogdij   |
         | minderjarige.burgerservicenummer | 000000012 |
       En het gezag heeft de volgende derden
-        | burgerservicenummer |
-        |           000000024 |
+        | type         | burgerservicenummer |
+        | BekendeDerde |           000000024 |
       Als personen wordt gezocht met de volgende parameters
         | naam                             | waarde                                  |
         | type                             | ZoekMetAdresseerbaarObjectIdentificatie |
@@ -202,8 +204,9 @@ Functionaliteit: gezagsrelaties van een minderjarige(n)
         | type                             | Voogdij   |
         | minderjarige.burgerservicenummer | 000000012 |
       En heeft 'gezag' een 'derde' met de volgende gegevens
-        | naam                | waarde    |
-        | burgerservicenummer | 000000024 |
+        | naam                | waarde       |
+        | type                | BekendeDerde |
+        | burgerservicenummer | 000000024    |
 
   Regel: wanneer met een gerechtelijke uitspraak gezag is toegewezen aan een voogd dan is de voogd niet bekend en wordt gezag geleverd zonder de voogd(en)
 
