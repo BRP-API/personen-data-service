@@ -1,11 +1,11 @@
 openapi: 3.1.0
 info:
   title: gezagouder type definitie
-  version: 1.0.0
+  version: 2.0.0
 paths: {}
 components:
   schemas:
-    GezagOuder:
+    GezagOuderV2:
       type: object
       properties:
         burgerservicenummer:
@@ -15,4 +15,5 @@ components:
         geslacht:
           $ref: '../geslacht/geslachtsaanduiding-v1.yaml#/components/schemas/Geslachtsaanduiding'
       required: 
-        -  burgerservicenummer
+        - naam
+        - geslacht
