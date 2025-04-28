@@ -80,6 +80,7 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | type                             | GezamenlijkGezag |
         | minderjarige.burgerservicenummer |        000000012 |
         | ouder.burgerservicenummer        |        000000024 |
+        | derde.type                       | BekendeDerde     |
         | derde.burgerservicenummer        |        000000048 |
       En de persoon met burgerservicenummer '000000012' heeft een ouder '1' met de volgende gegevens
         | burgerservicenummer (01.20) |
@@ -94,6 +95,7 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | type                             | GezamenlijkGezag |
         | minderjarige.burgerservicenummer |        000000012 |
         | ouder.burgerservicenummer        |        000000024 |
+        | derde.type                       | BekendeDerde     |
         | derde.burgerservicenummer        |        000000048 |
 
   Regel: een meerderjarige die gezag heeft over een minderjarig kind van de partner krijgt de gezagsrelatie naar de ouder en zichzelf geleverd
@@ -125,6 +127,7 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | type                             | GezamenlijkGezag |
         | minderjarige.burgerservicenummer |        000000012 |
         | ouder.burgerservicenummer        |        000000024 |
+        | derde.type                       | BekendeDerde     |
         | derde.burgerservicenummer        |        000000048 |
       Als personen wordt gezocht met de volgende parameters
         | naam                             | waarde                                  |
@@ -136,6 +139,7 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | type                             | GezamenlijkGezag |
         | minderjarige.burgerservicenummer |        000000012 |
         | ouder.burgerservicenummer        |        000000024 |
+        | derde.type                       | BekendeDerde     |
         | derde.burgerservicenummer        |        000000048 |
 
   Regel: een meerderjarige krijg voor een meerderjarig kind geen gezagsrelatie geleverd
@@ -262,15 +266,15 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | type                             | Voogdij   |
         | minderjarige.burgerservicenummer | 000000012 |
       En het gezag heeft de volgende derden
-        | burgerservicenummer |
-        |           000000048 |
+        | type         | burgerservicenummer |
+        | BekendeDerde |           000000048 |
       En voor de persoon geldt ook het volgende gezag
         | naam                             | waarde    |
         | type                             | Voogdij   |
         | minderjarige.burgerservicenummer | 000000024 |
       En het gezag heeft de volgende derden
-        | burgerservicenummer |
-        |           000000048 |
+        | type         | burgerservicenummer |
+        | BekendeDerde |           000000048 |
       Als personen wordt gezocht met de volgende parameters
         | naam                             | waarde                                  |
         | type                             | ZoekMetAdresseerbaarObjectIdentificatie |
@@ -281,12 +285,14 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | type                             | Voogdij   |
         | minderjarige.burgerservicenummer | 000000012 |
       En heeft 'gezag' een 'derde' met de volgende gegevens
-        | naam                | waarde    |
-        | burgerservicenummer | 000000048 |
+        | naam                | waarde       |
+        | type                | BekendeDerde |
+        | burgerservicenummer | 000000048    |
       En heeft de persoon een 'gezag' met de volgende gegevens
         | naam                             | waarde    |
         | type                             | Voogdij   |
         | minderjarige.burgerservicenummer | 000000024 |
       En heeft 'gezag' een 'derde' met de volgende gegevens
-        | naam                | waarde    |
-        | burgerservicenummer | 000000048 |
+        | naam                | waarde       |
+        | type                | BekendeDerde |
+        | burgerservicenummer | 000000048    |

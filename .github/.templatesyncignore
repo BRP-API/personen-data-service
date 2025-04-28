@@ -1,9 +1,15 @@
 :!package.json
 :!package-lock.json
+:!cucumber.js
 :!.github/actions/*.*
 :!features/docs/*.*
 :!features/step_definitions/*.*
+:!scripts/process-cucumber-file.js
 :!src/Brp.Shared.Infrastructure/*.*
 :!src/Serilog.Sinks.PersistentFile/*.*
 :!specificatie/*.*
+:!.docker/scripts/*.*
+:!.docker/db.yml
+:!.docker/db-ci.yml
+:!.docker/Dockerfile
 *

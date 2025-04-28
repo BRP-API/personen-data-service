@@ -17,7 +17,7 @@ components:
         mapping:
           BekendeDerde: '#/components/schemas/BekendeDerde'
           OnbekendeDerde: '#/components/schemas/OnbekendeDerde'
-
+            
     BekendeDerde:
       allOf:
         - $ref: '#/components/schemas/Derde'
@@ -29,8 +29,6 @@ components:
               $ref: '../naam/naam-basis-v1.yaml#/components/schemas/NaamBasis'
             geslacht:
               $ref: '../geslacht/geslachtsaanduiding-v1.yaml#/components/schemas/Geslachtsaanduiding'
-      required:
-        - burgerservicenummer
 
     OnbekendeDerde:
       allOf:

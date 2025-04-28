@@ -32,6 +32,7 @@ Functionaliteit: gezagsrelaties vragen met fields
         | type                             | GezamenlijkGezag |
         | minderjarige.burgerservicenummer |        000000036 |
         | ouder.burgerservicenummer        |        000000061 |
+        | derde.type                       | BekendeDerde     |
         | derde.burgerservicenummer        |        000000048 |
       En voor de persoon geldt ook het volgende gezag
         | naam                             | waarde             |
@@ -43,8 +44,8 @@ Functionaliteit: gezagsrelaties vragen met fields
         | type                             | Voogdij   |
         | minderjarige.burgerservicenummer | 000000060 |
       En het gezag heeft de volgende derden
-        | burgerservicenummer |
-        |           000000048 |
+        | type         | burgerservicenummer |
+        | BekendeDerde |           000000048 |
       En voor de persoon geldt ook het volgende gezag
         | naam                             | waarde             |
         | type                             | TijdelijkGeenGezag |
@@ -75,6 +76,7 @@ Functionaliteit: gezagsrelaties vragen met fields
         | type                             | GezamenlijkGezag |
         | minderjarige.burgerservicenummer |        000000036 |
         | ouder.burgerservicenummer        |        000000061 |
+        | derde.type                       | BekendeDerde     |
         | derde.burgerservicenummer        |        000000048 |
       En heeft de persoon een 'gezag' met de volgende gegevens
         | naam                             | waarde             |
@@ -86,8 +88,9 @@ Functionaliteit: gezagsrelaties vragen met fields
         | type                             | Voogdij   |
         | minderjarige.burgerservicenummer | 000000060 |
       En heeft 'gezag' een 'derde' met de volgende gegevens
-        | naam                | waarde    |
-        | burgerservicenummer | 000000048 |
+        | naam                | waarde       |
+        | type                | BekendeDerde |
+        | burgerservicenummer |    000000048 |
       En heeft de persoon een 'gezag' met de volgende gegevens
         | naam                             | waarde             |
         | type                             | TijdelijkGeenGezag |

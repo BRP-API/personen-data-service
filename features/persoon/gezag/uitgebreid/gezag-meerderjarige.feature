@@ -173,6 +173,7 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | type                             | GezamenlijkGezag |
         | minderjarige.burgerservicenummer |        000000012 |
         | ouder.burgerservicenummer        |        000000024 |
+        | derde.type                       | BekendeDerde     |
         | derde.burgerservicenummer        |        000000048 |
       En de persoon met burgerservicenummer '000000012' heeft de volgende gegevens
         | naam                                 | waarde           |
@@ -222,6 +223,7 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | ouder.naam.adellijkeTitelPredicaat.soort               | predicaat           |
         | ouder.geslacht.code                                    | M                   |
         | ouder.geslacht.omschrijving                            | man                 |
+        | derde.type                                             | BekendeDerde        |
         | derde.burgerservicenummer                              |           000000048 |
         | derde.naam.voornamen                                   | Carolina            |
         | derde.naam.voorvoegsel                                 | te                  |
@@ -282,6 +284,7 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | type                             | GezamenlijkGezag |
         | minderjarige.burgerservicenummer |        000000012 |
         | ouder.burgerservicenummer        |        000000024 |
+        | derde.type                       | BekendeDerde     |
         | derde.burgerservicenummer        |        000000048 |
       Als personen wordt gezocht met de volgende parameters
         | naam                | waarde                          |
@@ -310,6 +313,7 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | ouder.naam.adellijkeTitelPredicaat.soort               | predicaat           |
         | ouder.geslacht.code                                    | M                   |
         | ouder.geslacht.omschrijving                            | man                 |
+        | derde.type                                             | BekendeDerde        |
         | derde.burgerservicenummer                              |           000000048 |
         | derde.naam.voornamen                                   | Carolina            |
         | derde.naam.voorvoegsel                                 | te                  |
@@ -395,12 +399,14 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | type                             | GezamenlijkGezag |
         | minderjarige.burgerservicenummer |        000000012 |
         | ouder.burgerservicenummer        |        000000048 |
+        | derde.type                       | BekendeDerde     |
         | derde.burgerservicenummer        |        000000061 |
       En voor de persoon geldt ook het volgende gezag
         | naam                             | waarde           |
         | type                             | GezamenlijkGezag |
         | minderjarige.burgerservicenummer |        000000013 |
         | ouder.burgerservicenummer        |        000000048 |
+        | derde.type                       | BekendeDerde     |
         | derde.burgerservicenummer        |        000000061 |
       Als personen wordt gezocht met de volgende parameters
         | naam                | waarde                          |
@@ -429,6 +435,7 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | ouder.naam.adellijkeTitelPredicaat.soort               | predicaat           |
         | ouder.geslacht.code                                    | V                   |
         | ouder.geslacht.omschrijving                            | vrouw               |
+        | derde.type                                             | BekendeDerde        |
         | derde.burgerservicenummer                              |           000000061 |
         | derde.naam.voornamen                                   | Karel               |
         | derde.naam.voorvoegsel                                 | te                  |
@@ -460,6 +467,7 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | ouder.naam.adellijkeTitelPredicaat.soort               | predicaat           |
         | ouder.geslacht.code                                    | V                   |
         | ouder.geslacht.omschrijving                            | vrouw               |
+        | derde.type                                             | BekendeDerde        |
         | derde.burgerservicenummer                              |           000000061 |
         | derde.naam.voornamen                                   | Karel               |
         | derde.naam.voorvoegsel                                 | te                  |
@@ -574,6 +582,7 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | type                             | GezamenlijkGezag |
         | minderjarige.burgerservicenummer |        000000012 |
         | ouder.burgerservicenummer        |        000000036 |
+        | derde.type                       | BekendeDerde     |
         | derde.burgerservicenummer        |        000000048 |
       En de persoon met burgerservicenummer '000000048' heeft de volgende gegevens
         | naam                                 | waarde           |
@@ -603,6 +612,7 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | type                             | GezamenlijkGezag |
         | minderjarige.burgerservicenummer |        000000012 |
         | ouder.burgerservicenummer        |        000000036 |
+        | derde.type                       | BekendeDerde     |
         | derde.burgerservicenummer        |        000000048 |
       Gegeven de persoon met burgerservicenummer '000000024' heeft de volgende gegevens
         | naam                                 | waarde           |
@@ -660,6 +670,7 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | ouder.naam.adellijkeTitelPredicaat.soort               | predicaat           |
         | ouder.geslacht.code                                    | M                   |
         | ouder.geslacht.omschrijving                            | man                 |
+        | derde.type                                             | BekendeDerde        |
         | derde.burgerservicenummer                              |           000000048 |
         | derde.naam.voornamen                                   | Carolina            |
         | derde.naam.voorvoegsel                                 | te                  |
@@ -875,15 +886,15 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | type                             | Voogdij   |
         | minderjarige.burgerservicenummer | 000000012 |
       En het gezag heeft de volgende derden
-        | burgerservicenummer |
-        |           000000048 |
+        | type         | burgerservicenummer |
+        | BekendeDerde |           000000048 |
       En voor de persoon geldt ook het volgende gezag
         | naam                             | waarde    |
         | type                             | Voogdij   |
         | minderjarige.burgerservicenummer | 000000024 |
       En het gezag heeft de volgende derden
-        | burgerservicenummer |
-        |           000000048 |
+        | type         | burgerservicenummer |
+        | BekendeDerde |           000000048 |
       Als personen wordt gezocht met de volgende parameters
         | naam                | waarde                          |
         | type                | RaadpleegMetBurgerservicenummer |
@@ -894,15 +905,17 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | type                             | Voogdij   |
         | minderjarige.burgerservicenummer | 000000012 |
       En heeft 'gezag' een 'derde' met de volgende gegevens
-        | naam                | waarde    |
-        | burgerservicenummer | 000000048 |
+        | naam                | waarde       |
+        | type                | BekendeDerde |
+        | burgerservicenummer |    000000048 |
       En heeft de persoon een 'gezag' met de volgende gegevens
         | naam                             | waarde    |
         | type                             | Voogdij   |
         | minderjarige.burgerservicenummer | 000000024 |
       En heeft 'gezag' een 'derde' met de volgende gegevens
-        | naam                | waarde    |
-        | burgerservicenummer | 000000048 |
+        | naam                | waarde       |
+        | type                | BekendeDerde |
+        | burgerservicenummer |    000000048 |
 
     Scenario: de partner van ouder onder curatele heeft gezag over een minderjarig kind, maar niet over alle kinderen
       Gegeven de persoon met burgerservicenummer '000000012' heeft een ouder '1' met de volgende gegevens
@@ -950,8 +963,8 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | type                             | Voogdij   |
         | minderjarige.burgerservicenummer | 000000024 |
       En het gezag heeft de volgende derden
-        | burgerservicenummer |
-        |           000000073 |
+        | type         | burgerservicenummer |
+        | BekendeDerde |           000000073 |
       Als personen wordt gezocht met de volgende parameters
         | naam                | waarde                          |
         | type                | RaadpleegMetBurgerservicenummer |
@@ -962,8 +975,9 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | type                             | Voogdij   |
         | minderjarige.burgerservicenummer | 000000024 |
       En heeft 'gezag' een 'derde' met de volgende gegevens
-        | naam                | waarde    |
-        | burgerservicenummer | 000000073 |
+        | naam                | waarde       |
+        | type                | BekendeDerde |
+        | burgerservicenummer |    000000073 |
 
     Scenario: de partner van overleden ouder heeft gezag over de minderjarige kinderen en heeft inmiddels andere partner
       Gegeven de persoon met burgerservicenummer '000000012' heeft een ouder '1' met de volgende gegevens
@@ -994,8 +1008,8 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | type                             | Voogdij   |
         | minderjarige.burgerservicenummer | 000000012 |
       En het gezag heeft de volgende derden
-        | burgerservicenummer |
-        |           000000048 |
+        | type         | burgerservicenummer |
+        | BekendeDerde |           000000048 |
       En de persoon met burgerservicenummer '000000061' heeft een 'partner' met de volgende gegevens
         | burgerservicenummer (01.20) | datum huwelijkssluiting/aangaan geregistreerd partnerschap (06.10) |
         |                   000000048 |                                                           20230614 |
@@ -1009,8 +1023,9 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | type                             | Voogdij   |
         | minderjarige.burgerservicenummer | 000000012 |
       En heeft 'gezag' een 'derde' met de volgende gegevens
-        | naam                | waarde    |
-        | burgerservicenummer | 000000048 |
+        | naam                | waarde       |
+        | type                | BekendeDerde |
+        | burgerservicenummer |    000000048 |
 
   Regel: een persoon die in RNI staat ingeschreven krijgt gezag niet te bepalen geleverd wanneer de leeftijd lager is dan 18 jaar
     # voor een persoon die staat ingeschreven in RNI (gemeente van inschrijving is gelijk aan 1999) levert de gezagsmodule altijd soort gezag 'N' (niet te bepalen)
@@ -1247,6 +1262,7 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | type                             | GezamenlijkGezag |
         | minderjarige.burgerservicenummer |        000000014 |
         | ouder.burgerservicenummer        |        000000048 |
+        | derde.type                       | BekendeDerde     |
         | derde.burgerservicenummer        |        000000073 |
       En de persoon met burgerservicenummer '000000012' heeft de volgende gegevens
         | naam                                 | waarde           |
@@ -1377,6 +1393,7 @@ Functionaliteit: gezagsrelaties van een meerderjarige
         | ouder.naam.adellijkeTitelPredicaat.soort               | predicaat           |
         | ouder.geslacht.code                                    | V                   |
         | ouder.geslacht.omschrijving                            | vrouw               |
+        | derde.type                                             | BekendeDerde        |
         | derde.burgerservicenummer                              |           000000073 |
         | derde.naam.voornamen                                   | Jan                 |
         | derde.naam.voorvoegsel                                 | te                  |

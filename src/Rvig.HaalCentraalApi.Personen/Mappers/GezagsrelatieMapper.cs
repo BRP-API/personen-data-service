@@ -67,9 +67,7 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
         {
             if (gezagsrelatie is ApiModels.Gezag.Voogdij voogdij)
             {
-                var derden = voogdij.Derden?
-                    .Select(d => MapPersoonToMeerderjarige(gezagPersonen, d.Burgerservicenummer))
-                    .ToList();
+                var derden = MapPersonenToBekendeDerden(gezagPersonen, voogdij.Derden);
 
                 var minderjarige = voogdij.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, voogdij.Minderjarige.Burgerservicenummer) : new ApiModels.BRP.Minderjarige();
 
@@ -87,7 +85,7 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             if (gezagsrelatie is ApiModels.Gezag.GezamenlijkGezag gezamenlijkGezag)
             {
                 var ouder = gezamenlijkGezag.Ouder != null ? MapPersoonToGezagOuder(gezagPersonen, gezamenlijkGezag.Ouder.Burgerservicenummer) : new ApiModels.BRP.GezagOuder();
-                var derde = gezamenlijkGezag.Derde != null ? MapPersoonToMeerderjarige(gezagPersonen, gezamenlijkGezag.Derde.Burgerservicenummer) : new ApiModels.BRP.Meerderjarige();
+                var derde = MapPersoonToDerde(gezagPersonen, gezamenlijkGezag.Derde);
                 var minderjarige = gezamenlijkGezag.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, gezamenlijkGezag.Minderjarige.Burgerservicenummer) : new ApiModels.BRP.Minderjarige();
 
                 result.Add(new ApiModels.BRP.GezamenlijkGezag
@@ -168,16 +166,39 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             };
         }
 
-        private static ApiModels.BRP.Meerderjarige MapPersoonToMeerderjarige(List<GbaPersoon> personen, string bsn)
+        private static List<ApiModels.BRP.BekendeDerde>? MapPersonenToBekendeDerden(List<GbaPersoon> personen, IEnumerable<ApiModels.Gezag.Derde>? derden)
         {
+            if (derden == null) return null;
+
+            var retval = new List<ApiModels.BRP.BekendeDerde>();
+
+            foreach (var gezagDerde in derden)
+            {
+                var brpDerde = MapPersoonToDerde(personen, gezagDerde);
+                if(brpDerde is ApiModels.BRP.BekendeDerde bekendeDerde)
+                {
+                    retval.Add(bekendeDerde);
+                }
+            }
+
+            return retval;
+        }
+
+        private static ApiModels.BRP.Derde? MapPersoonToDerde(List<GbaPersoon> personen, ApiModels.Gezag.Derde? derde)
+        {
+            if (derde == null) return null;
+            if (derde is ApiModels.Gezag.OnbekendeDerde) return new ApiModels.BRP.OnbekendeDerde();
+
+            var bsn = ((ApiModels.Gezag.BekendeDerde)derde).Burgerservicenummer;
+
             var persoon = personen.FirstOrDefault(p => p.Burgerservicenummer == bsn);
 
-            if (persoon == null) return new ApiModels.BRP.Meerderjarige()
+            if (persoon == null) return new ApiModels.BRP.BekendeDerde()
             {
                 Burgerservicenummer = bsn,
             };
 
-            return new ApiModels.BRP.Meerderjarige
+            return new ApiModels.BRP.BekendeDerde
             {
                 Burgerservicenummer = persoon.Burgerservicenummer,
                 Geslacht = persoon.Geslacht,
