@@ -43,6 +43,12 @@ jobs:
         run: |
           doCommit=false
 
+          if [ -n "$(git status specificatie/resolved/openapi-v1.yaml --porcelain)" ]; then
+              echo "specificatie/resolved/openapi-v1.yaml modified"
+              git add specificatie/resolved/openapi-v1.*
+              doCommit=true
+          fi
+
           if [ -n "$(git status specificatie/resolved/openapi.yaml --porcelain)" ]; then
               echo "specificatie/resolved/openapi.yaml modified"
               git add specificatie/resolved/openapi.*
