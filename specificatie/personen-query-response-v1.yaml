@@ -31,7 +31,7 @@ components:
             personen:
               type: array
               items:
-                $ref: 'persoon.yaml#/components/schemas/GbaPersoon'
+                $ref: 'persoon-v1.yaml#/components/schemas/GbaPersoon'
     ZoekMetGeslachtsnaamEnGeboortedatumResponse:
       allOf:
         - $ref: '#/components/schemas/PersonenQueryResponse'
@@ -40,7 +40,7 @@ components:
             personen:
               type: array
               items:
-                $ref: 'persoon.yaml#/components/schemas/GbaPersoonBeperkt'
+                $ref: 'persoon-v1.yaml#/components/schemas/GbaPersoonBeperkt'
     ZoekMetNaamEnGemeenteVanInschrijvingResponse:
       allOf:
         - $ref: '#/components/schemas/PersonenQueryResponse'
@@ -49,7 +49,7 @@ components:
             personen:
               type: array
               items:
-                $ref: 'persoon.yaml#/components/schemas/GbaPersoonBeperkt'
+                $ref: 'persoon-v1.yaml#/components/schemas/GbaPersoonBeperkt'
     ZoekMetPostcodeEnHuisnummerResponse:
       allOf:
         - $ref: '#/components/schemas/PersonenQueryResponse'
@@ -58,7 +58,7 @@ components:
             personen:
               type: array
               items:
-                $ref: 'persoon.yaml#/components/schemas/GbaPersoonBeperkt'
+                $ref: 'persoon-v1.yaml#/components/schemas/GbaPersoonBeperkt'
     ZoekMetStraatHuisnummerEnGemeenteVanInschrijvingResponse:
       allOf:
         - $ref: '#/components/schemas/PersonenQueryResponse'
@@ -67,7 +67,7 @@ components:
             personen:
               type: array
               items:
-                $ref: 'persoon.yaml#/components/schemas/GbaPersoonBeperkt'
+                $ref: 'persoon-v1.yaml#/components/schemas/GbaPersoonBeperkt'
     ZoekMetNummeraanduidingIdentificatieResponse:
       allOf:
         - $ref: '#/components/schemas/PersonenQueryResponse'
@@ -76,7 +76,7 @@ components:
             personen:
               type: array
               items:
-                $ref: 'persoon.yaml#/components/schemas/GbaPersoonBeperkt'
+                $ref: 'persoon-v1.yaml#/components/schemas/GbaPersoonBeperkt'
     ZoekMetAdresseerbaarObjectIdentificatieResponse:
       allOf:
         - $ref: '#/components/schemas/PersonenQueryResponse'
@@ -85,4 +85,4 @@ components:
             personen:
               type: array
               items:
-                $ref: 'gezag.yaml#/components/schemas/GbaGezagPersoonBeperkt'
+                $ref: 'gezag-v1.yaml#/components/schemas/GbaGezagPersoonBeperkt'

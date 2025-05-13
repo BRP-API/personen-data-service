@@ -1,0 +1,70 @@
+openapi: 3.1.0
+servers:
+  - description: |
+      Proef omgeving
+    url: https://proefomgeving-gba.haalcentraal.nl/haalcentraal/api/brp
+info:
+  title: BRP API Personen
+  description: |
+    API voor het bevragen van personen uit de basisregistratie personen (BRP), inclusief de registratie niet-ingezeten (RNI). Met deze API kun je personen zoeken en actuele gegevens over personen, kinderen, partners en ouders raadplegen.
+
+    Gegevens die er niet zijn of niet actueel zijn krijg je niet terug. Had een persoon bijvoorbeeld een verblijfstitel die nu niet meer geldig is, dan wordt die verblijfstitel niet opgenomen. In partners wordt alleen de actuele of de laatst ontbonden partner geleverd.
+  version: 2.6.0
+  contact:
+    url: https://github.com/VNG-Realisatie/Haal-Centraal-BRP-bevragen
+  license:
+    name: European Union Public License, version 1.2 (EUPL-1.2)
+    url: https://eupl.eu/1.2/nl/
+tags:
+  - name: Personen
+paths:
+  /personen:
+    post:
+      operationId: GetPersonen
+      summary: Zoek personen
+      description: |
+        Zoek personen met één van de onderstaande verplichte combinaties van parameters en vul ze evt. aan met optionele parameters.
+
+        1.  Raadpleeg met burgerservicenummer
+        2.  Zoek met geslachtsnaam en geboortedatum
+        3.  Zoek met geslachtsnaam, voornamen en gemeente van inschrijving
+        4.  Zoek met postcode en huisnummer
+        5.  Zoek met straat, huisnummer en gemeente van inschrijving
+        6.  Zoek met nummeraanduiding identificatie
+
+        Default krijg je personen terug die nog in leven zijn, tenzij je de inclusiefoverledenpersonen=true opgeeft.
+        
+        Gebruik de fields parameter om alleen die gegevens op te vragen die je nodig hebt en waarvoor je geautoriseerd bent.
+      requestBody:
+        content:
+          'application/json; charset=utf-8':
+            schema:
+              $ref: 'personen-query-v1.yaml#/components/schemas/PersonenQuery'
+      responses:
+        '200':
+          description: |
+                        Zoekactie geslaagd
+          content:
+            'application/json; charset=utf-8':
+              schema:
+                $ref: 'personen-query-response-v1.yaml#/components/schemas/PersonenQueryResponse'
+        '400':
+          $ref: 'problem-details/400-bad-request-response-v1.yaml#/components/responses/400'
+        '401':
+          $ref: 'problem-details/401-unauthorized-response-v1.yaml#/components/responses/401'
+        '403':
+          $ref: 'problem-details/403-forbidden-response-v1.yaml#/components/responses/403'
+        '406':
+          $ref: 'problem-details/406-not-acceptable-response-v1.yaml#/components/responses/406'
+        '415':
+          $ref: 'problem-details/415-unsupported-media-type-response-v1.yaml#/components/responses/415'
+        '429':
+          $ref: 'problem-details/429-too-many-requests-response-v1.yaml#/components/responses/429'
+        '500':
+          $ref: 'problem-details/500-internal-server-error-response-v1.yaml#/components/responses/500'
+        '503':
+          $ref: 'problem-details/503-service-unavailable-response-v1.yaml#/components/responses/503'
+        'default':
+          $ref: 'problem-details/500-internal-server-error-response-v1.yaml#/components/responses/500'
+      tags:
+        - Personen
