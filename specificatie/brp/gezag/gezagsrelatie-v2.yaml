@@ -22,11 +22,11 @@ components:
         propertyName: type
         mapping:
           GezamenlijkOuderlijkGezag: '#/components/schemas/GezamenlijkOuderlijkGezag'
-          EenhoofdigOuderlijkGezag: '#/components/schemas/EenhoofdigOuderlijkGezagV2'
-          GezamenlijkGezag: '#/components/schemas/GezamenlijkGezagV2'
-          Voogdij: '#/components/schemas/VoogdijV2'
-          TijdelijkGeenGezag: '#/components/schemas/TijdelijkGeenGezagV2'
-          GezagNietTeBepalen: '#/components/schemas/GezagNietTeBepalenV2'
+          EenhoofdigOuderlijkGezag: '#/components/schemas/EenhoofdigOuderlijkGezag'
+          GezamenlijkGezag: '#/components/schemas/GezamenlijkGezag'
+          Voogdij: '#/components/schemas/Voogdij'
+          TijdelijkGeenGezag: '#/components/schemas/TijdelijkGeenGezag'
+          GezagNietTeBepalen: '#/components/schemas/GezagNietTeBepalen'
       example:
         type: 'GezamenlijkOuderlijkGezag'
         ouders:
@@ -43,29 +43,31 @@ components:
             ouders:
               type: array
               items:
-                $ref: 'gezagouder-v2.yaml#/components/schemas/GezagOuderV2'
+                $ref: 'gezagouder-v2.yaml#/components/schemas/GezagOuder'
               minItems: 2
               maxItems: 2
 
-    EenhoofdigOuderlijkGezagV2:
+    EenhoofdigOuderlijkGezag:
       allOf:
         - $ref: '#/components/schemas/Gezagsrelatie'
         - type: object
           properties:
             ouder:
-              $ref: 'gezagouder-v2.yaml#/components/schemas/GezagOuderV2'
+              $ref: 'gezagouder-v2.yaml#/components/schemas/GezagOuder'
+      required:
+        - ouder
 
-    GezamenlijkGezagV2:
+    GezamenlijkGezag:
       allOf:
         - $ref: '#/components/schemas/Gezagsrelatie'
         - type: object
           properties:
             ouder:
-              $ref: 'gezagouder-v2.yaml#/components/schemas/GezagOuderV2'
+              $ref: 'gezagouder-v2.yaml#/components/schemas/GezagOuder'
             derde:
               $ref: 'derde-v1.yaml#/components/schemas/Derde'
 
-    VoogdijV2:
+    Voogdij:
       allOf:
         - $ref: '#/components/schemas/Gezagsrelatie'
         - type: object
@@ -77,18 +79,22 @@ components:
               minItems: 0
               maxItems: 2
 
-    TijdelijkGeenGezagV2:
+    TijdelijkGeenGezag:
       allOf:
         - $ref: '#/components/schemas/Gezagsrelatie'
         - type: object
           properties:
             toelichting:
               $ref: '../../gezag/toelichting-v1.yaml#/components/schemas/Toelichting'
+      required:
+        - toelichting
 
-    GezagNietTeBepalenV2:
+    GezagNietTeBepalen:
       allOf:
         - $ref: '#/components/schemas/Gezagsrelatie'
         - type: object
           properties:
             toelichting:
               $ref: '../../gezag/toelichting-v1.yaml#/components/schemas/Toelichting'
+      required:
+        - toelichting
