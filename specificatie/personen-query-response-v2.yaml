@@ -31,7 +31,7 @@ components:
             personen:
               type: array
               items:
-                $ref: 'persoon-v1.yaml#/components/schemas/GbaPersoon'
+                $ref: 'persoon.yaml#/components/schemas/GbaPersoon'
     ZoekMetGeslachtsnaamEnGeboortedatumResponse:
       allOf:
         - $ref: '#/components/schemas/PersonenQueryResponse'
@@ -85,4 +85,4 @@ components:
             personen:
               type: array
               items:
-                $ref: 'gezag-v1.yaml#/components/schemas/GbaGezagPersoonBeperkt'
+                $ref: 'gezag.yaml#/components/schemas/GbaGezagPersoonBeperkt'
