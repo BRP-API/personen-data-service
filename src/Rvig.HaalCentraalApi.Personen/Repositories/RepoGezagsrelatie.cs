@@ -36,7 +36,7 @@ public class RepoGezagsrelatie : RepoWebApiBase, IRepoGezagsrelatie
 		var httpContext = _httpContextAccessor.HttpContext;
 		var acceptGezagVersion = httpContext?.Request?.Headers["accept-gezag-version"].ToString();
 
-		if (!string.IsNullOrEmpty(acceptGezagVersion))
+		if (!string.IsNullOrEmpty(acceptGezagVersion) && acceptGezagVersion.Equals("2"))
 		{
 			// Use V2 DTO
 			return await GetResultFromHttpRequest<ApiModels.GezagV2.GezagResponse>(url, null, HttpMethod.Post, null, requestBody);
