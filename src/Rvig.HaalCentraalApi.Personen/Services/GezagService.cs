@@ -11,9 +11,9 @@ namespace Rvig.HaalCentraalApi.Personen.Services
 {
     public interface IGezagService
     {
-        public Task<IEnumerable<Persoon>> GetGezagIfRequested(List<string> fields, List<string?> bsns);
-        public Task<List<GbaPersoon>> GetGezagPersonenIfRequested(List<string> fields, IEnumerable<Persoon> gezag);
-        public void VerrijkPersonenMetGezagIfRequested(List<string> fields, IEnumerable<Persoon> persoonGezagsrelaties, List<GbaPersoon> gezagPersonen, (IPersoonMetGezag persoon, long pl_id) x);
+        public Task<IEnumerable<object>> GetGezagIfRequested(List<string> fields, List<string?> bsns);
+        public Task<List<GbaPersoon>> GetGezagPersonenIfRequested(List<string> fields, IEnumerable<object> gezag);
+        public void VerrijkPersonenMetGezagIfRequested(List<string> fields, IEnumerable<object> persoonGezagsrelaties, List<GbaPersoon> gezagPersonen, (IPersoonMetGezag persoon, long pl_id) x);
     }
 
     public class GezagService : BaseApiService, IGezagService
@@ -31,19 +31,21 @@ namespace Rvig.HaalCentraalApi.Personen.Services
             _gezagPersonenService = getAndMapPersoonService;
         }
 
-        public async Task<IEnumerable<Persoon>> GetGezagIfRequested(List<string> fields, List<string?> bsns)
+        public async Task<IEnumerable<object>> GetGezagIfRequested(List<string> fields, List<string?> bsns)
         {
             if (GezagIsRequested(fields))
             {
-                GezagResponse response = (await _gezagsrelatieRepo.GetGezag(bsns!)) ?? new GezagResponse();
+                var response = (await _gezagsrelatieRepo.GetGezagDynamic(bsns!)) as IGezagResponseWithPersonen ?? new GezagResponse();
                 return response.Personen.ToList();
             }
             return new List<Persoon>();
         }
 
-        public async Task<List<GbaPersoon>> GetGezagPersonenIfRequested(List<string> fields, IEnumerable<Persoon> gezag)
+        public async Task<List<GbaPersoon>> GetGezagPersonenIfRequested(List<string> fields, IEnumerable<object> gezag)
         {
-            var gezagsrelaties = gezag.Where(p => p.Gezag != null).SelectMany(p => p.Gezag).ToList();
+            var gezagsrelaties = gezag
+                .OfType<Persoon>() // Only V1 Personen
+                .Where(p => p.Gezag != null).SelectMany(p => p.Gezag).ToList();
 
             if (GezagIsRequested(fields) && gezagsrelaties.Count != 0)
             {
@@ -55,13 +57,15 @@ namespace Rvig.HaalCentraalApi.Personen.Services
             return new List<GbaPersoon>();
         }
 
-        public void VerrijkPersonenMetGezagIfRequested(List<string> fields, IEnumerable<Persoon> persoonGezagsrelaties, List<GbaPersoon> gezagPersonen, (IPersoonMetGezag persoon, long pl_id) x)
+        public void VerrijkPersonenMetGezagIfRequested(List<string> fields, IEnumerable<object> persoonGezagsrelaties, List<GbaPersoon> gezagPersonen, (IPersoonMetGezag persoon, long pl_id) x)
         {
             if (GezagIsRequested(fields) &&
+                x.persoon is { Burgerservicenummer: { } bsn } &&
                 !string.IsNullOrWhiteSpace(x.persoon.Burgerservicenummer))
             {
                 var persoonGezagsrelatie = persoonGezagsrelaties
-                    .Where(pgr => pgr.Burgerservicenummer == x.persoon.Burgerservicenummer);
+                    .OfType<Persoon>() // Only V1 Personen
+                    .Where(pgr => pgr.Burgerservicenummer == bsn);
 
                 if (persoonGezagsrelatie.Any())
                 {

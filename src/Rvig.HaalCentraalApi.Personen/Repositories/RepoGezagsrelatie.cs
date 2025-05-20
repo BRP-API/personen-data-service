@@ -11,26 +11,40 @@ namespace Rvig.HaalCentraalApi.Personen.Repositories;
 
 public interface IRepoGezagsrelatie
 {
-	Task<GezagResponse?> GetGezag(IEnumerable<string> burgerservicenummer);
+	Task<object?> GetGezagDynamic(IEnumerable<string> burgerservicenummer);
 }
 public class RepoGezagsrelatie : RepoWebApiBase, IRepoGezagsrelatie
 {
-	public RepoGezagsrelatie(IHttpContextAccessor httpContextAccessor, IOptions<WebApiOptions> webApiOptions, ILoggingHelper loggingHelper) : base(httpContextAccessor, webApiOptions, loggingHelper)
-	{
-	}
+	private readonly IHttpContextAccessor _httpContextAccessor;
 
-	public Task<GezagResponse?> GetGezag(IEnumerable<string> burgerservicenummer)
+    public RepoGezagsrelatie(IHttpContextAccessor httpContextAccessor, IOptions<WebApiOptions> webApiOptions, ILoggingHelper loggingHelper) : base(httpContextAccessor, webApiOptions, loggingHelper) => _httpContextAccessor = httpContextAccessor;
+
+	public async Task<object?> GetGezagDynamic(IEnumerable<string> burgerservicenummer)
 	{
 		if (burgerservicenummer.IsNullOrEmpty())
 		{
-			return Task.FromResult<GezagResponse?>(null);
+			return null;
 		}
+
 		var requestBody = new GezagRequest
 		{
 			Burgerservicenummer = burgerservicenummer.ToList()
 		};
-        // http://localhost:8080/api/v1/opvragenBevoegdheidTotGezag
-        var url = _webApiOptions.Value.Url + "/opvragenBevoegdheidTotGezag";
-		return GetResultFromHttpRequest<GezagResponse>(url, null, HttpMethod.Post, null, requestBody);
+
+		var url = _webApiOptions.Value.Url + "/opvragenBevoegdheidTotGezag";
+
+		var httpContext = _httpContextAccessor.HttpContext;
+		var acceptGezagVersion = httpContext?.Request?.Headers["accept-gezag-version"].ToString();
+
+		if (!string.IsNullOrEmpty(acceptGezagVersion))
+		{
+			// Use V2 DTO
+			return await GetResultFromHttpRequest<ApiModels.GezagV2.GezagResponse>(url, null, HttpMethod.Post, null, requestBody);
+		}
+		else
+		{
+			// Use default DTO
+			return await GetResultFromHttpRequest<GezagResponse>(url, null, HttpMethod.Post, null, requestBody);
+		}
 	}
 }

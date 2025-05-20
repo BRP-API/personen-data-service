@@ -53,7 +53,7 @@ namespace Personen.Tests
             };
 
             _gezagRepositoryMock
-                .GetGezag(bsns!)
+                .GetGezagDynamic(bsns!)
                 .Returns(mockGezagResponse);
 
             // Act
