@@ -74,7 +74,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
                 foreach (var pg in persoonGezagsrelatie)
                 {
                     var gezagResponse = new GezagResponse { Personen = new List<Persoon>() { pg } };
-                    var gezag = GezagsrelatieMapper.Map(gezagResponse, gezagPersonen);
+                    var gezag = GezagsrelatieV1Mapper.Map(gezagResponse, gezagPersonen);
 
                     x.persoon.Gezag!.AddRange(gezag);
                 }

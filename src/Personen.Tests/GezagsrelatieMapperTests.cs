@@ -484,7 +484,7 @@ namespace Personen.Tests
         [Fact]
         public void MapGezagsrelaties()
         {
-            var gezagsrelaties = GezagsrelatieMapper.Map(_gezagResponse, _gezagPersonen);
+            var gezagsrelaties = GezagsrelatieV1Mapper.Map(_gezagResponse, _gezagPersonen);
 
             gezagsrelaties.Should().BeEquivalentTo(_expected);
         }
@@ -492,7 +492,7 @@ namespace Personen.Tests
         [Fact]
         public void MapGezagsrelaties_GezagResponse_Null()
         {
-            var gezagsrelaties = GezagsrelatieMapper.Map(null, _gezagPersonen);
+            var gezagsrelaties = GezagsrelatieV1Mapper.Map(null, _gezagPersonen);
 
             gezagsrelaties.Should().BeEmpty();
         }
@@ -500,7 +500,7 @@ namespace Personen.Tests
         [Fact]
         public void MapGezagsrelaties_GezagPersonen_Null()
         {
-            var gezagsrelaties = GezagsrelatieMapper.Map(_gezagResponse, new List<GbaPersoon>());
+            var gezagsrelaties = GezagsrelatieV1Mapper.Map(_gezagResponse, new List<GbaPersoon>());
 
             gezagsrelaties.Count().Should().Be(_gezagResponse.Personen.Count);
         }
@@ -508,7 +508,7 @@ namespace Personen.Tests
         [Fact]
         public void MapGezagsrelaties_GezagPersonen_ZonderNaam()
         {
-            var gezagsrelaties = GezagsrelatieMapper.Map(_gezagResponse, _gezagPersonen_ZonderNaam);
+            var gezagsrelaties = GezagsrelatieV1Mapper.Map(_gezagResponse, _gezagPersonen_ZonderNaam);
 
             var gezag = gezagsrelaties.First() as EenhoofdigOuderlijkGezag;
 
@@ -520,7 +520,7 @@ namespace Personen.Tests
         [Fact]
         public void MapGezagsrelaties_GezagPersonen_ZonderGeslacht()
         {
-            var gezagsrelaties = GezagsrelatieMapper.Map(_gezagResponse, _gezagPersonen_ZonderGeslacht);
+            var gezagsrelaties = GezagsrelatieV1Mapper.Map(_gezagResponse, _gezagPersonen_ZonderGeslacht);
 
             var gezag = gezagsrelaties.First() as EenhoofdigOuderlijkGezag;
 
@@ -532,7 +532,7 @@ namespace Personen.Tests
         [Fact]
         public void MapGezagsrelaties_GezagPersonen_ZonderGeboorte()
         {
-            var gezagsrelaties = GezagsrelatieMapper.Map(_gezagResponse, _gezagPersonen_ZonderGeboorte);
+            var gezagsrelaties = GezagsrelatieV1Mapper.Map(_gezagResponse, _gezagPersonen_ZonderGeboorte);
 
             var gezag = gezagsrelaties.First() as EenhoofdigOuderlijkGezag;
 
@@ -543,7 +543,7 @@ namespace Personen.Tests
         [Fact]
         public void MapGezagsrelaties_GezagPersonen_ZonderAdellijkeTitelOfPredicaat()
         {
-            var gezagsrelaties = GezagsrelatieMapper.Map(_gezagResponse, _gezagPersonen_ZonderAdellijkeTitelPredicaat);
+            var gezagsrelaties = GezagsrelatieV1Mapper.Map(_gezagResponse, _gezagPersonen_ZonderAdellijkeTitelPredicaat);
 
             var gezag = gezagsrelaties.First() as EenhoofdigOuderlijkGezag;
 
@@ -555,7 +555,7 @@ namespace Personen.Tests
         [Fact]
         public void MapGezagsrelaties_Voogdij_ZonderDerden()
         {
-            var gezagsrelaties = GezagsrelatieMapper.Map(_gezagResponse_Voogdij_ZonderDerden, new List<GbaPersoon>());
+            var gezagsrelaties = GezagsrelatieV1Mapper.Map(_gezagResponse_Voogdij_ZonderDerden, new List<GbaPersoon>());
 
             var gezag = gezagsrelaties.First() as Voogdij;
 
@@ -567,7 +567,7 @@ namespace Personen.Tests
         [Fact]
         public void MapGezagsrelaties_TweehoofdigOuderlijkGezag_ZonderOuders()
         {
-            var gezagsrelaties = GezagsrelatieMapper.Map(_gezagResponse_TweehoofdigOuderlijkGezag_ZonderOuders, new List<GbaPersoon>());
+            var gezagsrelaties = GezagsrelatieV1Mapper.Map(_gezagResponse_TweehoofdigOuderlijkGezag_ZonderOuders, new List<GbaPersoon>());
 
             var gezag = gezagsrelaties.First() as TweehoofdigOuderlijkGezag;
 
@@ -598,7 +598,7 @@ namespace Personen.Tests
                 }
             };
 
-            var gezagsrelaties = GezagsrelatieMapper.Map(gezagResponse, _gezagPersonen);
+            var gezagsrelaties = GezagsrelatieV1Mapper.Map(gezagResponse, _gezagPersonen);
 
             gezagsrelaties.First().Minderjarige.Should().BeOfType<Minderjarige>();
         }
@@ -627,7 +627,7 @@ namespace Personen.Tests
                 }
             };
 
-            var gezagsrelaties = GezagsrelatieMapper.Map(gezagResponse, _gezagPersonen);
+            var gezagsrelaties = GezagsrelatieV1Mapper.Map(gezagResponse, _gezagPersonen);
 
             gezagsrelaties.First().Minderjarige.Should().BeOfType<Minderjarige>();
         }
@@ -697,7 +697,7 @@ namespace Personen.Tests
                 }
             };
 
-            GezagsrelatieMapper.Map(input, personen).Should().BeEquivalentTo(expected);
+            GezagsrelatieV1Mapper.Map(input, personen).Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -730,7 +730,7 @@ namespace Personen.Tests
                 }
             };
 
-            GezagsrelatieMapper.Map(input, new List<GbaPersoon>()).Should().BeEquivalentTo(expected);
+            GezagsrelatieV1Mapper.Map(input, new List<GbaPersoon>()).Should().BeEquivalentTo(expected);
         }
     }
 }
