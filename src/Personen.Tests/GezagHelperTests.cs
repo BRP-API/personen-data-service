@@ -51,7 +51,7 @@ namespace Personen.Tests
             };
 
             // Act
-            var result = GezagHelper.GetGezagBsns(gezagsrelaties);
+            var result = GezagHelperDeprecated.GetGezagBsns(gezagsrelaties);
 
             // Assert
             result.Should().BeEquivalentTo(new List<string> { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13" });
@@ -64,7 +64,7 @@ namespace Personen.Tests
             var gezagsrelaties = new List<Gezag.AbstractGezagsrelatie>();
 
             // Act
-            var result = GezagHelper.GetGezagBsns(gezagsrelaties);
+            var result = GezagHelperDeprecated.GetGezagBsns(gezagsrelaties);
 
             // Assert
             result.Should().BeEmpty();
@@ -81,7 +81,7 @@ namespace Personen.Tests
         };
 
             // Act
-            var result = GezagHelper.GetGezagBsns(gezagsrelaties);
+            var result = GezagHelperDeprecated.GetGezagBsns(gezagsrelaties);
 
             // Assert
             result.Should().BeEmpty();
@@ -111,7 +111,7 @@ namespace Personen.Tests
         };
 
             // Act
-            var result = GezagHelper.GetGezagBsns(gezagsrelaties);
+            var result = GezagHelperDeprecated.GetGezagBsns(gezagsrelaties);
 
             // Assert
             result.Should().BeEquivalentTo(new List<string> { "111", "222", "333", "444", "555", "666" });
@@ -135,7 +135,7 @@ namespace Personen.Tests
         };
 
             // Act
-            var result = GezagHelper.GetGezagBsns(gezagsrelaties);
+            var result = GezagHelperDeprecated.GetGezagBsns(gezagsrelaties);
 
             // Assert
             result.Should().BeEquivalentTo(new List<string> { "123" });
