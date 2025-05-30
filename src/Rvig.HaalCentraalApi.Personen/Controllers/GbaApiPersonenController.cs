@@ -10,9 +10,9 @@ namespace Rvig.HaalCentraalApi.Personen.Controllers;
 [ApiController, Route("haalcentraal/api/brp"), ValidateContentTypeHeader]
 public class GbaApiPersonenController : GbaApiBaseController
 {
-	private readonly IGbaPersonenApiService _gbaService;
+	private readonly IGbaPersonenApiServiceDeprecated _gbaService;
 
-	public GbaApiPersonenController(IGbaPersonenApiService gbaService)
+	public GbaApiPersonenController(IGbaPersonenApiServiceDeprecated gbaService)
 	{
 		_gbaService = gbaService;
 	}

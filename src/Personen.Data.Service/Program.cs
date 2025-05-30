@@ -8,8 +8,19 @@ using Microsoft.AspNetCore.Builder;
 using Rvig.HaalCentraalApi.Personen.Repositories;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
-var servicesDictionary = new Dictionary<Type, Type>
+var deprecatedServicesDictionary = new Dictionary<Type, Type>
+{
+	// BRP API
+	{ typeof(IGbaPersonenApiServiceDeprecated), typeof(GbaPersonenApiServiceDeprecated) },
+	{ typeof(IGezagServiceDeprecated), typeof(GezagServiceDeprecated) },
+
+	// Gezag Data
+	{ typeof(IRepoGezagsrelatieDeprecated), typeof(RepoGezagsrelatieDeprecated) }
+};
+
+var currentServicesDictionary = new Dictionary<Type, Type>
 {
 	// BRP Data
 	{ typeof(IRvigPersoonRepo), typeof(RvigPersoonRepo) },
@@ -19,12 +30,23 @@ var servicesDictionary = new Dictionary<Type, Type>
 	{ typeof(IGezagPersonenService), typeof(GezagPersonenService) },
 	
 	// BRP API
-	{ typeof(IGbaPersonenApiService), typeof(GbaPersonenApiService) },
-	{ typeof(IGezagService), typeof(GezagService) },
+	//{ typeof(IGbaPersonenApiServiceDeprecated), typeof(GbaPersonenApiServiceDeprecated) },
+	//{ typeof(IGezagServiceDeprecated), typeof(GezagServiceDeprecated) },
 
 	// Gezag Data
-	{ typeof(IRepoGezagsrelatie), typeof(RepoGezagsrelatie) }
+	//{ typeof(IRepoGezagsrelatieDeprecated), typeof(RepoGezagsrelatieDeprecated) }
 };
+
+var servicesDictionary = new Dictionary<Type, Type>(currentServicesDictionary);
+
+// Add deprecated services to the dictionary if they are not already present
+foreach (var kvp in deprecatedServicesDictionary)
+{
+    if (!servicesDictionary.ContainsKey(kvp.Key))
+    {
+        servicesDictionary.Add(kvp.Key, kvp.Value);
+    }
+}
 
 var validatorList = new List<Type>
 {
@@ -37,4 +59,5 @@ static bool UseAuthorizationLayer(WebApplicationBuilder builder)
 	// We no longer perform authorization checks in this app as this is taken care of by another application and therefore no longer the responsibility of this app.
 	return false;
 }
+
 RvigBaseApp.Init(servicesDictionary, validatorList, UseAuthorizationLayer, "BRP Personen API");

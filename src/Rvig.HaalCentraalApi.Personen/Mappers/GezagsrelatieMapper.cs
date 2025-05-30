@@ -4,7 +4,7 @@ using Rvig.HaalCentraalApi.Shared.ApiModels.PersonenHistorieBase;
 
 namespace Rvig.HaalCentraalApi.Personen.Mappers
 {
-    public static class GezagsrelatieV2Mapper
+    public static class GezagsrelatieMapper
     {
         public static IEnumerable<AbstractGezagsrelatie> Map(GezagResponse gezagResponse, List<GbaPersoon> gezagPersonen)
         {

@@ -5,18 +5,18 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using System.Net.Http;
 using Rvig.Data.Base.Gezag.Repositories;
-using Rvig.HaalCentraalApi.Gezag.Generated;
+using Rvig.HaalCentraalApi.Gezag.Generated.Deprecated;
 
 namespace Rvig.HaalCentraalApi.Personen.Repositories;
 
-public interface IRepoGezagsrelatie
+public interface IRepoGezagsrelatieDeprecated
 {
     Task<GezagResponse?> GetGezag(IEnumerable<string> burgerservicenummer);
 }
 
-public class RepoGezagsrelatie : RepoWebApiBase, IRepoGezagsrelatie
+public class RepoGezagsrelatieDeprecated : RepoWebApiBase, IRepoGezagsrelatieDeprecated
 {
-	public RepoGezagsrelatie(
+	public RepoGezagsrelatieDeprecated(
 		IHttpContextAccessor httpContextAccessor, 
 		IOptions<WebApiOptions> webApiOptions, 
 		ILoggingHelper loggingHelper) 
@@ -36,11 +36,6 @@ public class RepoGezagsrelatie : RepoWebApiBase, IRepoGezagsrelatie
 
 		var url = _webApiOptions.Value.Url + "/opvragenBevoegdheidTotGezag";
 
-		var headers = new List<(string Name, string Content)>
-			{
-				("Accept-Gezag-Version", "2")
-		};
-
-		return await GetResultFromHttpRequest<GezagResponse>(url, null, HttpMethod.Post, headers, requestBody);
+		return await GetResultFromHttpRequest<GezagResponse>(url, null, HttpMethod.Post, null, requestBody);
 	}
 }
