@@ -3,7 +3,7 @@
   "defaultVariables": null,
   "documentGenerator": {
     "fromDocument": {
-      "url": "../specificatie/brp-api-gezag/openapi.yaml",
+      "url": "../../specificatie/resolved/openapi.yaml",
       "output": null,
       "newLineBehavior": "Auto"
     }
@@ -59,7 +59,7 @@
       "wrapResponseMethods": [],
       "generateResponseClasses": true,
       "responseClass": "SwaggerResponse",
-      "namespace": "Rvig.HaalCentraalApi.Personen.ApiModels.Gezag",
+      "namespace": "Rvig.HaalCentraalApi.Personen.Generated.Common",
       "requiredPropertiesMustBeDefined": true,
       "dateType": "System.DateTimeOffset",
       "jsonConverters": null,
@@ -77,7 +77,24 @@
       "jsonLibrary": "NewtonsoftJson",
       "generateDefaultValues": true,
       "generateDataAnnotations": false,
-      "excludedTypeNames": [],
+      "excludedTypeNames": [
+        "DataApiRequest",
+        "DataApiResponse",
+        "Foutbericht",
+        "InvalidParam",
+        "BadRequestFoutbericht",
+        "Derde",
+        "BekendeDerde",
+        "GezagOuder",
+        "AbstractGezagsrelatie",
+        "TweehoofdigOuderlijkGezag",
+        "EenhoofdigOuderlijkGezag",
+        "GezamenlijkGezag",
+        "Voogdij",
+        "TijdelijkGeenGezag",
+        "GezagNietTeBepalen",
+        "Minderjarige"
+      ],
       "excludedParameterNames": [],
       "handleReferences": false,
       "generateImmutableArrayProperties": false,
@@ -93,7 +110,7 @@
       "templateDirectory": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "Rvig.HaalCentraalApi.Personen/ApiModels/Gezag/Generated.cs",
+      "output": "GeneratedCommon.cs",
       "newLineBehavior": "Auto"
     }
   }
