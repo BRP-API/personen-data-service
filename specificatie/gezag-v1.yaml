@@ -8,7 +8,7 @@ components:
   schemas:
     GbaGezagPersoonBeperkt:
       allOf:
-        - $ref: 'persoon-v1.yaml#/components/schemas/GbaPersoonBeperkt'
+        - $ref: 'persoon.yaml#/components/schemas/GbaPersoonBeperkt'
         - type: object
           properties:
             gezag:
@@ -17,5 +17,5 @@ components:
     Gezag:
       type: array
       items: 
-        $ref: 'brp/gezag/gezagsrelatie-v2.yaml#/components/schemas/Gezagsrelatie'
+        $ref: 'brp/gezag/gezagsrelatie-v1.yaml#/components/schemas/AbstractGezagsrelatie'
       minItems: 0

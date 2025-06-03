@@ -21,6 +21,8 @@ using Rvig.HaalCentraalApi.Shared.Exceptions;
 using Rvig.Data.Base.WebApi;
 using Serilog;
 using Brp.Shared.Infrastructure.ProblemDetails;
+using AutoMapper;
+using Rvig.HaalCentraalApi.Personen.Profiles;
 
 namespace Rvig.Base.App;
 
@@ -65,8 +67,11 @@ public static class RvigBaseApp
 				builder.Services.AddSingleton(servicePair.Key, servicePair.Value);
 			}
 
-			// Loading validators from child app.
-			validatorsToConfigure.ForEach(validator => builder.Services.AddValidatorsFromAssemblyContaining(validator));
+			// Load automapper profiles
+			builder.Services.AddAutoMapper(typeof(GbaPersoonProfile));
+
+            // Loading validators from child app.
+            validatorsToConfigure.ForEach(validator => builder.Services.AddValidatorsFromAssemblyContaining(validator));
 
 			bool useAuthorizationChecks = useAuthorizationLayerFunc(builder);
 

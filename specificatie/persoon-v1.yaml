@@ -1,0 +1,151 @@
+openapi: 3.0.3
+info:
+  title: Persoon definities
+  version: 2.0.0
+  contact: {}
+paths: {}
+components:
+  schemas:
+    ANummer:
+      description: |
+        Het A-nummer van de persoon
+      type: string
+      pattern: ^[0-9]{10}$
+    GemeenteVanInschrijving:
+      description: |
+        Een code die aangeeft in welke gemeente de persoon woont, of de laatste gemeente waar de persoon heeft gewoond, of de gemeente waar de persoon voor het eerst is ingeschreven.
+      type: string
+      pattern: ^[0-9]{4}$
+      example: "0518"
+    IndicatieCurateleRegister:
+      type: boolean
+      description: |
+        Geeft aan dat de persoon onder curatele is gesteld.
+      example: true
+    OmschrijvingVerdrag:
+      type: string
+      description: |
+        Omschrijving van het verdrag op basis waarvan een zusterorganisatie in het buitenland de gegevens bij de RNI-deelnemer heeft aangeleverd.
+      pattern: ^[a-zA-Z0-9À-ž \.\-\']{1,50}$
+    Categorie:
+      type: string
+      description: Naam van categorie waarop de RNI-deelnemer gegevens heeft aangeleverd
+      pattern: ^[a-zA-Z0-9À-ž \.\-\'\/]{1,40}$
+      example: Verblijfplaats
+    OmschrijvingVerificatie:
+      type: string
+      description: |
+        Omschrijving van de verificatie van de rni-gegevens
+      pattern: ^[a-zA-Z0-9À-ž \.\-\']{1,50}$
+    GbaVerificatie:
+      type: object
+      properties:
+        datum:
+          $ref: 'brp/datum-v1.yaml#/components/schemas/GbaDatum'
+        omschrijving:
+          $ref: '#/components/schemas/OmschrijvingVerificatie'
+    RniDeelnemer:
+      type: object
+      description: Gegevens over de RNI-deelnemer die de gegevens in de betrokken categorie heeft aangeleverd.
+      properties:
+        deelnemer:
+          $ref: 'brp/waardetabel-v1.yaml#/components/schemas/Waardetabel'
+        omschrijvingVerdrag:
+          $ref: '#/components/schemas/OmschrijvingVerdrag'
+        categorie:
+          $ref: '#/components/schemas/Categorie'
+    GbaPersoonBeperkt:
+      type: object
+      properties:
+        burgerservicenummer:
+          $ref: 'brp/identificatienummers/burgerservicenummer-v1.yaml#/components/schemas/Burgerservicenummer'
+        geboorte:
+          $ref: 'brp/geboorte/geboorte-basis-v1.yaml#/components/schemas/GeboorteBasis'
+        geheimhoudingPersoonsgegevens:
+          $ref: 'brp/geheim/indicatie-geheim-v1.yaml#/components/schemas/IndicatieGeheim'
+        geslacht:
+          $ref: 'brp/geslacht/geslachtsaanduiding-v1.yaml#/components/schemas/Geslachtsaanduiding'
+        persoonInOnderzoek:
+          $ref: 'brp/in-onderzoek-v1.yaml#/components/schemas/InOnderzoek'
+        naam:
+          $ref: 'brp/naam/naam-basis-v1.yaml#/components/schemas/NaamBasis'
+        opschortingBijhouding:
+          $ref: 'opschortingbijhouding.yaml#/components/schemas/GbaOpschortingBijhouding'
+        gemeenteVanInschrijving:
+          $ref: 'brp/waardetabel-v1.yaml#/components/schemas/Waardetabel'
+        verblijfplaats:
+          $ref: 'verblijfplaats.yaml#/components/schemas/GbaVerblijfplaatsBeperkt'
+        rni:
+          type: array
+          items:
+            $ref: '#/components/schemas/RniDeelnemer'
+        verificatie:
+          $ref: '#/components/schemas/GbaVerificatie'
+    GbaPersoon:
+      type: object
+      properties:
+        aNummer:
+          $ref: '#/components/schemas/ANummer'
+        burgerservicenummer:
+          $ref: 'brp/identificatienummers/burgerservicenummer-v1.yaml#/components/schemas/Burgerservicenummer'
+        datumEersteInschrijvingGBA:
+          $ref: 'brp/datum-v1.yaml#/components/schemas/GbaDatum'
+        geheimhoudingPersoonsgegevens:
+          $ref: 'brp/geheim/indicatie-geheim-v1.yaml#/components/schemas/IndicatieGeheim'
+        geslacht:
+          $ref: 'brp/geslacht/geslachtsaanduiding-v1.yaml#/components/schemas/Geslachtsaanduiding'
+        persoonInOnderzoek:
+          $ref: 'brp/in-onderzoek-v1.yaml#/components/schemas/InOnderzoek'
+        gezagInOnderzoek:
+          $ref: 'brp/in-onderzoek-v1.yaml#/components/schemas/InOnderzoek'
+        uitsluitingKiesrecht:
+          $ref: 'kiesrecht.yaml#/components/schemas/GbaUitsluitingKiesrecht'
+        europeesKiesrecht:
+          $ref: 'kiesrecht.yaml#/components/schemas/GbaEuropeesKiesrecht'
+        naam:
+          $ref: 'naam.yaml#/components/schemas/GbaNaamPersoon'
+        nationaliteiten:
+          type: array
+          items:
+            $ref: 'nationaliteit.yaml#/components/schemas/GbaNationaliteit'
+        geboorte:
+          $ref: 'geboorte.yaml#/components/schemas/GbaGeboorte'
+        opschortingBijhouding:
+          $ref: 'opschortingbijhouding.yaml#/components/schemas/GbaOpschortingBijhouding'
+        overlijden:
+          $ref: 'overlijden.yaml#/components/schemas/GbaOverlijden'
+        verblijfplaats:
+          $ref: 'verblijfplaats.yaml#/components/schemas/GbaVerblijfplaats'
+        immigratie:
+          $ref: 'immigratie.yaml#/components/schemas/GbaImmigratie'
+        gemeenteVanInschrijving:
+          $ref: 'brp/waardetabel-v1.yaml#/components/schemas/Waardetabel'
+        datumInschrijvingInGemeente:
+          $ref: 'brp/datum-v1.yaml#/components/schemas/GbaDatum'
+        indicatieCurateleRegister:
+          $ref: '#/components/schemas/IndicatieCurateleRegister'
+        indicatieGezagMinderjarige:
+          $ref: 'brp/waardetabel-v1.yaml#/components/schemas/Waardetabel'
+          deprecated: true
+        gezag:
+          $ref: 'gezag-v1.yaml#/components/schemas/Gezag'
+        verblijfstitel:
+          $ref: 'verblijfstitel.yaml#/components/schemas/GbaVerblijfstitel'
+        kinderen:
+          type: array
+          items:
+            $ref: 'kind.yaml#/components/schemas/GbaKind'
+        ouders:
+          type: array
+          items:
+            $ref: 'ouder.yaml#/components/schemas/GbaOuder'
+        partners:
+          type: array
+          items:
+            $ref: 'partner.yaml#/components/schemas/GbaPartner'
+        rni:
+          type: array
+          items:
+            $ref: '#/components/schemas/RniDeelnemer'
+        verificatie:
+          $ref: '#/components/schemas/GbaVerificatie'

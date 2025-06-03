@@ -1,5 +1,6 @@
-﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
+﻿using AutoMapper;
 using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
+using Rvig.HaalCentraalApi.Personen.Generated.Deprecated;
 using Rvig.HaalCentraalApi.Personen.Helpers;
 using Rvig.HaalCentraalApi.Personen.Interfaces;
 using Rvig.HaalCentraalApi.Personen.Mappers;
@@ -9,33 +10,41 @@ using Rvig.HaalCentraalApi.Shared.Services;
 
 namespace Rvig.HaalCentraalApi.Personen.Services
 {
-    public interface IGezagService
+    public interface IGezagServiceDeprecated
     {
-        public Task<IEnumerable<object>> GetGezagIfRequested(List<string> fields, List<string?> bsns);
-        public Task<List<GbaPersoon>> GetGezagPersonenIfRequested(List<string> fields, IEnumerable<object> gezag);
-        public void VerrijkPersonenMetGezagIfRequested(List<string> fields, IEnumerable<object> persoonGezagsrelaties, List<GbaPersoon> gezagPersonen, (IPersoonMetGezag persoon, long pl_id) x);
+        public Task<IEnumerable<object>> GetGezag(List<string> fields, List<string?> bsns);
+        public Task<List<GbaPersoon>> GetGezagPersonen(List<string> fields, IEnumerable<object> gezag);
+        public void VerrijkPersonenMetGezag(List<string> fields, IEnumerable<object> persoonGezagsrelaties, List<GbaPersoon> gezagPersonen, (GbaPersoon persoon, long pl_id) x);
     }
 
-    public class GezagService : BaseApiService, IGezagService
+    public class GezagServiceDeprecated : BaseApiService
     {
-        private readonly IRepoGezagsrelatie _gezagsrelatieRepo;
+        private readonly IRepoGezagsrelatieDeprecated _gezagsrelatieRepo;
         private readonly IGezagPersonenService _gezagPersonenService;
+        private readonly IMapper _mapper;
 
-        public GezagService(
+        private static bool GezagIsRequested(List<string> fields) =>
+           fields.Any(field =>
+               field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) &&
+               !field.StartsWith("indicatieGezagMinderjarige"));
+
+        public GezagServiceDeprecated(
             IGezagPersonenService getAndMapPersoonService,
             IDomeinTabellenRepo domeinTabellenRepo,
-            IRepoGezagsrelatie gezagsrelatieRepo)
+            IRepoGezagsrelatieDeprecated gezagsrelatieRepo,
+            IMapper mapper)
         : base(domeinTabellenRepo)
         {
             _gezagsrelatieRepo = gezagsrelatieRepo;
             _gezagPersonenService = getAndMapPersoonService;
+            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<object>> GetGezagIfRequested(List<string> fields, List<string?> bsns)
+        public async Task<IEnumerable<Persoon>> GetGezagIfRequested(List<string> fields, List<string?> bsns)
         {
             if (GezagIsRequested(fields))
             {
-                var response = (await _gezagsrelatieRepo.GetGezagDynamic(bsns!)) as IGezagResponseWithPersonen ?? new GezagResponse();
+                var response = (await _gezagsrelatieRepo.GetGezag(bsns!)) ?? new GezagResponse();
                 return response.Personen.ToList();
             }
             return new List<Persoon>();
@@ -57,7 +66,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
             return new List<GbaPersoon>();
         }
 
-        public void VerrijkPersonenMetGezagIfRequested(List<string> fields, IEnumerable<object> persoonGezagsrelaties, List<GbaPersoon> gezagPersonen, (IPersoonMetGezag persoon, long pl_id) x)
+        public void VerrijkPersonenMetGezagIfRequested(List<string> fields, IEnumerable<object> persoonGezagsrelaties, List<GbaPersoon> gezagPersonen, (GbaPersoon persoon, long pl_id) x)
         {
             if (GezagIsRequested(fields) &&
                 x.persoon is { Burgerservicenummer: { } bsn } &&
@@ -69,29 +78,31 @@ namespace Rvig.HaalCentraalApi.Personen.Services
 
                 if (persoonGezagsrelatie.Any())
                 {
-                    x.persoon.Gezag = new List<ApiModels.BRP.AbstractGezagsrelatie>();
+                    x.persoon.Gezag = new List<Generated.Deprecated.AbstractGezagsrelatie>();
                 }
                 foreach (var pg in persoonGezagsrelatie)
                 {
                     var gezagResponse = new GezagResponse { Personen = new List<Persoon>() { pg } };
-                    var gezag = GezagsrelatieV1Mapper.Map(gezagResponse, gezagPersonen);
+                    var gezag = GezagsrelatieMapperDeprecated.Map(gezagResponse, gezagPersonen);
 
-                    x.persoon.Gezag!.AddRange(gezag);
+                    foreach (var g in gezag)
+                    {
+                        if (g is Generated.Deprecated.AbstractGezagsrelatie gezagsrelatie)
+                        {
+                            x.persoon.Gezag.Add(gezagsrelatie);
+                        }
+                    }
                 }
             }
         }
-        
-        private static bool GezagIsRequested(List<string> fields) =>
-            fields.Any(field =>
-                field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) &&
-                !field.StartsWith("indicatieGezagMinderjarige"));
 
         private async Task<List<GbaPersoon>> GetGezagPersonen(List<string> gezagBsns)
         {
-            var gezagPersonen = await _gezagPersonenService.GetGezagPersonen(gezagBsns);
+            var gezagPersonen = await _gezagPersonenService.GetGezagPersonen(gezagBsns); 
 
-            return gezagPersonen.ToList();
+            var mappedGezagPersonen = _mapper.Map<List<GbaPersoon>>(gezagPersonen);
+
+            return mappedGezagPersonen.ToList();
         }
-
     }
 }
