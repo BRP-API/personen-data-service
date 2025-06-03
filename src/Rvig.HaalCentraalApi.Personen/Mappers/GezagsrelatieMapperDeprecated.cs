@@ -1,14 +1,11 @@
-﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
-using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
-using Rvig.HaalCentraalApi.Shared.ApiModels.PersonenHistorieBase;
-using Rvig.HaalCentraalApi.Shared.ApiModels.Universal;
+﻿using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
 using Deprecated = Rvig.HaalCentraalApi.Personen.Generated.Deprecated;
 
 namespace Rvig.HaalCentraalApi.Personen.Mappers
 {
     public static class GezagsrelatieMapperDeprecated
     {
-        public static IEnumerable<Deprecated.AbstractGezagsrelatie> Map(GezagResponse gezagResponse, List<GbaPersoon> gezagPersonen)
+        public static IEnumerable<Deprecated.AbstractGezagsrelatie> Map(GezagResponse gezagResponse, List<Deprecated.GbaPersoon> gezagPersonen)
         {
             var result = new List<Deprecated.AbstractGezagsrelatie>();
 
@@ -35,7 +32,7 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             return result;
         }
 
-        private static void MapGezagNietTeBepalen(List<GbaPersoon> gezagPersonen, List<Deprecated.AbstractGezagsrelatie> result, ApiModels.Gezag.AbstractGezagsrelatie? gezagsrelatie)
+        private static void MapGezagNietTeBepalen(List<Deprecated.GbaPersoon> gezagPersonen, List<Deprecated.AbstractGezagsrelatie> result, ApiModels.Gezag.AbstractGezagsrelatie? gezagsrelatie)
         {
             if (gezagsrelatie is ApiModels.Gezag.GezagNietTeBepalen gezagNietTeBepalen)
             {
@@ -50,7 +47,7 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             }
         }
 
-        private static void MapTijdelijkGeenGezag(List<GbaPersoon> gezagPersonen, List<Deprecated.AbstractGezagsrelatie> result, ApiModels.Gezag.AbstractGezagsrelatie? gezagsrelatie)
+        private static void MapTijdelijkGeenGezag(List<Deprecated.GbaPersoon> gezagPersonen, List<Deprecated.AbstractGezagsrelatie> result, ApiModels.Gezag.AbstractGezagsrelatie? gezagsrelatie)
         {
             if (gezagsrelatie is ApiModels.Gezag.TijdelijkGeenGezag tijdelijkGeenGezag)
             {
@@ -65,7 +62,7 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             }
         }
 
-        private static void MapVoogdij(List<GbaPersoon> gezagPersonen, List<Deprecated.AbstractGezagsrelatie> result, ApiModels.Gezag.AbstractGezagsrelatie? gezagsrelatie)
+        private static void MapVoogdij(List<Deprecated.GbaPersoon> gezagPersonen, List<Deprecated.AbstractGezagsrelatie> result, ApiModels.Gezag.AbstractGezagsrelatie? gezagsrelatie)
         {
             if (gezagsrelatie is ApiModels.Gezag.Voogdij voogdij)
             {
@@ -82,7 +79,7 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             }
         }
 
-        private static void MapGezamenlijkGezag(List<GbaPersoon> gezagPersonen, List<Deprecated.AbstractGezagsrelatie> result, ApiModels.Gezag.AbstractGezagsrelatie? gezagsrelatie)
+        private static void MapGezamenlijkGezag(List<Deprecated.GbaPersoon> gezagPersonen, List<Deprecated.AbstractGezagsrelatie> result, ApiModels.Gezag.AbstractGezagsrelatie? gezagsrelatie)
         {
             if (gezagsrelatie is ApiModels.Gezag.GezamenlijkGezag gezamenlijkGezag)
             {
@@ -100,7 +97,7 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             }
         }
 
-        private static void MapTweehoofdigOuderlijkGezag(List<GbaPersoon> gezagPersonen, List<Deprecated.AbstractGezagsrelatie> result, ApiModels.Gezag.AbstractGezagsrelatie? gezagsrelatie)
+        private static void MapTweehoofdigOuderlijkGezag(List<Deprecated.GbaPersoon> gezagPersonen, List<Deprecated.AbstractGezagsrelatie> result, ApiModels.Gezag.AbstractGezagsrelatie? gezagsrelatie)
         {
             if (gezagsrelatie is ApiModels.Gezag.TweehoofdigOuderlijkGezag tweehoofdigOuderlijkGezag)
             {
@@ -117,7 +114,7 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             }
         }
 
-        private static void MapEenhoofdigOuderlijkGezag(List<GbaPersoon> gezagPersonen, List<Deprecated.AbstractGezagsrelatie> result, ApiModels.Gezag.AbstractGezagsrelatie? gezagsrelatie)
+        private static void MapEenhoofdigOuderlijkGezag(List<Deprecated.GbaPersoon> gezagPersonen, List<Deprecated.AbstractGezagsrelatie> result, ApiModels.Gezag.AbstractGezagsrelatie? gezagsrelatie)
         {
             if (gezagsrelatie is ApiModels.Gezag.EenhoofdigOuderlijkGezag eenhoofdigOuderlijkGezag)
             {
@@ -133,7 +130,7 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             }
         }
 
-        private static Deprecated.GezagOuder MapPersoonToGezagOuder(List<GbaPersoon> personen, string bsn)
+        private static Deprecated.GezagOuder MapPersoonToGezagOuder(List<Deprecated.GbaPersoon> personen, string bsn)
         {
             var persoon = personen.FirstOrDefault(p => p.Burgerservicenummer == bsn);
 
@@ -145,12 +142,12 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             return new Deprecated.GezagOuder
             {
                 Burgerservicenummer = persoon.Burgerservicenummer,
-                Geslacht = MapGeslacht(persoon.Geslacht),
+                Geslacht = persoon.Geslacht,
                 Naam = MapNaam(persoon)
             };
         }
 
-        private static Deprecated.Minderjarige MapPersoonToMinderjarige(List<GbaPersoon> personen, string bsn)
+        private static Deprecated.Minderjarige MapPersoonToMinderjarige(List<Deprecated.GbaPersoon> personen, string bsn)
         {
             var persoon = personen.FirstOrDefault(p => p.Burgerservicenummer == bsn);
 
@@ -162,30 +159,13 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             return new Deprecated.Minderjarige
             {
                 Burgerservicenummer = persoon.Burgerservicenummer,
-                Geboorte = MapGeboorteToGeboorteBasis(persoon.Geboorte),
+                Geboorte = persoon.Geboorte,
                 Naam = MapNaam(persoon),
-                Geslacht = MapGeslacht(persoon.Geslacht)
+                Geslacht = persoon.Geslacht
             };
         }
 
-        private static Generated.Common.Geslachtsaanduiding? MapGeslacht(Waardetabel? geslacht)
-        {
-            return geslacht != null ? new Generated.Common.Geslachtsaanduiding
-            {
-                Code = geslacht.Code,
-                Omschrijving = geslacht.Omschrijving
-            } : null;
-        }
-
-        private static Generated.Common.GeboorteBasis? MapGeboorteToGeboorteBasis(GbaGeboorte? geboorte)
-        {
-            return geboorte != null ? new Generated.Common.GeboorteBasis
-            {
-                Datum = geboorte.Datum
-            } : null;
-        }
-
-        private static List<Deprecated.BekendeDerde>? MapPersonenToBekendeDerden(List<GbaPersoon> personen, IEnumerable<ApiModels.Gezag.Derde>? derden)
+        private static List<Deprecated.BekendeDerde>? MapPersonenToBekendeDerden(List<Deprecated.GbaPersoon> personen, IEnumerable<ApiModels.Gezag.Derde>? derden)
         {
             if (derden == null) return null;
 
@@ -203,7 +183,7 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             return retval;
         }
 
-        private static Deprecated.Derde? MapPersoonToDerde(List<GbaPersoon> personen, ApiModels.Gezag.Derde? derde)
+        private static Deprecated.Derde? MapPersoonToDerde(List<Deprecated.GbaPersoon> personen, ApiModels.Gezag.Derde? derde)
         {
             if (derde == null) return null;
             if (derde is ApiModels.Gezag.OnbekendeDerde) return new Deprecated.Derde();
@@ -229,7 +209,7 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             };
         }
 
-        private static Generated.Common.NaamBasis? MapNaam(GbaPersoon persoon)
+        private static Generated.Common.NaamBasis? MapNaam(Deprecated.GbaPersoon persoon)
         {
             return persoon.Naam != null ? new Generated.Common.NaamBasis
             {
