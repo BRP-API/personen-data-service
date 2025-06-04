@@ -5,7 +5,7 @@ info:
     API voor het bevragen van personen uit de basisregistratie personen (BRP), inclusief de registratie niet-ingezeten (RNI). Met deze API kun je personen zoeken en actuele gegevens over personen, kinderen, partners en ouders raadplegen.
 
     Gegevens die er niet zijn of niet actueel zijn krijg je niet terug. Had een persoon bijvoorbeeld een verblijfstitel die nu niet meer geldig is, dan wordt die verblijfstitel niet opgenomen. In partners wordt alleen de actuele of de laatst ontbonden partner geleverd.
-  version: 2.7.0
+  version: 2.6.0
   contact:
     url: https://github.com/VNG-Realisatie/Haal-Centraal-BRP-bevragen
   license:
@@ -85,6 +85,7 @@ components:
           ZoekMetStraatHuisnummerEnGemeenteVanInschrijving: '#/components/schemas/ZoekMetStraatHuisnummerEnGemeenteVanInschrijving'
           ZoekMetNummeraanduidingIdentificatie: '#/components/schemas/ZoekMetNummeraanduidingIdentificatie'
           ZoekMetAdresseerbaarObjectIdentificatie: '#/components/schemas/ZoekMetAdresseerbaarObjectIdentificatie'
+      additionalProperties: false
       properties:
         type:
           type: string
@@ -144,6 +145,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/PersonenQuery'
         - type: object
+          additionalProperties: false
           properties:
             inclusiefOverledenPersonen:
               $ref: '#/components/schemas/InclusiefOverledenPersonen'
@@ -173,6 +175,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/PersonenQuery'
         - type: object
+          additionalProperties: false
           properties:
             inclusiefOverledenPersonen:
               $ref: '#/components/schemas/InclusiefOverledenPersonen'
@@ -194,6 +197,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/PersonenQuery'
         - type: object
+          additionalProperties: false
           properties:
             burgerservicenummer:
               type: array
@@ -233,6 +237,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/PersonenQuery'
         - type: object
+          additionalProperties: false
           properties:
             inclusiefOverledenPersonen:
               $ref: '#/components/schemas/InclusiefOverledenPersonen'
@@ -264,6 +269,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/PersonenQuery'
         - type: object
+          additionalProperties: false
           properties:
             inclusiefOverledenPersonen:
               $ref: '#/components/schemas/InclusiefOverledenPersonen'
@@ -287,6 +293,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/PersonenQuery'
         - type: object
+          additionalProperties: false
           properties:
             inclusiefOverledenPersonen:
               $ref: '#/components/schemas/InclusiefOverledenPersonen'
@@ -304,6 +311,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/PersonenQuery'
         - type: object
+          additionalProperties: false
           properties:
             inclusiefOverledenPersonen:
               $ref: '#/components/schemas/InclusiefOverledenPersonen'
@@ -323,6 +331,7 @@ components:
     Foutbericht:
       type: object
       description: Terugmelding bij een fout. JSON representatie in lijn met [RFC7807](https://tools.ietf.org/html/rfc7807).
+      additionalProperties: false
       properties:
         type:
           description: Link naar meer informatie over deze fout
@@ -363,6 +372,7 @@ components:
           ZoekMetStraatHuisnummerEnGemeenteVanInschrijving: '#/components/schemas/ZoekMetStraatHuisnummerEnGemeenteVanInschrijvingResponse'
           ZoekMetNummeraanduidingIdentificatie: '#/components/schemas/ZoekMetNummeraanduidingIdentificatieResponse'
           ZoekMetAdresseerbaarObjectIdentificatie: '#/components/schemas/ZoekMetAdresseerbaarObjectIdentificatieResponse'
+      additionalProperties: false
       properties:
         type:
           type: string
@@ -372,6 +382,7 @@ components:
       example: '20180700'
     GeboorteBasis:
       type: object
+      additionalProperties: false
       properties:
         datum:
           $ref: '#/components/schemas/GbaDatum'
@@ -385,6 +396,7 @@ components:
       maximum: 7
     Waardetabel:
       type: object
+      additionalProperties: false
       properties:
         code:
           type: string
@@ -405,6 +417,7 @@ components:
       required:
         - aanduidingGegevensInOnderzoek
         - datumIngangOnderzoek
+      additionalProperties: false
       properties:
         aanduidingGegevensInOnderzoek:
           type: string
@@ -449,6 +462,7 @@ components:
       example: Vries
     NaamBasis:
       type: object
+      additionalProperties: false
       properties:
         voornamen:
           $ref: '#/components/schemas/Voornamen'
@@ -462,6 +476,7 @@ components:
       type: object
       description: |
         Gegevens over het (gedeeltelijk) stoppen van de bijhouding van de persoonsgegevens
+      additionalProperties: false
       properties:
         reden:
           description: Omschrijving reden opschorting bijhouding
@@ -470,6 +485,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/OpschortingBijhoudingBasis'
         - type: object
+          additionalProperties: false
           properties:
             datum:
               description: Datum waarop de bijhouding is gestaakt
@@ -512,6 +528,7 @@ components:
       example: Selangor
     GbaVerblijfplaatsBeperkt:
       type: object
+      additionalProperties: false
       properties:
         straat:
           $ref: '#/components/schemas/KorteStraatnaam'
@@ -552,6 +569,7 @@ components:
     RniDeelnemer:
       type: object
       description: Gegevens over de RNI-deelnemer die de gegevens in de betrokken categorie heeft aangeleverd.
+      additionalProperties: false
       properties:
         deelnemer:
           $ref: '#/components/schemas/Waardetabel'
@@ -561,6 +579,7 @@ components:
           $ref: '#/components/schemas/Categorie'
     VerificatieBasis:
       type: object
+      additionalProperties: false
       properties:
         omschrijving:
           type: string
@@ -571,11 +590,13 @@ components:
       allOf:
         - $ref: '#/components/schemas/VerificatieBasis'
         - type: object
+          additionalProperties: false
           properties:
             datum:
               $ref: '#/components/schemas/GbaDatum'
     GbaPersoonBeperkt:
       type: object
+      additionalProperties: false
       properties:
         burgerservicenummer:
           $ref: '#/components/schemas/Burgerservicenummer'
@@ -605,6 +626,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/PersonenQueryResponse'
         - type: object
+          additionalProperties: false
           properties:
             personen:
               type: array
@@ -614,6 +636,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/PersonenQueryResponse'
         - type: object
+          additionalProperties: false
           properties:
             personen:
               type: array
@@ -626,6 +649,7 @@ components:
       pattern: ^[0-9]{10}$
     UitsluitingKiesrechtBasis:
       type: object
+      additionalProperties: false
       properties:
         uitgeslotenVanKiesrecht:
           type: boolean
@@ -634,11 +658,13 @@ components:
       allOf:
         - $ref: '#/components/schemas/UitsluitingKiesrechtBasis'
         - type: object
+          additionalProperties: false
           properties:
             einddatum:
               $ref: '#/components/schemas/GbaDatum'
     EuropeesKiesrechtBasis:
       type: object
+      additionalProperties: false
       properties:
         aanduiding:
           description: |
@@ -648,6 +674,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/EuropeesKiesrechtBasis'
         - type: object
+          additionalProperties: false
           properties:
             einddatumUitsluiting:
               $ref: '#/components/schemas/GbaDatum'
@@ -659,6 +686,7 @@ components:
               $ref: '#/components/schemas/Waardetabel'
     GbaNationaliteit:
       type: object
+      additionalProperties: false
       properties:
         aanduidingBijzonderNederlanderschap:
           type: string
@@ -675,6 +703,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/GeboorteBasis'
         - type: object
+          additionalProperties: false
           properties:
             land:
               $ref: '#/components/schemas/Waardetabel'
@@ -682,6 +711,7 @@ components:
               $ref: '#/components/schemas/Waardetabel'
     OverlijdenBasis:
       type: object
+      additionalProperties: false
       properties:
         land:
           description: |
@@ -695,6 +725,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/OverlijdenBasis'
       type: object
+      additionalProperties: false
       properties:
         datum:
           description: |
@@ -723,6 +754,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/GbaVerblijfplaatsBeperkt'
         - type: object
+          additionalProperties: false
           properties:
             adresseerbaarObjectIdentificatie:
               $ref: '#/components/schemas/AdresseerbaarObjectIdentificatie'
@@ -741,6 +773,7 @@ components:
               $ref: '#/components/schemas/OfficieleStraatnaam'
     ImmigratieBasis:
       type: object
+      additionalProperties: false
       properties:
         landVanwaarIngeschreven:
           description: |
@@ -750,6 +783,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/ImmigratieBasis'
         - type: object
+          additionalProperties: false
           properties:
             datumVestigingInNederland:
               $ref: '#/components/schemas/GbaDatum'
@@ -758,11 +792,12 @@ components:
       description: |
         Geeft aan dat de persoon onder curatele is gesteld.
       example: true
-    Gezagsrelatie:
+    AbstractGezagsrelatie:
       type: object
       required:
         - type
         - minderjarige
+      additionalProperties: false
       properties:
         type:
           type: string
@@ -774,14 +809,14 @@ components:
       discriminator:
         propertyName: type
         mapping:
-          GezamenlijkOuderlijkGezag: '#/components/schemas/GezamenlijkOuderlijkGezag'
+          TweehoofdigOuderlijkGezag: '#/components/schemas/TweehoofdigOuderlijkGezag'
           EenhoofdigOuderlijkGezag: '#/components/schemas/EenhoofdigOuderlijkGezag'
           GezamenlijkGezag: '#/components/schemas/GezamenlijkGezag'
           Voogdij: '#/components/schemas/Voogdij'
           TijdelijkGeenGezag: '#/components/schemas/TijdelijkGeenGezag'
           GezagNietTeBepalen: '#/components/schemas/GezagNietTeBepalen'
       example:
-        type: GezamenlijkOuderlijkGezag
+        type: TweehoofdigOuderlijkGezag
         ouders:
           - burgerservicenummer: '999998870'
           - burgerservicenummer: '999998882'
@@ -789,6 +824,7 @@ components:
           burgerservicenummer: '999998894'
     GezagOuder:
       type: object
+      additionalProperties: false
       properties:
         burgerservicenummer:
           $ref: '#/components/schemas/Burgerservicenummer'
@@ -797,12 +833,12 @@ components:
         geslacht:
           $ref: '#/components/schemas/Geslachtsaanduiding'
       required:
-        - naam
-        - geslacht
-    GezamenlijkOuderlijkGezag:
+        - burgerservicenummer
+    TweehoofdigOuderlijkGezag:
       allOf:
-        - $ref: '#/components/schemas/Gezagsrelatie'
+        - $ref: '#/components/schemas/AbstractGezagsrelatie'
         - type: object
+          additionalProperties: false
           properties:
             ouders:
               type: array
@@ -812,17 +848,17 @@ components:
               maxItems: 2
     EenhoofdigOuderlijkGezag:
       allOf:
-        - $ref: '#/components/schemas/Gezagsrelatie'
+        - $ref: '#/components/schemas/AbstractGezagsrelatie'
         - type: object
+          additionalProperties: false
           properties:
             ouder:
               $ref: '#/components/schemas/GezagOuder'
-      required:
-        - ouder
     Derde:
       type: object
       required:
         - type
+      additionalProperties: false
       properties:
         type:
           type: string
@@ -835,6 +871,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/Derde'
         - type: object
+          additionalProperties: false
           properties:
             burgerservicenummer:
               $ref: '#/components/schemas/Burgerservicenummer'
@@ -847,8 +884,9 @@ components:
         - $ref: '#/components/schemas/Derde'
     GezamenlijkGezag:
       allOf:
-        - $ref: '#/components/schemas/Gezagsrelatie'
+        - $ref: '#/components/schemas/AbstractGezagsrelatie'
         - type: object
+          additionalProperties: false
           properties:
             ouder:
               $ref: '#/components/schemas/GezagOuder'
@@ -856,8 +894,9 @@ components:
               $ref: '#/components/schemas/Derde'
     Voogdij:
       allOf:
-        - $ref: '#/components/schemas/Gezagsrelatie'
+        - $ref: '#/components/schemas/AbstractGezagsrelatie'
         - type: object
+          additionalProperties: false
           properties:
             derden:
               type: array
@@ -870,8 +909,9 @@ components:
       pattern: ^[a-zA-Z0-9À-ž \/\;\:\.\-\?\(\)]{1,400}$
     TijdelijkGeenGezag:
       allOf:
-        - $ref: '#/components/schemas/Gezagsrelatie'
+        - $ref: '#/components/schemas/AbstractGezagsrelatie'
         - type: object
+          additionalProperties: false
           properties:
             toelichting:
               $ref: '#/components/schemas/Toelichting'
@@ -879,15 +919,15 @@ components:
         - toelichting
     GezagNietTeBepalen:
       allOf:
-        - $ref: '#/components/schemas/Gezagsrelatie'
+        - $ref: '#/components/schemas/AbstractGezagsrelatie'
         - type: object
+          additionalProperties: false
           properties:
             toelichting:
               $ref: '#/components/schemas/Toelichting'
-      required:
-        - toelichting
     Minderjarige:
       type: object
+      additionalProperties: false
       properties:
         burgerservicenummer:
           $ref: '#/components/schemas/Burgerservicenummer'
@@ -902,12 +942,13 @@ components:
     Gezag:
       type: array
       items:
-        $ref: '#/components/schemas/Gezagsrelatie'
+        $ref: '#/components/schemas/AbstractGezagsrelatie'
       minItems: 0
     VerblijfstitelBasis:
       description: |
         Gegevens over de verblijfsrechtelijke status van de persoon.
       type: object
+      additionalProperties: false
       properties:
         aanduiding:
           description: |
@@ -917,6 +958,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/VerblijfstitelBasis'
         - type: object
+          additionalProperties: false
           properties:
             datumEinde:
               description: |
@@ -930,6 +972,7 @@ components:
               $ref: '#/components/schemas/InOnderzoek'
     KindBasis:
       type: object
+      additionalProperties: false
       properties:
         burgerservicenummer:
           $ref: '#/components/schemas/Burgerservicenummer'
@@ -937,6 +980,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/KindBasis'
         - type: object
+          additionalProperties: false
           properties:
             inOnderzoek:
               $ref: '#/components/schemas/InOnderzoek'
@@ -950,6 +994,7 @@ components:
       example: '1'
     OuderBasis:
       type: object
+      additionalProperties: false
       properties:
         burgerservicenummer:
           $ref: '#/components/schemas/Burgerservicenummer'
@@ -963,6 +1008,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/OuderBasis'
         - type: object
+          additionalProperties: false
           properties:
             datumIngangFamilierechtelijkeBetrekking:
               description: |
@@ -976,6 +1022,7 @@ components:
               $ref: '#/components/schemas/InOnderzoek'
     PartnerBasis:
       type: object
+      additionalProperties: false
       properties:
         burgerservicenummer:
           $ref: '#/components/schemas/Burgerservicenummer'
@@ -987,6 +1034,7 @@ components:
           $ref: '#/components/schemas/Waardetabel'
     AangaanHuwelijkPartnerschapBasis:
       type: object
+      additionalProperties: false
       properties:
         land:
           description: |
@@ -1000,6 +1048,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/AangaanHuwelijkPartnerschapBasis'
         - type: object
+          additionalProperties: false
           properties:
             datum:
               description: |
@@ -1007,6 +1056,7 @@ components:
               $ref: '#/components/schemas/GbaDatum'
     GbaOntbindingHuwelijkPartnerschap:
       type: object
+      additionalProperties: false
       properties:
         datum:
           $ref: '#/components/schemas/GbaDatum'
@@ -1014,6 +1064,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/PartnerBasis'
         - type: object
+          additionalProperties: false
           properties:
             naam:
               $ref: '#/components/schemas/NaamBasis'
@@ -1027,6 +1078,7 @@ components:
               $ref: '#/components/schemas/InOnderzoek'
     GbaPersoon:
       type: object
+      additionalProperties: false
       properties:
         aNummer:
           $ref: '#/components/schemas/ANummer'
@@ -1097,6 +1149,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/PersonenQueryResponse'
         - type: object
+          additionalProperties: false
           properties:
             personen:
               type: array
@@ -1106,6 +1159,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/PersonenQueryResponse'
         - type: object
+          additionalProperties: false
           properties:
             personen:
               type: array
@@ -1115,6 +1169,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/PersonenQueryResponse'
         - type: object
+          additionalProperties: false
           properties:
             personen:
               type: array
@@ -1124,6 +1179,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/PersonenQueryResponse'
         - type: object
+          additionalProperties: false
           properties:
             personen:
               type: array
@@ -1133,6 +1189,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/GbaPersoonBeperkt'
         - type: object
+          additionalProperties: false
           properties:
             gezag:
               $ref: '#/components/schemas/Gezag'
@@ -1140,6 +1197,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/PersonenQueryResponse'
         - type: object
+          additionalProperties: false
           properties:
             personen:
               type: array
@@ -1148,6 +1206,7 @@ components:
     InvalidParam:
       type: object
       description: Details over fouten in opgegeven parameters
+      additionalProperties: false
       properties:
         type:
           type: string
@@ -1172,6 +1231,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/Foutbericht'
         - type: object
+          additionalProperties: false
           properties:
             invalidParams:
               description: |
