@@ -1,9 +1,9 @@
 ﻿using Rvig.HaalCentraalApi.Shared.ApiModels.Universal;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
-using Rvig.HaalCentraalApi.Shared.Fields;
 using Rvig.HaalCentraalApi.Shared.Helpers;
 using System.Reflection;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Rvig.HaalCentraalApi.Shared.Fields;
 public class FieldsFilterService
@@ -611,6 +611,12 @@ public class FieldsFilterService
 			var attribute = property.GetCustomAttribute<DataMemberAttribute>();
 
 			if (attribute != null && attribute.Name == name)
+			{
+				return property;
+			}
+
+			var jsonPropertyAttribute = property.GetCustomAttribute<JsonPropertyAttribute>();
+			if (jsonPropertyAttribute != null && jsonPropertyAttribute.PropertyName == name)
 			{
 				return property;
 			}

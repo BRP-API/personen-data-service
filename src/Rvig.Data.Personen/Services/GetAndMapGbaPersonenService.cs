@@ -2,7 +2,6 @@
 using Rvig.Data.Personen.Repositories;
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
-using Rvig.HaalCentraalApi.Personen.RequestModels.BRP;
 using Rvig.HaalCentraalApi.Personen.Interfaces;
 using Rvig.Data.Base.Postgres.Services;
 

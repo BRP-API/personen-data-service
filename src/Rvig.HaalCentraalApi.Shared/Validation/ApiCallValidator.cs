@@ -90,8 +90,20 @@ public static class ApiCallValidator
 			}
 			else
 			{
-				requestParams.Add(propName);
+				if (propName != "type")
+				{
+					requestParams.Add(ToPascalCase(propName));
+				}
 			}
 		}
+	}
+
+	private static string ToPascalCase(string camelCase)
+	{
+		if (string.IsNullOrEmpty(camelCase))
+			return camelCase;
+		
+		// Convert first character to uppercase
+		return char.ToUpperInvariant(camelCase[0]) + camelCase.Substring(1);
 	}
 }

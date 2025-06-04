@@ -11,7 +11,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
 {
     public interface IGezagService
     {
-        public Task<IEnumerable<Persoon>> GetGezagIfRequested(List<string> fields, List<string?> bsns);
+        public Task<IEnumerable<Persoon>> GetGezagIfRequested(List<string> fields, List<string> bsns);
         public Task<List<GbaPersoon>> GetGezagPersonenIfRequested(List<string> fields, IEnumerable<Persoon> gezag);
         public void VerrijkPersonenMetGezagIfRequested(List<string> fields, IEnumerable<Persoon> persoonGezagsrelaties, List<GbaPersoon> gezagPersonen, (IPersoonMetGezag persoon, long pl_id) x);
     }
@@ -31,7 +31,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
             _gezagPersonenService = getAndMapPersoonService;
         }
 
-        public async Task<IEnumerable<Persoon>> GetGezagIfRequested(List<string> fields, List<string?> bsns)
+        public async Task<IEnumerable<Persoon>> GetGezagIfRequested(List<string> fields, List<string> bsns)
         {
             if (GezagIsRequested(fields))
             {

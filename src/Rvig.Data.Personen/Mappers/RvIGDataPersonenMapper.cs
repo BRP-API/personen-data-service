@@ -4,8 +4,6 @@ using Rvig.Data.Base.Postgres.Mappers;
 using Rvig.Data.Base.Postgres.Mappers.Helpers;
 using Rvig.Data.Base.Providers;
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
-using Rvig.HaalCentraalApi.Shared.ApiModels.PersonenHistorieBase;
-using Rvig.HaalCentraalApi.Shared.ApiModels.Universal;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
 using Rvig.HaalCentraalApi.Shared.Helpers;
 
@@ -71,7 +69,7 @@ public class RvIGDataPersonenMapper : RvIGDataMapperBase, IRvIGDataPersonenMappe
 					gbaPersoon.PersoonInOnderzoek = MapGbaInOnderzoek(dbPersoon.onderzoek_gegevens_aand, dbPersoon.onderzoek_start_datum, dbPersoon.onderzoek_eind_datum);
 					break;
 				case nameof(GbaPersoonBeperkt.Naam):
-					gbaPersoon.Naam = new GbaNaamBasis();
+					gbaPersoon.Naam = new NaamBasis();
 					await MapNaam(dbPersoon, gbaPersoon.Naam);
 					gbaPersoon.Naam = ObjectHelper.InstanceOrNullWhenDefault(gbaPersoon.Naam);
 					break;
@@ -101,7 +99,7 @@ public class RvIGDataPersonenMapper : RvIGDataMapperBase, IRvIGDataPersonenMappe
 					gbaPersoon.Burgerservicenummer = dbPersoon.burger_service_nr?.ToString().PadLeft(9, '0');
 					break;
 				case nameof(GbaPersoonBeperkt.Geboorte):
-					gbaPersoon.Geboorte = new GbaGeboorteBeperkt();
+					gbaPersoon.Geboorte = new GeboorteBasis();
 					MapGeboorteBeperkt(dbPersoon, gbaPersoon.Geboorte);
 					gbaPersoon.Geboorte = ObjectHelper.InstanceOrNullWhenDefault(gbaPersoon.Geboorte);
 					break;
@@ -116,8 +114,8 @@ public class RvIGDataPersonenMapper : RvIGDataMapperBase, IRvIGDataPersonenMappe
 					break;
 				case nameof(GbaGezagPersoonBeperkt.Partners):
 					(List<GbaPartner>? currentPartners, List<GbaPartner>? historicPartners) = await GetPartners(dbPersoonWrapper!.Partners);
-					gbaPersoon.Partners = currentPartners;
-					gbaPersoon.HistorischePartners = historicPartners;
+					gbaPersoon.Partners = currentPartners!;
+					gbaPersoon.HistorischePartners = historicPartners!;
 					break;
 				case nameof(GbaPersoon.HistorischePartners):
 					// Handled in mapping of partners
@@ -185,7 +183,7 @@ public class RvIGDataPersonenMapper : RvIGDataMapperBase, IRvIGDataPersonenMappe
 			case nameof(GbaPersoon.Partners):
 				(List<GbaPartner>? currentPartners, List<GbaPartner>? historicPartners) = await GetPartners(dbPersoonWrapper.Partners);
 				gbaPersoon.Partners = currentPartners;
-				gbaPersoon.HistorischePartners = historicPartners;
+				gbaPersoon.HistorischePartners = historicPartners!;
 				break;
 			case nameof(GbaPersoon.ANummer):
 				gbaPersoon.ANummer = dbPersoon.a_nr?.ToString().PadLeft(10, '0');
@@ -392,7 +390,7 @@ public class RvIGDataPersonenMapper : RvIGDataMapperBase, IRvIGDataPersonenMappe
 					ouder.DatumIngangFamilierechtelijkeBetrekking = GbaMappingHelper.ParseToDatumOnvolledig(dbOuder?.familie_betrek_start_datum);
 					break;
 				case nameof(GbaOuder.Naam):
-					ouder.Naam = dbOuder == null ? null : await MapNaam(dbOuder, new GbaNaamBasis());
+					ouder.Naam = dbOuder == null ? null : await MapNaam(dbOuder, new NaamBasis());
 					break;
 				case nameof(GbaOuder.InOnderzoek):
 					ouder.InOnderzoek = MapGbaInOnderzoek(dbOuder?.onderzoek_gegevens_aand, dbOuder?.onderzoek_start_datum, dbOuder?.onderzoek_eind_datum);
@@ -441,7 +439,7 @@ public class RvIGDataPersonenMapper : RvIGDataMapperBase, IRvIGDataPersonenMappe
 					kind.InOnderzoek = MapGbaInOnderzoek(dbkind.onderzoek_gegevens_aand, dbkind.onderzoek_start_datum, dbkind.onderzoek_eind_datum);
 					break;
 				case nameof(GbaKind.Naam):
-					kind.Naam = await MapNaam(dbkind, new GbaNaamBasis());
+					kind.Naam = await MapNaam(dbkind, new NaamBasis());
 					break;
 				case nameof(GbaKind.Burgerservicenummer):
 					kind.Burgerservicenummer = dbkind.burger_service_nr?.ToString().PadLeft(9, '0');

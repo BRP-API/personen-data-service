@@ -1,6 +1,5 @@
 ﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
-using Rvig.HaalCentraalApi.Shared.ApiModels.PersonenHistorieBase;
 
 namespace Rvig.HaalCentraalApi.Personen.Mappers
 {
@@ -206,9 +205,9 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             };
         }
 
-        private static GbaNaamBasis? MapNaam(GbaPersoon persoon)
+        private static NaamBasis? MapNaam(GbaPersoon persoon)
         {
-            return persoon.Naam != null ? new GbaNaamBasis
+            return persoon.Naam != null ? new NaamBasis
             {
                 Voornamen = persoon.Naam?.Voornamen,
                 AdellijkeTitelPredicaat = persoon.Naam?.AdellijkeTitelPredicaat,
@@ -217,9 +216,9 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             } : null;
         }
 
-        private static GbaGeboorteBeperkt? MapGeboorte(GbaPersoon persoon)
+        private static GeboorteBasis? MapGeboorte(GbaPersoon persoon)
         {
-            return persoon.Geboorte != null ? new GbaGeboorteBeperkt()
+            return persoon.Geboorte != null ? new GeboorteBasis()
             {
                 Datum = persoon.Geboorte?.Datum
             } : null;
