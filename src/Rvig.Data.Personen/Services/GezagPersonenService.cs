@@ -1,6 +1,6 @@
 ﻿using Rvig.Data.Personen.Mappers;
 using Rvig.Data.Personen.Repositories;
-using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
 using Rvig.HaalCentraalApi.Personen.Interfaces;
 using Rvig.Data.Base.Postgres.Services;
 

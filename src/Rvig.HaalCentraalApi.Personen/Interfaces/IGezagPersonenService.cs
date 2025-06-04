@@ -1,4 +1,4 @@
-﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
+﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
 
 namespace Rvig.HaalCentraalApi.Personen.Interfaces;
 public interface IGezagPersonenService

@@ -3,7 +3,7 @@ using Rvig.Data.Base.Postgres.Helpers;
 using Rvig.Data.Base.Postgres.Mappers;
 using Rvig.Data.Base.Postgres.Mappers.Helpers;
 using Rvig.Data.Base.Providers;
-using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
 using Rvig.HaalCentraalApi.Shared.Helpers;
 

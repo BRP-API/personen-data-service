@@ -1,4 +1,4 @@
-using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
 using Rvig.HaalCentraalApi.Personen.Mappers;
 using Gezag = Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
 

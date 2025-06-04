@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
 using Rvig.HaalCentraalApi.Shared.Validation;
 using Rvig.HaalCentraalApi.Personen.Services;
 using Rvig.HaalCentraalApi.Shared.Controllers;
