@@ -1,6 +1,6 @@
 ﻿using Npgsql;
 using Rvig.Data.Base.Postgres.Repositories.Queries;
-using Rvig.HaalCentraalApi.Personen.RequestModels.BRP;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using System.Text.RegularExpressions;
 
 namespace Rvig.Data.Personen.Repositories.Queries.Helper
@@ -47,31 +47,31 @@ namespace Rvig.Data.Personen.Repositories.Queries.Helper
 			var parameters = new List<NpgsqlParameter>();
 			var whereParts = new List<string?>();
 
-			(string where, NpgsqlParameter pgsqlParam) = CreateGeslachtsnaamPart(model.geslachtsnaam);
+			(string where, NpgsqlParameter pgsqlParam) = CreateGeslachtsnaamPart(model.Geslachtsnaam);
 			whereParts.Add(where);
 			parameters.Add(pgsqlParam);
 
-			(string where, NpgsqlParameter pgsqlParam) voornamenPart = CreateVoornamenPart(model.voornamen);
+			(string where, NpgsqlParameter pgsqlParam) voornamenPart = CreateVoornamenPart(model.Voornamen);
 			whereParts.Add(voornamenPart.where);
 			parameters.Add(voornamenPart.pgsqlParam);
 
-			(string where, NpgsqlParameter pgsqlParam) voorvoegselPart = CreateVoorvoegselPart(model.voorvoegsel);
+			(string where, NpgsqlParameter pgsqlParam) voorvoegselPart = CreateVoorvoegselPart(model.Voorvoegsel);
 			whereParts.Add(voorvoegselPart.where);
 			parameters.Add(voorvoegselPart.pgsqlParam);
 
-			(string where, NpgsqlParameter pgsqlParam) geslachtsaanduidingPart = CreateGeslachtsaanduidingPart(model.geslacht);
+			(string where, NpgsqlParameter pgsqlParam) geslachtsaanduidingPart = CreateGeslachtsaanduidingPart(model.Geslacht);
 			whereParts.Add(geslachtsaanduidingPart.where);
 			parameters.Add(geslachtsaanduidingPart.pgsqlParam);
 
 			// Null is not allowed for geboortedatum.
-			if (!string.IsNullOrWhiteSpace(model.geboortedatum))
+			if (!string.IsNullOrWhiteSpace(model.Geboortedatum))
 			{
-				(string where, NpgsqlParameter pgsqlParam) geboorteDatumPart = CreateGeboorteDatumPart(int.Parse(model.geboortedatum.Replace("-", "")));
+				(string where, NpgsqlParameter pgsqlParam) geboorteDatumPart = CreateGeboorteDatumPart(int.Parse(model.Geboortedatum.Replace("-", "")));
 				whereParts.Add(geboorteDatumPart.where);
 				parameters.Add(geboorteDatumPart.pgsqlParam);
 			}
 
-			(string where, NpgsqlParameter pgsqlParam) gemeenteVanInschrijvingPart = CreateGemeenteVanInschrijvingPart(!string.IsNullOrWhiteSpace(model.gemeenteVanInschrijving) ? int.Parse(model.gemeenteVanInschrijving) : null);
+			(string where, NpgsqlParameter pgsqlParam) gemeenteVanInschrijvingPart = CreateGemeenteVanInschrijvingPart(!string.IsNullOrWhiteSpace(model.GemeenteVanInschrijving) ? int.Parse(model.GemeenteVanInschrijving) : null);
 			whereParts.Add(gemeenteVanInschrijvingPart.where);
 			parameters.Add(gemeenteVanInschrijvingPart.pgsqlParam);
 
@@ -83,23 +83,23 @@ namespace Rvig.Data.Personen.Repositories.Queries.Helper
 			var parameters = new List<NpgsqlParameter>();
 			var whereParts = new List<string?>();
 
-			(string where, NpgsqlParameter pgsqlParam) = CreateGeslachtsnaamPart(model.geslachtsnaam);
+			(string where, NpgsqlParameter pgsqlParam) = CreateGeslachtsnaamPart(model.Geslachtsnaam);
 			whereParts.Add(where);
 			parameters.Add(pgsqlParam);
 
-			(string where, NpgsqlParameter pgsqlParam) voornamenPart = CreateVoornamenPart(model.voornamen);
+			(string where, NpgsqlParameter pgsqlParam) voornamenPart = CreateVoornamenPart(model.Voornamen);
 			whereParts.Add(voornamenPart.where);
 			parameters.Add(voornamenPart.pgsqlParam);
 
-			(string where, NpgsqlParameter pgsqlParam) voorvoegselPart = CreateVoorvoegselPart(model.voorvoegsel);
+			(string where, NpgsqlParameter pgsqlParam) voorvoegselPart = CreateVoorvoegselPart(model.Voorvoegsel);
 			whereParts.Add(voorvoegselPart.where);
 			parameters.Add(voorvoegselPart.pgsqlParam);
 
-			(string where, NpgsqlParameter pgsqlParam) geslachtsaanduidingPart = CreateGeslachtsaanduidingPart(model.geslacht);
+			(string where, NpgsqlParameter pgsqlParam) geslachtsaanduidingPart = CreateGeslachtsaanduidingPart(model.Geslacht);
 			whereParts.Add(geslachtsaanduidingPart.where);
 			parameters.Add(geslachtsaanduidingPart.pgsqlParam);
 
-			(string where, NpgsqlParameter pgsqlParam) gemeenteVanInschrijvingPart = CreateGemeenteVanInschrijvingPart(!string.IsNullOrWhiteSpace(model.gemeenteVanInschrijving) ? int.Parse(model.gemeenteVanInschrijving) : null);
+			(string where, NpgsqlParameter pgsqlParam) gemeenteVanInschrijvingPart = CreateGemeenteVanInschrijvingPart(!string.IsNullOrWhiteSpace(model.GemeenteVanInschrijving) ? int.Parse(model.GemeenteVanInschrijving) : null);
 			whereParts.Add(gemeenteVanInschrijvingPart.where);
 			parameters.Add(gemeenteVanInschrijvingPart.pgsqlParam);
 
@@ -114,11 +114,11 @@ namespace Rvig.Data.Personen.Repositories.Queries.Helper
 			var parameters = new List<NpgsqlParameter>();
 			var whereParts = new List<string?>();
 
-			(string where, NpgsqlParameter pgsqlParam) = CreateGemeenteVanInschrijvingPart(!string.IsNullOrWhiteSpace(model.gemeenteVanInschrijving) ? int.Parse(model.gemeenteVanInschrijving) : null);
+			(string where, NpgsqlParameter pgsqlParam) = CreateGemeenteVanInschrijvingPart(!string.IsNullOrWhiteSpace(model.GemeenteVanInschrijving) ? int.Parse(model.GemeenteVanInschrijving) : null);
 			whereParts.Add(where);
 			parameters.Add(pgsqlParam);
 
-			(string where, NpgsqlParameter pgsqlParam) identificatiecodeNummeraanduidingPart = CreateIdentificatiecodeNummeraanduidingPart(model.nummeraanduidingIdentificatie);
+			(string where, NpgsqlParameter pgsqlParam) identificatiecodeNummeraanduidingPart = CreateIdentificatiecodeNummeraanduidingPart(model.NummeraanduidingIdentificatie);
 			whereParts.Add(identificatiecodeNummeraanduidingPart.where);
 			parameters.Add(identificatiecodeNummeraanduidingPart.pgsqlParam);
 
@@ -133,34 +133,34 @@ namespace Rvig.Data.Personen.Repositories.Queries.Helper
 			var parameters = new List<NpgsqlParameter>();
 			var whereParts = new List<string?>();
 
-			(string where, NpgsqlParameter pgsqlParam) = CreateGemeenteVanInschrijvingPart(!string.IsNullOrWhiteSpace(model.gemeenteVanInschrijving) ? int.Parse(model.gemeenteVanInschrijving) : null);
+			(string where, NpgsqlParameter pgsqlParam) = CreateGemeenteVanInschrijvingPart(!string.IsNullOrWhiteSpace(model.GemeenteVanInschrijving) ? int.Parse(model.GemeenteVanInschrijving) : null);
 			whereParts.Add(where);
 			parameters.Add(pgsqlParam);
 
-			(string where, NpgsqlParameter pgsqlParam) postcodePart = CreatePostcodePart(model.postcode);
+			(string where, NpgsqlParameter pgsqlParam) postcodePart = CreatePostcodePart(model.Postcode);
 			whereParts.Add(postcodePart.where);
 			parameters.Add(postcodePart.pgsqlParam);
 
-			(string where, NpgsqlParameter pgsqlParam) huisnummerPart = CreateHuisnummerPart(model.huisnummer);
+			(string where, NpgsqlParameter pgsqlParam) huisnummerPart = CreateHuisnummerPart(model.Huisnummer);
 			whereParts.Add(huisnummerPart.where);
 			parameters.Add(huisnummerPart.pgsqlParam);
 
-			(string where, NpgsqlParameter pgsqlParam) huisletterPart = CreateHuisletterPart(model.huisletter);
+			(string where, NpgsqlParameter pgsqlParam) huisletterPart = CreateHuisletterPart(model.Huisletter);
 			whereParts.Add(huisletterPart.where);
 			parameters.Add(huisletterPart.pgsqlParam);
 
-			(string where, NpgsqlParameter pgsqlParam) huisnummerToevoegingPart = CreateHuisnummerToevoegingPart(model.huisnummertoevoeging);
+			(string where, NpgsqlParameter pgsqlParam) huisnummerToevoegingPart = CreateHuisnummerToevoegingPart(model.Huisnummertoevoeging);
 			whereParts.Add(huisnummerToevoegingPart.where);
 			parameters.Add(huisnummerToevoegingPart.pgsqlParam);
 
-			if (!string.IsNullOrWhiteSpace(model.geboortedatum))
+			if (!string.IsNullOrWhiteSpace(model.Geboortedatum))
 			{
-				(string where, NpgsqlParameter pgsqlParam) geboorteDatumPart = CreateGeboorteDatumPart(int.Parse(model.geboortedatum.Replace("-", "")));
+				(string where, NpgsqlParameter pgsqlParam) geboorteDatumPart = CreateGeboorteDatumPart(int.Parse(model.Geboortedatum.Replace("-", "")));
 				whereParts.Add(geboorteDatumPart.where);
 				parameters.Add(geboorteDatumPart.pgsqlParam);
 			}
 
-            (string where, NpgsqlParameter pgsqlParam) geslachtsnaamPart = CreateGeslachtsnaamPart(model.geslachtsnaam);
+            (string where, NpgsqlParameter pgsqlParam) geslachtsnaamPart = CreateGeslachtsnaamPart(model.Geslachtsnaam);
             whereParts.Add(geslachtsnaamPart.where);
             parameters.Add(geslachtsnaamPart.pgsqlParam);
 
@@ -175,23 +175,23 @@ namespace Rvig.Data.Personen.Repositories.Queries.Helper
 			var parameters = new List<NpgsqlParameter>();
 			var whereParts = new List<string?>();
 
-			(string where, NpgsqlParameter pgsqlParam) = CreateGemeenteVanInschrijvingPart(!string.IsNullOrWhiteSpace(model.gemeenteVanInschrijving) ? int.Parse(model.gemeenteVanInschrijving) : null);
+			(string where, NpgsqlParameter pgsqlParam) = CreateGemeenteVanInschrijvingPart(!string.IsNullOrWhiteSpace(model.GemeenteVanInschrijving) ? int.Parse(model.GemeenteVanInschrijving) : null);
 			whereParts.Add(where);
 			parameters.Add(pgsqlParam);
 
-			(string where, NpgsqlParameter pgsqlParam) straatnaamPart = CreateStraatnaamPart(model.straat);
+			(string where, NpgsqlParameter pgsqlParam) straatnaamPart = CreateStraatnaamPart(model.Straat);
 			whereParts.Add(straatnaamPart.where);
 			parameters.Add(straatnaamPart.pgsqlParam);
 
-			(string where, NpgsqlParameter pgsqlParam) huisnummerPart = CreateHuisnummerPart(model.huisnummer);
+			(string where, NpgsqlParameter pgsqlParam) huisnummerPart = CreateHuisnummerPart(model.Huisnummer);
 			whereParts.Add(huisnummerPart.where);
 			parameters.Add(huisnummerPart.pgsqlParam);
 
-			(string where, NpgsqlParameter pgsqlParam) huisletterPart = CreateHuisletterPart(model.huisletter);
+			(string where, NpgsqlParameter pgsqlParam) huisletterPart = CreateHuisletterPart(model.Huisletter);
 			whereParts.Add(huisletterPart.where);
 			parameters.Add(huisletterPart.pgsqlParam);
 
-			(string where, NpgsqlParameter pgsqlParam) huisnummerToevoegingPart = CreateHuisnummerToevoegingPart(model.huisnummertoevoeging);
+			(string where, NpgsqlParameter pgsqlParam) huisnummerToevoegingPart = CreateHuisnummerToevoegingPart(model.Huisnummertoevoeging);
 			whereParts.Add(huisnummerToevoegingPart.where);
 			parameters.Add(huisnummerToevoegingPart.pgsqlParam);
 
@@ -206,11 +206,11 @@ namespace Rvig.Data.Personen.Repositories.Queries.Helper
 			var parameters = new List<NpgsqlParameter>();
 			var whereParts = new List<string?>();
 
-			(string where, NpgsqlParameter pgsqlParam) = CreateGemeenteVanInschrijvingPart(!string.IsNullOrWhiteSpace(model.gemeenteVanInschrijving) ? int.Parse(model.gemeenteVanInschrijving) : null);
+			(string where, NpgsqlParameter pgsqlParam) = CreateGemeenteVanInschrijvingPart(!string.IsNullOrWhiteSpace(model.GemeenteVanInschrijving) ? int.Parse(model.GemeenteVanInschrijving) : null);
 			whereParts.Add(where);
 			parameters.Add(pgsqlParam);
 
-			(string where, NpgsqlParameter pgsqlParam) identificatiecodeNummeraanduidingPart = CreateIdentificatiecodeAdresseerbaarObjectPart(model.adresseerbaarObjectIdentificatie);
+			(string where, NpgsqlParameter pgsqlParam) identificatiecodeNummeraanduidingPart = CreateIdentificatiecodeAdresseerbaarObjectPart(model.AdresseerbaarObjectIdentificatie);
 			whereParts.Add(identificatiecodeNummeraanduidingPart.where);
 			parameters.Add(identificatiecodeNummeraanduidingPart.pgsqlParam);
 

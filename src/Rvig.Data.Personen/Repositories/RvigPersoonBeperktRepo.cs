@@ -2,7 +2,7 @@
 using Npgsql;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
 using Rvig.HaalCentraalApi.Shared.Options;
-using Rvig.HaalCentraalApi.Personen.RequestModels.BRP;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.Data.Base.Postgres.DatabaseModels;
 using Rvig.Data.Base.Postgres.Repositories;
 using Rvig.Data.Personen.Repositories.Queries.Helper;
@@ -29,12 +29,12 @@ public class RvigPersoonBeperktRepo : RvigRepoPostgresBase<DbPersoonActueelWrapp
 	{
 		return model switch
 		{
-			ZoekMetGeslachtsnaamEnGeboortedatum geslachtsnaamGeboortedatum => await SearchPersonenBase(PersonenQueryHelper.CreateGeslachtsnaamGeboortedatumWhere(geslachtsnaamGeboortedatum), geslachtsnaamGeboortedatum.inclusiefOverledenPersonen, geslachtsnaamGeboortedatum.maxItems, fields),
-			ZoekMetNaamEnGemeenteVanInschrijving naamGemeenteVanInschrijving => await SearchPersonenBase(PersonenQueryHelper.CreateNaamGemeenteVanInschrijvingWhere(naamGemeenteVanInschrijving), naamGemeenteVanInschrijving.inclusiefOverledenPersonen, naamGemeenteVanInschrijving.maxItems, fields),
-			ZoekMetNummeraanduidingIdentificatie nummeraanduidingIdentificatie => await SearchPersonenBase(PersonenQueryHelper.CreateNummeraanduidingIdentificatieWhere(nummeraanduidingIdentificatie), nummeraanduidingIdentificatie.inclusiefOverledenPersonen, nummeraanduidingIdentificatie.maxItems, fields),
-			ZoekMetPostcodeEnHuisnummer postcodeHuisnummer => await SearchPersonenBase(PersonenQueryHelper.CreatePostcodeHuisnummerWhere(postcodeHuisnummer), postcodeHuisnummer.inclusiefOverledenPersonen, postcodeHuisnummer.maxItems, fields),
-			ZoekMetStraatHuisnummerEnGemeenteVanInschrijving staatHuisnummerGemeenteVanInschrijving => await SearchPersonenBase(PersonenQueryHelper.CreateStraatHuisnummerGemeenteVanInschrijvingWhere(staatHuisnummerGemeenteVanInschrijving), staatHuisnummerGemeenteVanInschrijving.inclusiefOverledenPersonen, staatHuisnummerGemeenteVanInschrijving.maxItems, fields),
-			ZoekMetAdresseerbaarObjectIdentificatie adresseerbaarObjectIdentificatie => await SearchPersonenBase(PersonenQueryHelper.CreateAdresseerbaarObjectIdentificatieWhere(adresseerbaarObjectIdentificatie), adresseerbaarObjectIdentificatie.inclusiefOverledenPersonen, adresseerbaarObjectIdentificatie.maxItems, fields),
+			ZoekMetGeslachtsnaamEnGeboortedatum geslachtsnaamGeboortedatum => await SearchPersonenBase(PersonenQueryHelper.CreateGeslachtsnaamGeboortedatumWhere(geslachtsnaamGeboortedatum), geslachtsnaamGeboortedatum.InclusiefOverledenPersonen ?? false, geslachtsnaamGeboortedatum.maxItems, fields),
+			ZoekMetNaamEnGemeenteVanInschrijving naamGemeenteVanInschrijving => await SearchPersonenBase(PersonenQueryHelper.CreateNaamGemeenteVanInschrijvingWhere(naamGemeenteVanInschrijving), naamGemeenteVanInschrijving.InclusiefOverledenPersonen ?? false, naamGemeenteVanInschrijving.maxItems, fields),
+			ZoekMetNummeraanduidingIdentificatie nummeraanduidingIdentificatie => await SearchPersonenBase(PersonenQueryHelper.CreateNummeraanduidingIdentificatieWhere(nummeraanduidingIdentificatie), nummeraanduidingIdentificatie.InclusiefOverledenPersonen ?? false, nummeraanduidingIdentificatie.maxItems, fields),
+			ZoekMetPostcodeEnHuisnummer postcodeHuisnummer => await SearchPersonenBase(PersonenQueryHelper.CreatePostcodeHuisnummerWhere(postcodeHuisnummer), postcodeHuisnummer.InclusiefOverledenPersonen ?? false, postcodeHuisnummer.maxItems, fields),
+			ZoekMetStraatHuisnummerEnGemeenteVanInschrijving staatHuisnummerGemeenteVanInschrijving => await SearchPersonenBase(PersonenQueryHelper.CreateStraatHuisnummerGemeenteVanInschrijvingWhere(staatHuisnummerGemeenteVanInschrijving), staatHuisnummerGemeenteVanInschrijving.InclusiefOverledenPersonen ?? false, staatHuisnummerGemeenteVanInschrijving.maxItems, fields),
+			ZoekMetAdresseerbaarObjectIdentificatie adresseerbaarObjectIdentificatie => await SearchPersonenBase(PersonenQueryHelper.CreateAdresseerbaarObjectIdentificatieWhere(adresseerbaarObjectIdentificatie), adresseerbaarObjectIdentificatie.InclusiefOverledenPersonen ?? false, adresseerbaarObjectIdentificatie.maxItems, fields),
 			_ => throw new CustomInvalidOperationException($"Onbekend type query: {model}"),
 		};
 	}

@@ -1,7 +1,6 @@
 ﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
 using Rvig.HaalCentraalApi.Shared.Helpers;
-using Rvig.HaalCentraalApi.Personen.RequestModels.BRP;
 
 namespace Rvig.HaalCentraalApi.Personen.Helpers;
 
@@ -481,13 +480,13 @@ public static class PersonenApiToRubriekCategoryHelper
 	{
 		var rubrieken = new List<string>();
 
-		if (_fieldRubriekCategoryDictionary.ContainsKey(nameof(RaadpleegMetBurgerservicenummer.burgerservicenummer)))
+		if (_fieldRubriekCategoryDictionary.ContainsKey(nameof(RaadpleegMetBurgerservicenummer.Burgerservicenummer)))
 		{
-			rubrieken.Add(_fieldRubriekCategoryDictionary[nameof(RaadpleegMetBurgerservicenummer.burgerservicenummer)]);
+			rubrieken.Add(_fieldRubriekCategoryDictionary[nameof(RaadpleegMetBurgerservicenummer.Burgerservicenummer)]);
 		}
-		if (!string.IsNullOrWhiteSpace(model.gemeenteVanInschrijving) && _fieldRubriekCategoryDictionary.ContainsKey(nameof(RaadpleegMetBurgerservicenummer.gemeenteVanInschrijving)))
+		if (!string.IsNullOrWhiteSpace(model.GemeenteVanInschrijving) && _fieldRubriekCategoryDictionary.ContainsKey(nameof(RaadpleegMetBurgerservicenummer.GemeenteVanInschrijving)))
 		{
-			rubrieken.Add(_fieldRubriekCategoryDictionary[nameof(RaadpleegMetBurgerservicenummer.gemeenteVanInschrijving)]);
+			rubrieken.Add(_fieldRubriekCategoryDictionary[nameof(RaadpleegMetBurgerservicenummer.GemeenteVanInschrijving)]);
 		}
 
 		return rubrieken;
@@ -497,29 +496,29 @@ public static class PersonenApiToRubriekCategoryHelper
 	{
 		var rubrieken = new List<string>();
 
-		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Geboorte).ToLower()}.{nameof(ZoekMetGeslachtsnaamEnGeboortedatum.geboortedatum).Replace("geboorte", "")}"))
+		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Geboorte).ToLower()}.{nameof(ZoekMetGeslachtsnaamEnGeboortedatum.Geboortedatum).Replace("geboorte", "")}"))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Geboorte).ToLower()}.{nameof(ZoekMetGeslachtsnaamEnGeboortedatum.geboortedatum).Replace("geboorte", "")}"]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Geboorte).ToLower()}.{nameof(ZoekMetGeslachtsnaamEnGeboortedatum.Geboortedatum).Replace("geboorte", "")}"]);
 		}
-		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetGeslachtsnaamEnGeboortedatum.geslachtsnaam)}"))
+		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetGeslachtsnaamEnGeboortedatum.Geslachtsnaam)}"))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetGeslachtsnaamEnGeboortedatum.geslachtsnaam)}"]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetGeslachtsnaamEnGeboortedatum.Geslachtsnaam)}"]);
 		}
-		if (!string.IsNullOrWhiteSpace(model.geslacht) && _fieldRubriekBeperktCategoryDictionary.ContainsKey(nameof(ZoekMetGeslachtsnaamEnGeboortedatum.geslacht)))
+		if (!string.IsNullOrWhiteSpace(model.Geslacht) && _fieldRubriekBeperktCategoryDictionary.ContainsKey(nameof(ZoekMetGeslachtsnaamEnGeboortedatum.Geslacht)))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[nameof(ZoekMetGeslachtsnaamEnGeboortedatum.geslacht)]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[nameof(ZoekMetGeslachtsnaamEnGeboortedatum.Geslacht)]);
 		}
-		if (!string.IsNullOrWhiteSpace(model.gemeenteVanInschrijving) && _fieldRubriekBeperktCategoryDictionary.ContainsKey(nameof(ZoekMetGeslachtsnaamEnGeboortedatum.gemeenteVanInschrijving)))
+		if (!string.IsNullOrWhiteSpace(model.GemeenteVanInschrijving) && _fieldRubriekBeperktCategoryDictionary.ContainsKey(nameof(ZoekMetGeslachtsnaamEnGeboortedatum.GemeenteVanInschrijving)))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[nameof(ZoekMetGeslachtsnaamEnGeboortedatum.gemeenteVanInschrijving)]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[nameof(ZoekMetGeslachtsnaamEnGeboortedatum.GemeenteVanInschrijving)]);
 		}
-		if (!string.IsNullOrWhiteSpace(model.voorvoegsel) && _fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetGeslachtsnaamEnGeboortedatum.voorvoegsel)}"))
+		if (!string.IsNullOrWhiteSpace(model.Voorvoegsel) && _fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetGeslachtsnaamEnGeboortedatum.Voorvoegsel)}"))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetGeslachtsnaamEnGeboortedatum.voorvoegsel)}"]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetGeslachtsnaamEnGeboortedatum.Voorvoegsel)}"]);
 		}
-		if (!string.IsNullOrWhiteSpace(model.voornamen) && _fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetGeslachtsnaamEnGeboortedatum.voornamen)}"))
+		if (!string.IsNullOrWhiteSpace(model.Voornamen) && _fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetGeslachtsnaamEnGeboortedatum.Voornamen)}"))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetGeslachtsnaamEnGeboortedatum.voornamen)}"]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetGeslachtsnaamEnGeboortedatum.Voornamen)}"]);
 		}
 
 		return rubrieken;
@@ -529,25 +528,25 @@ public static class PersonenApiToRubriekCategoryHelper
 	{
 		var rubrieken = new List<string>();
 
-		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey(nameof(ZoekMetNaamEnGemeenteVanInschrijving.gemeenteVanInschrijving)))
+		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey(nameof(ZoekMetNaamEnGemeenteVanInschrijving.GemeenteVanInschrijving)))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[nameof(ZoekMetNaamEnGemeenteVanInschrijving.gemeenteVanInschrijving)]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[nameof(ZoekMetNaamEnGemeenteVanInschrijving.GemeenteVanInschrijving)]);
 		}
-		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetNaamEnGemeenteVanInschrijving.geslachtsnaam)}"))
+		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetNaamEnGemeenteVanInschrijving.Geslachtsnaam)}"))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetNaamEnGemeenteVanInschrijving.geslachtsnaam)}"]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetNaamEnGemeenteVanInschrijving.Geslachtsnaam)}"]);
 		}
-		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetNaamEnGemeenteVanInschrijving.voornamen)}"))
+		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetNaamEnGemeenteVanInschrijving.Voornamen)}"))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetNaamEnGemeenteVanInschrijving.voornamen)}"]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetNaamEnGemeenteVanInschrijving.Voornamen)}"]);
 		}
-		if (!string.IsNullOrWhiteSpace(model.geslacht) && _fieldRubriekBeperktCategoryDictionary.ContainsKey(nameof(ZoekMetNaamEnGemeenteVanInschrijving.geslacht)))
+		if (!string.IsNullOrWhiteSpace(model.Geslacht) && _fieldRubriekBeperktCategoryDictionary.ContainsKey(nameof(ZoekMetNaamEnGemeenteVanInschrijving.Geslacht)))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[nameof(ZoekMetNaamEnGemeenteVanInschrijving.geslacht)]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[nameof(ZoekMetNaamEnGemeenteVanInschrijving.Geslacht)]);
 		}
-		if (!string.IsNullOrWhiteSpace(model.voorvoegsel) && _fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetNaamEnGemeenteVanInschrijving.voorvoegsel)}"))
+		if (!string.IsNullOrWhiteSpace(model.Voorvoegsel) && _fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetNaamEnGemeenteVanInschrijving.Voorvoegsel)}"))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetNaamEnGemeenteVanInschrijving.voorvoegsel)}"]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Naam).ToLower()}.{nameof(ZoekMetNaamEnGemeenteVanInschrijving.Voorvoegsel)}"]);
 		}
 
 		return rubrieken;
@@ -557,25 +556,25 @@ public static class PersonenApiToRubriekCategoryHelper
 	{
 		var rubrieken = new List<string>();
 
-		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetPostcodeEnHuisnummer.huisnummer)}"))
+		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetPostcodeEnHuisnummer.Huisnummer)}"))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetPostcodeEnHuisnummer.huisnummer)}"]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetPostcodeEnHuisnummer.Huisnummer)}"]);
 		}
-		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetPostcodeEnHuisnummer.postcode)}"))
+		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetPostcodeEnHuisnummer.Postcode)}"))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetPostcodeEnHuisnummer.postcode)}"]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetPostcodeEnHuisnummer.Postcode)}"]);
 		}
-		if (!string.IsNullOrWhiteSpace(model.gemeenteVanInschrijving) && _fieldRubriekBeperktCategoryDictionary.ContainsKey(nameof(ZoekMetPostcodeEnHuisnummer.gemeenteVanInschrijving)))
+		if (!string.IsNullOrWhiteSpace(model.GemeenteVanInschrijving) && _fieldRubriekBeperktCategoryDictionary.ContainsKey(nameof(ZoekMetPostcodeEnHuisnummer.GemeenteVanInschrijving)))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[nameof(ZoekMetPostcodeEnHuisnummer.gemeenteVanInschrijving)]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[nameof(ZoekMetPostcodeEnHuisnummer.GemeenteVanInschrijving)]);
 		}
-		if (!string.IsNullOrWhiteSpace(model.huisletter) && _fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetPostcodeEnHuisnummer.huisletter)}"))
+		if (!string.IsNullOrWhiteSpace(model.Huisletter) && _fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetPostcodeEnHuisnummer.Huisletter)}"))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetPostcodeEnHuisnummer.huisletter)}"]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetPostcodeEnHuisnummer.Huisletter)}"]);
 		}
-		if (!string.IsNullOrWhiteSpace(model.huisnummertoevoeging) && _fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetPostcodeEnHuisnummer.huisnummertoevoeging)}"))
+		if (!string.IsNullOrWhiteSpace(model.Huisnummertoevoeging) && _fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetPostcodeEnHuisnummer.Huisnummertoevoeging)}"))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetPostcodeEnHuisnummer.huisnummertoevoeging)}"]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetPostcodeEnHuisnummer.Huisnummertoevoeging)}"]);
 		}
 
 		return rubrieken;
@@ -585,25 +584,25 @@ public static class PersonenApiToRubriekCategoryHelper
 	{
 		var rubrieken = new List<string>();
 
-		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey(nameof(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving.gemeenteVanInschrijving)))
+		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey(nameof(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving.GemeenteVanInschrijving)))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[nameof(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving.gemeenteVanInschrijving)]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[nameof(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving.GemeenteVanInschrijving)]);
 		}
-		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving.huisnummer)}"))
+		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving.Huisnummer)}"))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving.huisnummer)}"]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving.Huisnummer)}"]);
 		}
-		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving.straat)}"))
+		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving.Straat)}"))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving.straat)}"]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving.Straat)}"]);
 		}
-		if (!string.IsNullOrWhiteSpace(model.huisletter) && _fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving.huisletter)}"))
+		if (!string.IsNullOrWhiteSpace(model.Huisletter) && _fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving.Huisletter)}"))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving.huisletter)}"]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving.Huisletter)}"]);
 		}
-		if (!string.IsNullOrWhiteSpace(model.huisnummertoevoeging) && _fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving.huisnummertoevoeging)}"))
+		if (!string.IsNullOrWhiteSpace(model.Huisnummertoevoeging) && _fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving.Huisnummertoevoeging)}"))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving.huisnummertoevoeging)}"]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving.Huisnummertoevoeging)}"]);
 		}
 
 		return rubrieken;
@@ -613,13 +612,13 @@ public static class PersonenApiToRubriekCategoryHelper
 	{
 		var rubrieken = new List<string>();
 
-		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetNummeraanduidingIdentificatie.nummeraanduidingIdentificatie)}"))
+		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetNummeraanduidingIdentificatie.NummeraanduidingIdentificatie)}"))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetNummeraanduidingIdentificatie.nummeraanduidingIdentificatie)}"]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetNummeraanduidingIdentificatie.NummeraanduidingIdentificatie)}"]);
 		}
-		if (!string.IsNullOrWhiteSpace(model.gemeenteVanInschrijving) && _fieldRubriekBeperktCategoryDictionary.ContainsKey(nameof(ZoekMetNummeraanduidingIdentificatie.gemeenteVanInschrijving)))
+		if (!string.IsNullOrWhiteSpace(model.GemeenteVanInschrijving) && _fieldRubriekBeperktCategoryDictionary.ContainsKey(nameof(ZoekMetNummeraanduidingIdentificatie.GemeenteVanInschrijving)))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[nameof(ZoekMetNummeraanduidingIdentificatie.gemeenteVanInschrijving)]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[nameof(ZoekMetNummeraanduidingIdentificatie.GemeenteVanInschrijving)]);
 		}
 		return rubrieken;
 	}
@@ -628,13 +627,13 @@ public static class PersonenApiToRubriekCategoryHelper
 	{
 		var rubrieken = new List<string>();
 
-		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetAdresseerbaarObjectIdentificatie.adresseerbaarObjectIdentificatie)}"))
+		if (_fieldRubriekBeperktCategoryDictionary.ContainsKey($"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetAdresseerbaarObjectIdentificatie.AdresseerbaarObjectIdentificatie)}"))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetAdresseerbaarObjectIdentificatie.adresseerbaarObjectIdentificatie)}"]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[$"{nameof(GbaPersoon.Verblijfplaats).ToLower()}.{nameof(ZoekMetAdresseerbaarObjectIdentificatie.AdresseerbaarObjectIdentificatie)}"]);
 		}
-		if (!string.IsNullOrWhiteSpace(model.gemeenteVanInschrijving) && _fieldRubriekBeperktCategoryDictionary.ContainsKey(nameof(ZoekMetAdresseerbaarObjectIdentificatie.gemeenteVanInschrijving)))
+		if (!string.IsNullOrWhiteSpace(model.GemeenteVanInschrijving) && _fieldRubriekBeperktCategoryDictionary.ContainsKey(nameof(ZoekMetAdresseerbaarObjectIdentificatie.GemeenteVanInschrijving)))
 		{
-			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[nameof(ZoekMetAdresseerbaarObjectIdentificatie.gemeenteVanInschrijving)]);
+			rubrieken.Add(_fieldRubriekBeperktCategoryDictionary[nameof(ZoekMetAdresseerbaarObjectIdentificatie.GemeenteVanInschrijving)]);
 		}
 		return rubrieken;
 	}
