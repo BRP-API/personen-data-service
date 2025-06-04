@@ -1,5 +1,4 @@
 ﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
-using Rvig.HaalCentraalApi.Shared.ApiModels.Universal;
 using Rvig.HaalCentraalApi.Shared.Fields;
 
 namespace Rvig.HaalCentraalApi.Personen.Helpers;

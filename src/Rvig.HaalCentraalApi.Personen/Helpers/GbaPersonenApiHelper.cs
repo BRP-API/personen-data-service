@@ -1,9 +1,8 @@
 ﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Personen.Fields;
-using Rvig.HaalCentraalApi.Shared.ApiModels.PersonenHistorieBase;
-using Rvig.HaalCentraalApi.Shared.ApiModels.Universal;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
 using Rvig.HaalCentraalApi.Shared.Fields;
+using GbaInOnderzoek = Rvig.HaalCentraalApi.Shared.ApiModels.Universal.GbaInOnderzoek;
 
 namespace Rvig.HaalCentraalApi.Personen.Helpers;
 
@@ -206,7 +205,7 @@ public class GbaPersonenApiHelper : GbaPersonenApiHelperBase
 			&& (partner.SoortVerbintenis == null || _fieldsExpandFilterService.IsDefault(partner.SoortVerbintenis, partner.SoortVerbintenis.GetType()));
 	}
 
-	private bool IsDefaultInGeboorteNaamBurgerservicenummerInOnderzoek(GbaGeboorte? geboorte, GbaNaamBasis? naam, string? burgerservicenummer, GbaInOnderzoek? inOnderzoek)
+	private bool IsDefaultInGeboorteNaamBurgerservicenummerInOnderzoek(GbaGeboorte? geboorte, NaamBasis? naam, string? burgerservicenummer, GbaInOnderzoek? inOnderzoek)
 	{
 		return IsGeboorteDefault(geboorte)
 			&& IsNaamDefault(naam)
@@ -232,7 +231,7 @@ public class GbaPersonenApiHelper : GbaPersonenApiHelperBase
 				&& (inOnderzoek.DatumIngangOnderzoek == null || _fieldsExpandFilterService.IsDefault(inOnderzoek.DatumIngangOnderzoek, inOnderzoek.DatumIngangOnderzoek.GetType()));
 	}
 
-	private bool IsNaamDefault(GbaNaamBasis? naam)
+	private bool IsNaamDefault(NaamBasis? naam)
 	{
 		return naam == null || _fieldsExpandFilterService.IsDefault(naam, naam.GetType())
 			|| (naam.Geslachtsnaam == null || _fieldsExpandFilterService.IsDefault(naam.Geslachtsnaam, naam.Geslachtsnaam.GetType()))

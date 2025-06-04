@@ -1,5 +1,5 @@
 ﻿using Rvig.Data.Base.Providers;
-using Rvig.HaalCentraalApi.Shared.ApiModels.Universal;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Shared.Util;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -7,13 +7,13 @@ using System.Text.RegularExpressions;
 namespace Rvig.Data.Base.Postgres.Mappers.Helpers;
 public static class GbaMappingHelper
 {
-    public static Waardetabel? ParseToGeslachtEnum(string? geslachtCode)
+    public static Geslachtsaanduiding? ParseToGeslachtEnum(string? geslachtCode)
     {
         return (geslachtCode?.ToUpper()) switch
         {
-            "M" => new Waardetabel { Code = geslachtCode, Omschrijving = "man" },
-            "V" => new Waardetabel { Code = geslachtCode, Omschrijving = "vrouw" },
-            "O" => new Waardetabel { Code = geslachtCode, Omschrijving = "onbekend" },
+            "M" => new Geslachtsaanduiding { Code = geslachtCode, Omschrijving = "man" },
+            "V" => new Geslachtsaanduiding { Code = geslachtCode, Omschrijving = "vrouw" },
+            "O" => new Geslachtsaanduiding { Code = geslachtCode, Omschrijving = "onbekend" },
             _ => null
         };
     }
@@ -846,8 +846,8 @@ public static class GbaMappingHelper
     {
         return (code?.ToUpper()) switch
         {
-            "TITEL" => AdellijkeTitelPredicaatSoort.TitelEnum,
-            "PREDICAAT" => AdellijkeTitelPredicaatSoort.PredicaatEnum,
+            "TITEL" => AdellijkeTitelPredicaatSoort.Titel,
+            "PREDICAAT" => AdellijkeTitelPredicaatSoort.Predicaat,
             _ => null,
         };
     }

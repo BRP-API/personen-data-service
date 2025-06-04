@@ -1,10 +1,12 @@
 ﻿using Rvig.Data.Base.Postgres.DatabaseModels;
 using Rvig.Data.Base.Postgres.Helpers;
 using Rvig.Data.Base.Postgres.Mappers.Helpers;
-using Rvig.HaalCentraalApi.Shared.ApiModels.Universal;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Shared.Helpers;
-using Rvig.HaalCentraalApi.Shared.ApiModels.PersonenHistorieBase;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
+using GbaNaamBasis = Rvig.HaalCentraalApi.Personen.ApiModels.BRP.NaamBasis;
+using GbaGeboorteBeperkt = Rvig.HaalCentraalApi.Personen.ApiModels.BRP.GeboorteBasis;
+using GbaInOnderzoek = Rvig.HaalCentraalApi.Shared.ApiModels.Universal.GbaInOnderzoek;
 
 namespace Rvig.Data.Base.Postgres.Mappers;
 
@@ -488,17 +490,6 @@ public class RvIGDataMapperBase
 					break;
 				case nameof(GbaNationaliteit._datumOpneming):
 					nationaliteit._datumOpneming = GbaMappingHelper.ParseToDatumOnvolledig(dbNationaliteit.opneming_datum);
-					break;
-				case nameof(GbaNationaliteitHistorie.RedenBeeindigen):
-					if (nationaliteit is not GbaNationaliteitHistorie historieNationaliteit)
-					{
-						break;
-					}
-					historieNationaliteit.RedenBeeindigen = dbNationaliteit.nl_nat_verlies_reden.HasValue ? new Waardetabel
-					{
-						Code = dbNationaliteit.nl_nat_verlies_reden.ToString()?.PadLeft(3, '0'),
-						Omschrijving = redenVerlies
-					} : null;
 					break;
 
 				default:

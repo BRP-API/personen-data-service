@@ -239,7 +239,7 @@ namespace Personen.Tests
                     Minderjarige = new Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Minderjarige()
                     {
                         Burgerservicenummer = bsn,
-                        Naam = new Rvig.HaalCentraalApi.Shared.ApiModels.PersonenHistorieBase.GbaNaamBasis()
+                        Naam = new NaamBasis()
                         {
                             Voornamen = "voornamen",
                             Voorvoegsel = "voorvoegsel",

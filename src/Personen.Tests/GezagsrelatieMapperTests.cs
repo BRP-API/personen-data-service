@@ -1,7 +1,5 @@
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Personen.Mappers;
-using Rvig.HaalCentraalApi.Shared.ApiModels.PersonenHistorieBase;
-using Rvig.HaalCentraalApi.Shared.ApiModels.Universal;
 using Gezag = Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
 
 namespace Personen.Tests
@@ -91,7 +89,7 @@ namespace Personen.Tests
                     {
                         Code = "JH",
                         Omschrijving = "Jonkheer",
-                        Soort = AdellijkeTitelPredicaatSoort.PredicaatEnum
+                        Soort = AdellijkeTitelPredicaatSoort.Predicaat
                     }
                 },
                 Geboorte = new GbaGeboorte()
@@ -108,7 +106,7 @@ namespace Personen.Tests
                         Omschrijving = "Amsterdam"
                     }
                 },
-                Geslacht = new Waardetabel()
+                Geslacht = new Geslachtsaanduiding()
                 {
                     Code = "V",
                     Omschrijving = "Vrouw"
@@ -131,7 +129,7 @@ namespace Personen.Tests
                     {
                         Code = "JH",
                         Omschrijving = "Jonkheer",
-                        Soort = AdellijkeTitelPredicaatSoort.PredicaatEnum
+                        Soort = AdellijkeTitelPredicaatSoort.Predicaat
                     }
                 },
                 Geboorte = new GbaGeboorte()
@@ -148,7 +146,7 @@ namespace Personen.Tests
                         Omschrijving = "Amsterdam"
                     }
                 },
-                Geslacht = new Waardetabel()
+                Geslacht = new Geslachtsaanduiding()
                 {
                     Code = "M",
                     Omschrijving = "Man"
@@ -175,7 +173,7 @@ namespace Personen.Tests
                         Omschrijving = "Amsterdam"
                     }
                 },
-                Geslacht = new Waardetabel()
+                Geslacht = new Geslachtsaanduiding()
                 {
                     Code = "V",
                     Omschrijving = "Vrouw"
@@ -198,7 +196,7 @@ namespace Personen.Tests
                         Omschrijving = "Amsterdam"
                     }
                 },
-                Geslacht = new Waardetabel()
+                Geslacht = new Geslachtsaanduiding()
                 {
                     Code = "M",
                     Omschrijving = "Man"
@@ -225,7 +223,7 @@ namespace Personen.Tests
                     {
                         Code = "JH",
                         Omschrijving = "Jonkheer",
-                        Soort = AdellijkeTitelPredicaatSoort.PredicaatEnum
+                        Soort = AdellijkeTitelPredicaatSoort.Predicaat
                     }
                 },
                 Geboorte = new GbaGeboorte()
@@ -260,7 +258,7 @@ namespace Personen.Tests
                     {
                         Code = "JH",
                         Omschrijving = "Jonkheer",
-                        Soort = AdellijkeTitelPredicaatSoort.PredicaatEnum
+                        Soort = AdellijkeTitelPredicaatSoort.Predicaat
                     }
                 },
                 Geboorte = new GbaGeboorte()
@@ -299,10 +297,10 @@ namespace Personen.Tests
                     {
                         Code = "JH",
                         Omschrijving = "Jonkheer",
-                        Soort = AdellijkeTitelPredicaatSoort.PredicaatEnum
+                        Soort = AdellijkeTitelPredicaatSoort.Predicaat
                     }
                 },
-                Geslacht = new Waardetabel()
+                Geslacht = new Geslachtsaanduiding()
                 {
                     Code = "V",
                     Omschrijving = "Vrouw"
@@ -325,10 +323,10 @@ namespace Personen.Tests
                     {
                         Code = "JH",
                         Omschrijving = "Jonkheer",
-                        Soort = AdellijkeTitelPredicaatSoort.PredicaatEnum
+                        Soort = AdellijkeTitelPredicaatSoort.Predicaat
                     }
                 },
-                Geslacht = new Waardetabel()
+                Geslacht = new Geslachtsaanduiding()
                 {
                     Code = "M",
                     Omschrijving = "Man"
@@ -366,7 +364,7 @@ namespace Personen.Tests
                         Omschrijving = "Amsterdam"
                     }
                 },
-                Geslacht = new Waardetabel()
+                Geslacht = new Geslachtsaanduiding()
                 {
                     Code = "V",
                     Omschrijving = "Vrouw"
@@ -400,7 +398,7 @@ namespace Personen.Tests
                         Omschrijving = "Amsterdam"
                     }
                 },
-                Geslacht = new Waardetabel()
+                Geslacht = new Geslachtsaanduiding()
                 {
                     Code = "M",
                     Omschrijving = "Man"
@@ -429,10 +427,10 @@ namespace Personen.Tests
                         {
                             Code = "JH",
                             Omschrijving = "Jonkheer",
-                            Soort = AdellijkeTitelPredicaatSoort.PredicaatEnum
+                            Soort = AdellijkeTitelPredicaatSoort.Predicaat
                         }
                     },
-                    Geslacht = new Waardetabel()
+                    Geslacht = new Geslachtsaanduiding()
                     {
                         Code = "V",
                         Omschrijving = "Vrouw"
@@ -455,7 +453,7 @@ namespace Personen.Tests
                         {
                             Code = "JH",
                             Omschrijving = "Jonkheer",
-                            Soort = AdellijkeTitelPredicaatSoort.PredicaatEnum
+                            Soort = AdellijkeTitelPredicaatSoort.Predicaat
                         }
                     },
                     Geboorte = new GbaGeboorte()
@@ -472,7 +470,7 @@ namespace Personen.Tests
                             Omschrijving = "Amsterdam"
                         }
                     },
-                    Geslacht = new Waardetabel()
+                    Geslacht = new Geslachtsaanduiding()
                     {
                         Code = "M",
                         Omschrijving = "Man"
@@ -649,10 +647,10 @@ namespace Personen.Tests
                         {
                             Code = "JH",
                             Omschrijving = "Jonkheer",
-                            Soort = AdellijkeTitelPredicaatSoort.PredicaatEnum
+                            Soort = AdellijkeTitelPredicaatSoort.Predicaat
                         }
                     },
-                    Geslacht = new Waardetabel()
+                    Geslacht = new Geslachtsaanduiding()
                     {
                         Code = "V",
                         Omschrijving = "Vrouw"
@@ -690,7 +688,7 @@ namespace Personen.Tests
                             Geslachtsnaam = "Jansen",
                             Voornamen = "Anna",
                             Voorvoegsel = "van",
-                            AdellijkeTitelPredicaat = new() { Code = "JH", Omschrijving = "Jonkheer", Soort = AdellijkeTitelPredicaatSoort.PredicaatEnum }
+                            AdellijkeTitelPredicaat = new() { Code = "JH", Omschrijving = "Jonkheer", Soort = AdellijkeTitelPredicaatSoort.Predicaat }
                         },
                         Geslacht = new() { Code = "V", Omschrijving = "Vrouw" },
                     },

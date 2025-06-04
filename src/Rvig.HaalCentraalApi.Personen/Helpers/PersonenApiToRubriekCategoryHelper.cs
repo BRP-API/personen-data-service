@@ -2,8 +2,6 @@
 using Rvig.HaalCentraalApi.Shared.Exceptions;
 using Rvig.HaalCentraalApi.Shared.Helpers;
 using Rvig.HaalCentraalApi.Personen.RequestModels.BRP;
-using Rvig.HaalCentraalApi.Shared.ApiModels.Universal;
-using Rvig.HaalCentraalApi.Shared.ApiModels.PersonenHistorieBase;
 
 namespace Rvig.HaalCentraalApi.Personen.Helpers;
 
@@ -910,40 +908,40 @@ public static class PersonenApiToRubriekCategoryHelper
 		return deliveredRubrieken;
 	}
 
-	private static List<string> ConvertNaamBasisToRubriekCategory(GbaNaamBasis naam, string categoryCode)
+	private static List<string> ConvertNaamBasisToRubriekCategory(NaamBasis naam, string categoryCode)
 	{
 		var deliveredRubrieken = new List<string>();
-		foreach (var propertyName in ObjectHelper.GetPropertyNames<GbaNaamBasis>())
+		foreach (var propertyName in ObjectHelper.GetPropertyNames<NaamBasis>())
 		{
 			switch (propertyName)
 			{
-				case nameof(GbaNaamBasis.Voornamen):
+				case nameof(NaamBasis.Voornamen):
 					if (!string.IsNullOrWhiteSpace(naam.Voornamen))
 					{
 						deliveredRubrieken.Add($"{categoryCode}0210");
 					}
 					break;
-				case nameof(GbaNaamBasis.AdellijkeTitelPredicaat):
+				case nameof(NaamBasis.AdellijkeTitelPredicaat):
 					if (naam.AdellijkeTitelPredicaat != null
 						&& (!string.IsNullOrWhiteSpace(naam.AdellijkeTitelPredicaat?.Code) || !string.IsNullOrWhiteSpace(naam.AdellijkeTitelPredicaat?.Omschrijving) || naam.AdellijkeTitelPredicaat?.Soort != null))
 					{
 						deliveredRubrieken.Add($"{categoryCode}0220");
 					}
 					break;
-				case nameof(GbaNaamBasis.Voorvoegsel):
+				case nameof(NaamBasis.Voorvoegsel):
 					if (!string.IsNullOrWhiteSpace(naam.Voorvoegsel))
 					{
 						deliveredRubrieken.Add($"{categoryCode}0230");
 					}
 					break;
-				case nameof(GbaNaamBasis.Geslachtsnaam):
+				case nameof(NaamBasis.Geslachtsnaam):
 					if (!string.IsNullOrWhiteSpace(naam.Geslachtsnaam))
 					{
 						deliveredRubrieken.Add($"{categoryCode}0240");
 					}
 					break;
 				default:
-					throw new CustomNotImplementedException($"Mapping not implemented for {nameof(GbaNaamBasis)} property {propertyName}");
+					throw new CustomNotImplementedException($"Mapping not implemented for {nameof(NaamBasis)} property {propertyName}");
 			}
 		}
 
@@ -978,25 +976,25 @@ public static class PersonenApiToRubriekCategoryHelper
 		return deliveredRubrieken;
 	}
 
-	private static List<string> ConvertGeboorteBeperktToRubriekCategory(GbaGeboorteBeperkt geboorte, string categoryCode)
+	private static List<string> ConvertGeboorteBeperktToRubriekCategory(GeboorteBasis geboorte, string categoryCode)
 	{
 		var deliveredRubrieken = new List<string>();
-		foreach (var propertyName in ObjectHelper.GetPropertyNames<GbaGeboorteBeperkt>())
+		foreach (var propertyName in ObjectHelper.GetPropertyNames<GeboorteBasis>())
 		{
 			switch (propertyName)
 			{
-				case nameof(GbaGeboorteBeperkt.Datum):
+				case nameof(GeboorteBasis.Datum):
 					if (!string.IsNullOrWhiteSpace(geboorte.Datum))
 					{
 						deliveredRubrieken.Add($"{categoryCode}0310");
 					}
 					break;
-				case nameof(GbaGeboorteBeperkt.DatumJaar):
-				case nameof(GbaGeboorteBeperkt.DatumMaand):
-				case nameof(GbaGeboorteBeperkt.DatumDag):
+				case nameof(GeboorteBasis.DatumJaar):
+				case nameof(GeboorteBasis.DatumMaand):
+				case nameof(GeboorteBasis.DatumDag):
 					break;
 				default:
-					throw new CustomNotImplementedException($"Mapping not implemented for {nameof(GbaGeboorteBeperkt)} property {propertyName}");
+					throw new CustomNotImplementedException($"Mapping not implemented for {nameof(GeboorteBasis)} property {propertyName}");
 			}
 		}
 
