@@ -65,7 +65,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
 
                 if (persoonGezagsrelatie.Any())
                 {
-                    x.persoon.Gezag = new List<ApiModels.BRP.AbstractGezagsrelatie>();
+                    x.persoon.Gezag = new List<ApiModels.BRP.Deprecated.AbstractGezagsrelatie>();
                 }
                 foreach (var pg in persoonGezagsrelatie)
                 {

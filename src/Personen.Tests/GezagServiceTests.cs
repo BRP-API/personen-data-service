@@ -1,5 +1,5 @@
 ﻿using NSubstitute;
-using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
 using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
 using Rvig.HaalCentraalApi.Personen.Interfaces;
 using Rvig.HaalCentraalApi.Personen.Repositories;
@@ -232,11 +232,11 @@ namespace Personen.Tests
 
             var inputPersoon = (new GbaPersoon { Burgerservicenummer = bsn }, 1L);
 
-            var expectedGezag = new List<Rvig.HaalCentraalApi.Personen.ApiModels.BRP.AbstractGezagsrelatie>
+            var expectedGezag = new List<Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated.AbstractGezagsrelatie>
             {
-                new Rvig.HaalCentraalApi.Personen.ApiModels.BRP.EenhoofdigOuderlijkGezag()
+                new Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated.EenhoofdigOuderlijkGezag()
                 {
-                    Minderjarige = new Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Minderjarige()
+                    Minderjarige = new Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated.Minderjarige()
                     {
                         Burgerservicenummer = bsn,
                         Naam = new NaamBasis()
@@ -327,9 +327,9 @@ namespace Personen.Tests
 
             var inputPersoon = (new GbaGezagPersoonBeperkt { Burgerservicenummer = bsn }, 1L);
 
-            var expectedGezag = new List<Rvig.HaalCentraalApi.Personen.ApiModels.BRP.AbstractGezagsrelatie>
+            var expectedGezag = new List<Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated.AbstractGezagsrelatie>
             {
-                new Rvig.HaalCentraalApi.Personen.ApiModels.BRP.EenhoofdigOuderlijkGezag()
+                new Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated.EenhoofdigOuderlijkGezag()
                 {
                     Minderjarige = new()
                     {
@@ -388,9 +388,9 @@ namespace Personen.Tests
 
             var inputPersoon = (new GbaGezagPersoonBeperkt { Burgerservicenummer = bsnOuder }, 1L);
 
-            var expectedGezag = new List<Rvig.HaalCentraalApi.Personen.ApiModels.BRP.AbstractGezagsrelatie>
+            var expectedGezag = new List<Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated.AbstractGezagsrelatie>
             {
-                new Rvig.HaalCentraalApi.Personen.ApiModels.BRP.EenhoofdigOuderlijkGezag()
+                new Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated.EenhoofdigOuderlijkGezag()
                 {
                     Minderjarige = new()
                     {
