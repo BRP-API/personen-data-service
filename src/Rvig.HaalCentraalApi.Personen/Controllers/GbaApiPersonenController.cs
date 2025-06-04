@@ -10,20 +10,35 @@ namespace Rvig.HaalCentraalApi.Personen.Controllers;
 public class GbaApiPersonenController : GbaApiBaseController
 {
 	private readonly IGbaPersonenApiService _gbaService;
+	private readonly IGezagService _gezagService;
+    private static bool GezagIsRequested(List<string> fields) =>
+            fields.Any(field =>
+                field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) &&
+                !field.StartsWith("indicatieGezagMinderjarige"));
 
-	public GbaApiPersonenController(IGbaPersonenApiService gbaService)
+	public GbaApiPersonenController(IGbaPersonenApiService gbaService, IGezagService gezagService)
 	{
 		_gbaService = gbaService;
+		_gezagService = gezagService;
 	}
 
-	[HttpPost]
+
+    [HttpPost]
 	[Route("personen")]
-	public async Task<PersonenQueryResponse> GetPersonen([FromBody] PersonenQuery model)
+	public async Task<IActionResult> GetPersonen([FromBody] PersonenQuery model)
 	{
 		await ValidateUnusableQueryParams(model);
-		(PersonenQueryResponse personenResponse, List<long>? plIds) = await _gbaService.GetPersonen(model);
+		
+		(PersonenQueryResponse personenResponse, List<long>? plIds, List<string>? bsns) = await _gbaService.GetPersonen(model);
+        
 		AddPlIdsToResponseHeaders(plIds);
 
-		return personenResponse;
+		if(GezagIsRequested(model.Fields))
+		{
+			var personenResponseMetGezag = await _gezagService.GetGezag(personenResponse, model.Fields, bsns);
+			return Ok(personenResponseMetGezag);
+		}
+
+		return Ok(personenResponse);
 	}
 }

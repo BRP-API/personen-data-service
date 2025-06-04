@@ -11,6 +11,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
 {
     public interface IGezagService
     {
+        public Task<PersonenQueryResponse> GetGezag(PersonenQueryResponse personenResponse, List<string> fields, List<string>? bsns);
         public Task<IEnumerable<Persoon>> GetGezagIfRequested(List<string> fields, List<string> bsns);
         public Task<List<GbaPersoon>> GetGezagPersonenIfRequested(List<string> fields, IEnumerable<Persoon> gezag);
         public void VerrijkPersonenMetGezagIfRequested(List<string> fields, IEnumerable<Persoon> persoonGezagsrelaties, List<GbaPersoon> gezagPersonen, (IPersoonMetGezag persoon, long pl_id) x);
@@ -31,13 +32,147 @@ namespace Rvig.HaalCentraalApi.Personen.Services
             _gezagPersonenService = getAndMapPersoonService;
         }
 
+        public async Task<PersonenQueryResponse> GetGezag(PersonenQueryResponse personenResponse, List<string> fields, List<string>? bsns)
+        {
+            if (bsns == null || !bsns.Any())
+            {
+                return personenResponse;
+            }
+            var gezagPersonen = await GetGezagIfRequested(fields, bsns);
+            if (gezagPersonen.Any())
+            {
+                if(personenResponse is RaadpleegMetBurgerservicenummerResponse r1)
+                {
+                    await VerrijkPersonenMetGezag(r1, fields, bsns);
+                }
+                else if (personenResponse is ZoekMetAdresseerbaarObjectIdentificatieResponse r2)
+                {
+                    await VerrijkPersonenMetGezag(r2, fields, bsns);
+                }
+                else if (personenResponse is ZoekMetGeslachtsnaamEnGeboortedatumResponse r3)
+                {
+                    await VerrijkPersonenMetGezag(r3, fields, bsns);
+                }
+                else if (personenResponse is ZoekMetNaamEnGemeenteVanInschrijvingResponse r4)
+                {
+                    await VerrijkPersonenMetGezag(r4, fields, bsns);
+                }
+                else if (personenResponse is ZoekMetNummeraanduidingIdentificatieResponse r5)
+                {
+                    await VerrijkPersonenMetGezag(r5, fields, bsns);
+                }
+                else if (personenResponse is ZoekMetPostcodeEnHuisnummerResponse r6)
+                {
+                    await VerrijkPersonenMetGezag(r6, fields, bsns);
+                }
+                else if (personenResponse is ZoekMetStraatHuisnummerEnGemeenteVanInschrijvingResponse r7)
+                {
+                    await VerrijkPersonenMetGezag(r7, fields, bsns);
+                }
+            }
+            return personenResponse;
+        }
+
+        private async Task VerrijkPersonenMetGezag(RaadpleegMetBurgerservicenummerResponse response, List<string> fields, List<string> bsns)
+        {
+            var gezag = await GetGezagIfRequested(fields, bsns);
+            var gp = await GetGezagPersonenIfRequested(fields, gezag);
+            foreach (var x in response.Personen.Select((persoon, pl_id) => (persoon, pl_id)))
+            {
+                if (x.persoon is IPersoonMetGezag)
+                {
+                    VerrijkPersonenMetGezagIfRequested(fields, gezag, gp, x);
+                }
+            }
+        }
+
+        private async Task VerrijkPersonenMetGezag(ZoekMetAdresseerbaarObjectIdentificatieResponse response, List<string> fields, List<string> bsns)
+        {
+            var gezag = await GetGezagIfRequested(fields, bsns);
+            var gp = await GetGezagPersonenIfRequested(fields, gezag);
+            foreach (var x in response.Personen.Select((persoon, pl_id) => (persoon, pl_id)))
+            {
+                if (x.persoon is IPersoonMetGezag)
+                {
+                    VerrijkPersonenMetGezagIfRequested(fields, gezag, gp, x);
+                }
+            }
+        }
+
+        private async Task VerrijkPersonenMetGezag(ZoekMetGeslachtsnaamEnGeboortedatumResponse response, List<string> fields, List<string> bsns)
+        {
+            var gezag = await GetGezagIfRequested(fields, bsns);
+            var gp = await GetGezagPersonenIfRequested(fields, gezag);
+            foreach (var x in response.Personen.Select((persoon, pl_id) => (persoon, pl_id)))
+            {
+                if (x.persoon is IPersoonMetGezag)
+                {
+                    VerrijkPersonenMetGezagIfRequested(fields, gezag, gp, ((IPersoonMetGezag persoon, long pl_id))x);
+                }
+            }
+        }
+
+        private async Task VerrijkPersonenMetGezag(ZoekMetNaamEnGemeenteVanInschrijvingResponse response, List<string> fields, List<string> bsns)
+        {
+            var gezag = await GetGezagIfRequested(fields, bsns);
+            var gp = await GetGezagPersonenIfRequested(fields, gezag);
+            foreach (var x in response.Personen.Select((persoon, pl_id) => (persoon, pl_id)))
+            {
+                if (x.persoon is IPersoonMetGezag)
+                {
+                    VerrijkPersonenMetGezagIfRequested(fields, gezag, gp, ((IPersoonMetGezag persoon, long pl_id))x);
+                }
+            }
+        }
+
+        private async Task VerrijkPersonenMetGezag(ZoekMetNummeraanduidingIdentificatieResponse response, List<string> fields, List<string> bsns)
+        {
+            var gezag = await GetGezagIfRequested(fields, bsns);
+            var gp = await GetGezagPersonenIfRequested(fields, gezag);
+            foreach (var x in response.Personen.Select((persoon, pl_id) => (persoon, pl_id)))
+            {
+                if (x.persoon is IPersoonMetGezag)
+                {
+                    VerrijkPersonenMetGezagIfRequested(fields, gezag, gp, ((IPersoonMetGezag persoon, long pl_id))x);
+                }
+            }
+        }
+
+        private async Task VerrijkPersonenMetGezag(ZoekMetPostcodeEnHuisnummerResponse response, List<string> fields, List<string> bsns)
+        {
+            var gezag = await GetGezagIfRequested(fields, bsns);
+            var gp = await GetGezagPersonenIfRequested(fields, gezag);
+            foreach (var x in response.Personen.Select((persoon, pl_id) => (persoon, pl_id)))
+            {
+                if (x.persoon is IPersoonMetGezag)
+                {
+                    VerrijkPersonenMetGezagIfRequested(fields, gezag, gp, ((IPersoonMetGezag persoon, long pl_id))x);
+                }
+            }
+        }
+
+        private async Task VerrijkPersonenMetGezag(ZoekMetStraatHuisnummerEnGemeenteVanInschrijvingResponse response, List<string> fields, List<string> bsns)
+        {
+            var gezag = await GetGezagIfRequested(fields, bsns);
+            var gp = await GetGezagPersonenIfRequested(fields, gezag);
+            foreach (var x in response.Personen.Select((persoon, pl_id) => (persoon, pl_id)))
+            {
+                if (x.persoon is IPersoonMetGezag)
+                {
+                    VerrijkPersonenMetGezagIfRequested(fields, gezag, gp, ((IPersoonMetGezag persoon, long pl_id))x);
+                }
+            }
+        }
+
         public async Task<IEnumerable<Persoon>> GetGezagIfRequested(List<string> fields, List<string> bsns)
         {
-            if (GezagIsRequested(fields))
+            if(GezagIsRequested(fields))
             {
+
                 GezagResponse response = (await _gezagsrelatieRepo.GetGezag(bsns!)) ?? new GezagResponse();
                 return response.Personen.ToList();
             }
+            
             return new List<Persoon>();
         }
 

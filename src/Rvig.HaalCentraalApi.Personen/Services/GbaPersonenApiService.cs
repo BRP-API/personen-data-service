@@ -10,13 +10,12 @@ using Rvig.HaalCentraalApi.Shared.Services;
 namespace Rvig.HaalCentraalApi.Personen.Services;
 public interface IGbaPersonenApiService
 {
-	Task<(PersonenQueryResponse personenResponse, List<long>? plIds)> GetPersonen(PersonenQuery model);
+	Task<(PersonenQueryResponse personenResponse, List<long>? plIds, List<string>? bsns)> GetPersonen(PersonenQuery model);
 }
 
 public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 {
 	protected IGetAndMapGbaPersonenService _getAndMapPersoonService;
-	private readonly IGezagService _gezagService;
 	private readonly GbaPersonenApiHelper _gbaPersonenApiHelper;
 	private readonly GbaPersonenBeperktApiHelper _gbaPersonenBeperktApiHelper;
 
@@ -25,12 +24,10 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 
 	public GbaPersonenApiService(
         IGetAndMapGbaPersonenService getAndMapPersoonService, 
-		IDomeinTabellenRepo domeinTabellenRepo, 
-		IGezagService gezagService)
+		IDomeinTabellenRepo domeinTabellenRepo)
 		: base(domeinTabellenRepo)
 	{
 		_getAndMapPersoonService = getAndMapPersoonService;
-		_gezagService = gezagService;
 		_gbaPersonenApiHelper = new GbaPersonenApiHelper(_fieldsExpandFilterService, _persoonFieldsSettings);
 		_gbaPersonenBeperktApiHelper = new GbaPersonenBeperktApiHelper(_persoonBeperktFieldsSettings);
 	}
@@ -41,7 +38,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 	/// <param name="model">Child of PersonenQuery.</param>
 	/// <returns>Child of PersonenQueryResponse</returns>
 	/// <exception cref="InvalidOperationException"></exception>
-	public async Task<(PersonenQueryResponse personenResponse, List<long>? plIds)> GetPersonen(PersonenQuery model)
+	public async Task<(PersonenQueryResponse personenResponse, List<long>? plIds, List<string>? bsns)> GetPersonen(PersonenQuery model)
 	{
 		return model switch
 		{
@@ -61,7 +58,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 	/// </summary>
 	/// <param name="model"></param>
 	/// <returns>Response object with list of complete person data</returns>
-	private async Task<(RaadpleegMetBurgerservicenummerResponse personenResponse, List<long>? plIds)> GetPersonen(RaadpleegMetBurgerservicenummer model)
+	private async Task<(RaadpleegMetBurgerservicenummerResponse personenResponse, List<long>? plIds, List<string> bsns)> GetPersonen(RaadpleegMetBurgerservicenummer model)
 	{
 		// Validation
 		_fieldsExpandFilterService.ValidateScope(typeof(GbaPersoon), _persoonFieldsSettings.GbaFieldsSettings, model.Fields);
@@ -79,15 +76,13 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 		{
 			_gbaPersonenApiHelper.HackLogicKinderenPartnersOuders(model.Fields, personenPlIds?.ToList()?.ConvertAll(gbaPersoon => gbaPersoon.persoon));
 
-			var bsns = personenPlIds!.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
-
-			var gezag = await _gezagService.GetGezagIfRequested(model.Fields, bsns);
-
-            var gezagPersonen = await _gezagService.GetGezagPersonenIfRequested(model.Fields, gezag);
+			//var bsns = personenPlIds!.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
+			//var gezag = await _gezagService.GetGezagIfRequested(model.Fields, bsns);
+            //var gezagPersonen = await _gezagService.GetGezagPersonenIfRequested(model.Fields, gezag);
 
 			foreach (var x in personenPlIds!.Where(x => x.persoon != null))
             {
-				_gezagService.VerrijkPersonenMetGezagIfRequested(model.Fields, gezag, gezagPersonen, x);
+				//_gezagService.VerrijkPersonenMetGezagIfRequested(model.Fields, gezag, gezagPersonen, x);
 
                 x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.Fields, x.persoon.Rni, _persoonFieldsSettings.GbaFieldsSettings);
                 if (x.persoon.Verblijfplaats != null)
@@ -108,7 +103,11 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
             }
 		}
 
-		return (new RaadpleegMetBurgerservicenummerResponse { Personen = result.ConvertAll(gbaPersoon => gbaPersoon.persoon) ?? new List<GbaPersoon>() }, result.Select(x => x.pl_id).ToList());
+		var response = new RaadpleegMetBurgerservicenummerResponse { Personen = result.ConvertAll(gbaPersoon => gbaPersoon.persoon) ?? new List<GbaPersoon>() };
+		var plIds = result.Select(x => x.pl_id).ToList();
+		var bsns = result.Select(x => x.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
+
+		return (response, plIds, bsns); 
 	}
 
     /// <summary>
@@ -116,7 +115,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
     /// </summary>
     /// <param name="model"></param>
     /// <returns>Response object with list of restricted person data</returns>
-    private async Task<(List<T>? personen, List<long>? plIds)> GetPersonenBeperktBase<T>(PersonenQuery model, bool? inclusiefOverledenPersonen = false) where T : GbaPersoonBeperkt
+    private async Task<(List<T>? personen, List<long>? plIds, List<string>? bsns)> GetPersonenBeperktBase<T>(PersonenQuery model, bool? inclusiefOverledenPersonen = false) where T : GbaPersoonBeperkt
 	{
 		// Validation
 		_fieldsExpandFilterService.ValidateScope(typeof(T), _persoonBeperktFieldsSettings.GbaFieldsSettings, model.Fields);
@@ -140,16 +139,15 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 				|| x.persoon.OpschortingBijhouding?.Reden?.Code?.Equals("O") == true
 							&& inclusiefOverledenPersonen == true);
 
-            var bsns = personenPlIds.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
-
-            var gezag = await _gezagService.GetGezagIfRequested(model.Fields, bsns);
-            var gezagPersonen = await _gezagService.GetGezagPersonenIfRequested(model.Fields, gezag);
+            //var bsns = personenPlIds.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
+            //var gezag = await _gezagService.GetGezagIfRequested(model.Fields, bsns);
+            //var gezagPersonen = await _gezagService.GetGezagPersonenIfRequested(model.Fields, gezag);
 
             foreach (var x in personenPlIds.Where(x => x.persoon != null))
 			{
 				if (x.persoon is IPersoonMetGezag)
 				{
-					_gezagService.VerrijkPersonenMetGezagIfRequested(model.Fields, gezag, gezagPersonen, ((IPersoonMetGezag persoon, long pl_id))x);
+					//_gezagService.VerrijkPersonenMetGezagIfRequested(model.Fields, gezag, gezagPersonen, ((IPersoonMetGezag persoon, long pl_id))x);
 				}
 
 				x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.Fields, x.persoon.Rni, _persoonBeperktFieldsSettings.GbaFieldsSettings);
@@ -165,21 +163,25 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 			}
 		}
 
-		return (result.ConvertAll(gbaPersoon => gbaPersoon.persoon) ?? new List<T>(), result.Select(x => x.pl_id).ToList());
-	}
+		var response = result.ConvertAll(gbaPersoon => gbaPersoon.persoon) ?? new List<T>();
+        var plIds = result.Select(x => x.pl_id).ToList();
+        var bsns = result.Select(x => x.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
+
+        return (response, plIds, bsns);
+    }
 
 	/// <summary>
 	/// Get personen via search params (child of PersonenQuery)
 	/// </summary>
 	/// <param name="model"></param>
 	/// <returns>Response object with list of restricted person data</returns>
-	private async Task<(ZoekMetGeslachtsnaamEnGeboortedatumResponse personenResponse, List<long>? plIds)> GetPersonenBeperkt(ZoekMetGeslachtsnaamEnGeboortedatum model)
+	private async Task<(ZoekMetGeslachtsnaamEnGeboortedatumResponse personenResponse, List<long>? plIds, List<string>? bsns)> GetPersonenBeperkt(ZoekMetGeslachtsnaamEnGeboortedatum model)
 	{
 		// Validation
 		var personenPlIds = await GetPersonenBeperktBase<GbaPersoonBeperkt>(model, model.InclusiefOverledenPersonen);
 
 		// Get personen + Filter response by fields
-		return (new ZoekMetGeslachtsnaamEnGeboortedatumResponse { Personen = personenPlIds.personen }, personenPlIds.plIds);
+		return (new ZoekMetGeslachtsnaamEnGeboortedatumResponse { Personen = personenPlIds.personen }, personenPlIds.plIds, personenPlIds.bsns);
 	}
 
 	/// <summary>
@@ -187,13 +189,13 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 	/// </summary>
 	/// <param name="model"></param>
 	/// <returns>Response object with list of restricted person data</returns>
-	private async Task<(ZoekMetNaamEnGemeenteVanInschrijvingResponse personenResponse, List<long>? plIds)> GetPersonenBeperkt(ZoekMetNaamEnGemeenteVanInschrijving model)
+	private async Task<(ZoekMetNaamEnGemeenteVanInschrijvingResponse personenResponse, List<long>? plIds, List<string>? bsns)> GetPersonenBeperkt(ZoekMetNaamEnGemeenteVanInschrijving model)
 	{
 		// Validation
 		var personenPlIds = await GetPersonenBeperktBase<GbaPersoonBeperkt>(model, model.InclusiefOverledenPersonen);
 
 		// Get personen + Filter response by fields
-		return (new ZoekMetNaamEnGemeenteVanInschrijvingResponse { Personen = personenPlIds.personen }, personenPlIds.plIds);
+		return (new ZoekMetNaamEnGemeenteVanInschrijvingResponse { Personen = personenPlIds.personen }, personenPlIds.plIds, personenPlIds.bsns);
 	}
 
 	/// <summary>
@@ -201,12 +203,12 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 	/// </summary>
 	/// <param name="model"></param>
 	/// <returns>Response object with list of restricted person data</returns>
-	private async Task<(ZoekMetNummeraanduidingIdentificatieResponse personenResponse, List<long>? plIds)> GetPersonenBeperkt(ZoekMetNummeraanduidingIdentificatie model)
+	private async Task<(ZoekMetNummeraanduidingIdentificatieResponse personenResponse, List<long>? plIds, List<string>? bsns)> GetPersonenBeperkt(ZoekMetNummeraanduidingIdentificatie model)
 	{
 		var personenPlIds = await GetPersonenBeperktBase<GbaPersoonBeperkt>(model, model.InclusiefOverledenPersonen);
 
 		// Get personen + Filter response by fields
-		return (new ZoekMetNummeraanduidingIdentificatieResponse { Personen = personenPlIds.personen }, personenPlIds.plIds);
+		return (new ZoekMetNummeraanduidingIdentificatieResponse { Personen = personenPlIds.personen }, personenPlIds.plIds, personenPlIds.bsns);
 	}
 
 	/// <summary>
@@ -214,35 +216,35 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 	/// </summary>
 	/// <param name="model"></param>
 	/// <returns>Response object with list of restricted person data</returns>
-	private async Task<(ZoekMetPostcodeEnHuisnummerResponse personenResponse, List<long>? plIds)> GetPersonenBeperkt(ZoekMetPostcodeEnHuisnummer model)
-	{
-		// Validation
-		var personenPlIds = await GetPersonenBeperktBase<GbaPersoonBeperkt>(model, model.InclusiefOverledenPersonen);
-
-		// Get personen + Filter response by fields
-		return (new ZoekMetPostcodeEnHuisnummerResponse { Personen = personenPlIds.personen }, personenPlIds.plIds);
-	}
-
-	/// <summary>
-	/// Get personen via search params (child of PersonenQuery)
-	/// </summary>
-	/// <param name="model"></param>
-	/// <returns>Response object with list of restricted person data</returns>
-	private async Task<(ZoekMetStraatHuisnummerEnGemeenteVanInschrijvingResponse personenResponse, List<long>? plIds)> GetPersonenBeperkt(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving model)
+	private async Task<(ZoekMetPostcodeEnHuisnummerResponse personenResponse, List<long>? plIds, List<string>? bsns)> GetPersonenBeperkt(ZoekMetPostcodeEnHuisnummer model)
 	{
 		// Validation
 		var personenPlIds = await GetPersonenBeperktBase<GbaPersoonBeperkt>(model, model.InclusiefOverledenPersonen);
 
 		// Get personen + Filter response by fields
-		return (new ZoekMetStraatHuisnummerEnGemeenteVanInschrijvingResponse { Personen = personenPlIds.personen }, personenPlIds.plIds);
+		return (new ZoekMetPostcodeEnHuisnummerResponse { Personen = personenPlIds.personen }, personenPlIds.plIds, personenPlIds.bsns);
 	}
 
-	private async Task<(ZoekMetAdresseerbaarObjectIdentificatieResponse personenResponse, List<long>? plIds)> GetPersonenBeperkt(ZoekMetAdresseerbaarObjectIdentificatie model)
+	/// <summary>
+	/// Get personen via search params (child of PersonenQuery)
+	/// </summary>
+	/// <param name="model"></param>
+	/// <returns>Response object with list of restricted person data</returns>
+	private async Task<(ZoekMetStraatHuisnummerEnGemeenteVanInschrijvingResponse personenResponse, List<long>? plIds, List<string>? bsns)> GetPersonenBeperkt(ZoekMetStraatHuisnummerEnGemeenteVanInschrijving model)
+	{
+		// Validation
+		var personenPlIds = await GetPersonenBeperktBase<GbaPersoonBeperkt>(model, model.InclusiefOverledenPersonen);
+
+		// Get personen + Filter response by fields
+		return (new ZoekMetStraatHuisnummerEnGemeenteVanInschrijvingResponse { Personen = personenPlIds.personen }, personenPlIds.plIds, personenPlIds.bsns);
+	}
+
+	private async Task<(ZoekMetAdresseerbaarObjectIdentificatieResponse personenResponse, List<long>? plIds, List<string>? bsns)> GetPersonenBeperkt(ZoekMetAdresseerbaarObjectIdentificatie model)
 	{
 		var personenPlIds = await GetPersonenBeperktBase<GbaGezagPersoonBeperkt>(model, model.InclusiefOverledenPersonen);
 
 		// Get personen + Filter response by fields
-		return (new ZoekMetAdresseerbaarObjectIdentificatieResponse { Personen = personenPlIds.personen }, personenPlIds.plIds);
+		return (new ZoekMetAdresseerbaarObjectIdentificatieResponse { Personen = personenPlIds.personen }, personenPlIds.plIds, personenPlIds.bsns);
 	}
 
 	private T ApplyGbaPersoonBeperktScope<T>(T gbaPersoonBeperkt, List<string> fields) where T : GbaPersoonBeperkt
