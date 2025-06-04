@@ -55,7 +55,7 @@ npx cucumber-js -f json:./test-reports/cucumber-js/personen/test-result.json \
                 -f summary \
                 features/gezag-persoon-beperkt \
                 features/persoon \
-                features/persoon-bepertk \
+                features/persoon-beperkt \
                 features/raadpleeg-met-burgerservicenummer \
                 features/zoek-met-adresseerbaar-object-identificatie \
                 features/zoek-met-geslachtsnaam-en-geboortedatum \
