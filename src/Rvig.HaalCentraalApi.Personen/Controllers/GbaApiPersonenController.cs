@@ -46,7 +46,7 @@ public class GbaApiPersonenController : GbaApiBaseController
 							p.Burgerservicenummer = null;
 						}
 					}
-					return Ok(personenResponseMetGezag);
+					
 				} else if (personenResponseMetGezag is ZoekMetAdresseerbaarObjectIdentificatieResponse zoekResponse)
 				{
 					if (zoekResponse != null)
@@ -56,11 +56,12 @@ public class GbaApiPersonenController : GbaApiBaseController
 							p.Burgerservicenummer = null;
 						}
 					}
-					return Ok(personenResponseMetGezag);
                 }
             }
 
-			return Ok(personenResponse);
-		}
+			return Ok(personenResponseMetGezag);
+        }
+	
+		return Ok(personenResponse);
 	}
 }
