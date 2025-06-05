@@ -27,7 +27,7 @@ namespace Personen.Tests
         {
             // Arrange
             var fields = new List<string> { "adressering" };
-            var bsns = new List<string?> { "000000012", "000000013" };
+            var bsns = new List<string> { "000000012", "000000013" };
 
             // Act
             var result = await _gezagService.GetGezagDeprecatedIfRequested(fields, bsns);
@@ -41,7 +41,7 @@ namespace Personen.Tests
         {
             // Arrange
             var fields = new List<string> { "gezag" };
-            var bsns = new List<string?> { "000000012", "000000013" };
+            var bsns = new List<string> { "000000012", "000000013" };
 
             var mockGezagResponse = new GezagResponse
             {
@@ -53,7 +53,7 @@ namespace Personen.Tests
             };
 
             _gezagRepositoryMock
-                .GetGezag(bsns!)
+                .GetGezagDeprecated(bsns!)
                 .Returns(mockGezagResponse);
 
             // Act

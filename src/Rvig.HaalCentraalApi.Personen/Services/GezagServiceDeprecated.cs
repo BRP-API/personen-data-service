@@ -75,7 +75,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
         {
             if(GezagHelper.GezagIsRequested(fields))
             {
-                GezagResponse response = (await _gezagsrelatieRepo.GetGezag(bsns!)) ?? new GezagResponse();
+                GezagResponse response = (await _gezagsrelatieRepo.GetGezagDeprecated(bsns!)) ?? new GezagResponse();
                 return response.Personen.ToList();
             }
             
