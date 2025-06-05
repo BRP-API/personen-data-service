@@ -65,6 +65,8 @@ namespace Rvig.HaalCentraalApi.Personen.Services
             {
                 // Get gezagsrelaties from the repository
                 GezagResponse response = (await _gezagsrelatieRepo.GetGezag(bsns)) ?? new GezagResponse();
+
+                return response.Personen;
             }
 
             return new List<Persoon>();
