@@ -71,6 +71,8 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
         List<(GbaPersoon persoon, long pl_id)> result = new List<(GbaPersoon persoon, long pl_id)>();
         (IEnumerable<(GbaPersoon persoon, long pl_id)>? personenPlIds, int afnemerCode) = await _getAndMapPersoonService.GetPersonenMapByBsns(model.Burgerservicenummer, model.GemeenteVanInschrijving, fieldsToUseForAuthorisations);
 
+		List<string> bsns = new();
+
 		// Filter response by fields
 		if (model?.Fields?.Any() == true && personenPlIds != null)
 		{
@@ -82,7 +84,8 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 
 			foreach (var x in personenPlIds!.Where(x => x.persoon != null))
             {
-				//_gezagService.VerrijkPersonenMetGezagIfRequested(model.Fields, gezag, gezagPersonen, x);
+                bsns.Add(x.persoon.Burgerservicenummer);
+                //_gezagService.VerrijkPersonenMetGezagIfRequested(model.Fields, gezag, gezagPersonen, x);
 
                 x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.Fields, x.persoon.Rni, _persoonFieldsSettings.GbaFieldsSettings);
                 if (x.persoon.Verblijfplaats != null)
@@ -105,7 +108,6 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 
 		var response = new RaadpleegMetBurgerservicenummerResponse { Personen = result.ConvertAll(gbaPersoon => gbaPersoon.persoon) ?? new List<GbaPersoon>() };
 		var plIds = result.Select(x => x.pl_id).ToList();
-		var bsns = result.Select(x => x.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
 
 		return (response, plIds, bsns); 
 	}
