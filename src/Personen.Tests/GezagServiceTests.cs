@@ -30,7 +30,7 @@ namespace Personen.Tests
             var bsns = new List<string?> { "000000012", "000000013" };
 
             // Act
-            var result = await _gezagService.GetGezagIfRequested(fields, bsns);
+            var result = await _gezagService.GetGezagDeprecatedIfRequested(fields, bsns);
 
             // Assert
             result.Count().Should().Be(0);
@@ -57,7 +57,7 @@ namespace Personen.Tests
                 .Returns(mockGezagResponse);
 
             // Act
-            var result = await _gezagService.GetGezagIfRequested(fields, bsns);
+            var result = await _gezagService.GetGezagDeprecatedIfRequested(fields, bsns);
 
             // Assert
             result.Should().NotBeNull();

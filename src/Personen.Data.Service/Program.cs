@@ -20,7 +20,7 @@ var servicesDictionary = new Dictionary<Type, Type>
 	
 	// BRP API
 	{ typeof(IGbaPersonenApiService), typeof(GbaPersonenApiService) },
-	{ typeof(IGezagService), typeof(GezagService) },
+	{ typeof(IGezagService), typeof(GezagServiceDeprecated) },
 
 	// Gezag Data
 	{ typeof(IRepoGezagsrelatie), typeof(RepoGezagsrelatie) }

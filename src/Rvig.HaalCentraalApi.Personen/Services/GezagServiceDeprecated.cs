@@ -9,12 +9,12 @@ using Rvig.HaalCentraalApi.Shared.Services;
 
 namespace Rvig.HaalCentraalApi.Personen.Services
 {
-    public class GezagService : BaseApiService, IGezagService
+    public class GezagServiceDeprecated : BaseApiService, IGezagService
     {
         private readonly IRepoGezagsrelatie _gezagsrelatieRepo;
         private readonly IGezagPersonenService _gezagPersonenService;
 
-        public GezagService(
+        public GezagServiceDeprecated(
             IGezagPersonenService getAndMapPersoonService,
             IDomeinTabellenRepo domeinTabellenRepo,
             IRepoGezagsrelatie gezagsrelatieRepo)
