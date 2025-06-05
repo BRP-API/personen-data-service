@@ -98,6 +98,9 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
                 }
 
                 model.Fields = GbaPersonenApiHelper.OpschortingBijhoudingLogicRaadplegen(model.Fields, x.persoon.OpschortingBijhouding);
+				if (!model.Fields.Contains("burgerservicenummer")){
+					model.Fields.Add("burgerservicenummer");
+                }
 
                 GbaPersoon target = _fieldsExpandFilterService.ApplyScope(x.persoon, string.Join(",", model.Fields), _persoonFieldsSettings.GbaFieldsSettings);
                 _gbaPersonenApiHelper.RemoveInOnderzoekFromPersonCategoryIfNoFieldsAreRequested(model.Fields, target);

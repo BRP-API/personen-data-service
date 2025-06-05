@@ -28,7 +28,9 @@ public class GbaApiPersonenController : GbaApiBaseController
 	public async Task<IActionResult> GetPersonen([FromBody] PersonenQuery model)
 	{
 		await ValidateUnusableQueryParams(model);
-		
+
+        var vraagtBsn = model.Fields.Contains("burgerservicenummer");
+        
 		(PersonenQueryResponse personenResponse, List<long>? plIds, List<string>? bsns) = await _gbaService.GetPersonen(model);
         
 		AddPlIdsToResponseHeaders(plIds);
@@ -36,6 +38,17 @@ public class GbaApiPersonenController : GbaApiBaseController
 		if(GezagIsRequested(model.Fields))
 		{
 			var personenResponseMetGezag = await _gezagService.GetGezag(personenResponse, model.Fields, bsns);
+			if (!vraagtBsn)
+			{
+				var response = personenResponseMetGezag as RaadpleegMetBurgerservicenummerResponse;
+				if (response != null)
+				{
+					foreach(var p in response.Personen)
+					{
+						p.Burgerservicenummer = null;
+                    }
+                }
+			}
 			return Ok(personenResponseMetGezag);
 		}
 
