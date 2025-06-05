@@ -20,35 +20,47 @@ public class GbaApiPersonenController : GbaApiBaseController
 	}
 
 
-    [HttpPost]
+	[HttpPost]
 	[Route("personen")]
 	public async Task<IActionResult> GetPersonen([FromBody] PersonenQuery model)
 	{
 		await ValidateUnusableQueryParams(model);
 
-        var vraagtBsn = model.Fields.Contains("burgerservicenummer");
-        
+		var vraagtBsn = model.Fields.Contains("burgerservicenummer");
+
 		(PersonenQueryResponse personenResponse, List<long>? plIds, List<string>? bsns) = await _gbaService.GetPersonen(model);
-        
+
 		AddPlIdsToResponseHeaders(plIds);
 
-		if(GezagHelper.GezagIsRequested(model.Fields))
+		if (GezagHelper.GezagIsRequested(model.Fields))
 		{
 			var personenResponseMetGezag = await _gezagService.GetGezag(personenResponse, model.Fields, bsns);
 			if (!vraagtBsn)
 			{
-				var response = personenResponseMetGezag as RaadpleegMetBurgerservicenummerResponse;
-				if (response != null)
+				if (personenResponseMetGezag is RaadpleegMetBurgerservicenummerResponse response)
 				{
-					foreach(var p in response.Personen)
+					if (response != null)
 					{
-						p.Burgerservicenummer = null;
-                    }
+						foreach (var p in response.Personen)
+						{
+							p.Burgerservicenummer = null;
+						}
+					}
+					return Ok(personenResponseMetGezag);
+				} else if (personenResponseMetGezag is ZoekMetAdresseerbaarObjectIdentificatieResponse zoekResponse)
+				{
+					if (zoekResponse != null)
+					{
+						foreach (var p in zoekResponse.Personen)
+						{
+							p.Burgerservicenummer = null;
+						}
+					}
+					return Ok(personenResponseMetGezag);
                 }
-			}
-			return Ok(personenResponseMetGezag);
-		}
+            }
 
-		return Ok(personenResponse);
+			return Ok(personenResponse);
+		}
 	}
 }

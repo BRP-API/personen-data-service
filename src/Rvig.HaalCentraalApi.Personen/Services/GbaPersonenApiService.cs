@@ -134,6 +134,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 
 		(IEnumerable<(T persoon, long pl_id)>? personenPlIds, int afnemerCode) = await _getAndMapPersoonService.GetMapZoekPersonen<T>(model, fieldsToUseForAuthorisations);
         List<(T persoon, long pl_id)> result = new List<(T persoon, long pl_id)>();
+        List<string> bsns = new();
 
         // Filter response by fields
         if (model?.Fields?.Any() == true && personenPlIds != null)
@@ -156,6 +157,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
                 //{
                 //	//_gezagService.VerrijkPersonenMetGezagIfRequested(model.Fields, gezag, gezagPersonen, ((IPersoonMetGezag persoon, long pl_id))x);
                 //}
+                bsns.Add(x.persoon.Burgerservicenummer);
 
                 if (!model.Fields.Contains("burgerservicenummer") && GezagHelper.GezagIsRequested(model.Fields))
                 {
@@ -176,7 +178,6 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 
 		var response = result.ConvertAll(gbaPersoon => gbaPersoon.persoon) ?? new List<T>();
         var plIds = result.Select(x => x.pl_id).ToList();
-        var bsns = result.Select(x => x.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
 
         return (response, plIds, bsns);
     }
