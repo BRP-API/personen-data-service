@@ -166,7 +166,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
 
         public async Task<IEnumerable<Persoon>> GetGezagIfRequested(List<string> fields, List<string> bsns)
         {
-            if(GezagIsRequested(fields))
+            if(GezagHelper.GezagIsRequested(fields))
             {
 
                 GezagResponse response = (await _gezagsrelatieRepo.GetGezag(bsns!)) ?? new GezagResponse();
@@ -180,7 +180,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
         {
             var gezagsrelaties = gezag.Where(p => p.Gezag != null).SelectMany(p => p.Gezag).ToList();
 
-            if (GezagIsRequested(fields) && gezagsrelaties.Count != 0)
+            if (GezagHelper.GezagIsRequested(fields) && gezagsrelaties.Count != 0)
             {
                 var gezagBsns = GezagHelper.GetGezagBsns(gezagsrelaties);
 
@@ -192,7 +192,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
 
         public void VerrijkPersonenMetGezagIfRequested(List<string> fields, IEnumerable<Persoon> persoonGezagsrelaties, List<GbaPersoon> gezagPersonen, (IPersoonMetGezag persoon, long pl_id) x)
         {
-            if (GezagIsRequested(fields) &&
+            if (GezagHelper.GezagIsRequested(fields) &&
                 !string.IsNullOrWhiteSpace(x.persoon.Burgerservicenummer))
             {
                 var persoonGezagsrelatie = persoonGezagsrelaties
@@ -211,11 +211,6 @@ namespace Rvig.HaalCentraalApi.Personen.Services
                 }
             }
         }
-        
-        private static bool GezagIsRequested(List<string> fields) =>
-            fields.Any(field =>
-                field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) &&
-                !field.StartsWith("indicatieGezagMinderjarige"));
 
         private async Task<List<GbaPersoon>> GetGezagPersonen(List<string> gezagBsns)
         {
@@ -223,6 +218,5 @@ namespace Rvig.HaalCentraalApi.Personen.Services
 
             return gezagPersonen.ToList();
         }
-
     }
 }

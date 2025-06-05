@@ -3,6 +3,7 @@ using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
 using Rvig.HaalCentraalApi.Shared.Validation;
 using Rvig.HaalCentraalApi.Personen.Services;
 using Rvig.HaalCentraalApi.Shared.Controllers;
+using Rvig.HaalCentraalApi.Personen.Helpers;
 
 namespace Rvig.HaalCentraalApi.Personen.Controllers;
 
@@ -11,10 +12,6 @@ public class GbaApiPersonenController : GbaApiBaseController
 {
 	private readonly IGbaPersonenApiService _gbaService;
 	private readonly IGezagService _gezagService;
-    private static bool GezagIsRequested(List<string> fields) =>
-            fields.Any(field =>
-                field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) &&
-                !field.StartsWith("indicatieGezagMinderjarige"));
 
 	public GbaApiPersonenController(IGbaPersonenApiService gbaService, IGezagService gezagService)
 	{
@@ -35,7 +32,7 @@ public class GbaApiPersonenController : GbaApiBaseController
         
 		AddPlIdsToResponseHeaders(plIds);
 
-		if(GezagIsRequested(model.Fields))
+		if(GezagHelper.GezagIsRequested(model.Fields))
 		{
 			var personenResponseMetGezag = await _gezagService.GetGezag(personenResponse, model.Fields, bsns);
 			if (!vraagtBsn)

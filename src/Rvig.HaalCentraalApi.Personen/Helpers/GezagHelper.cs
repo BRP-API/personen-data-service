@@ -2,6 +2,11 @@
 {
     public static class GezagHelper
     {
+        public static bool GezagIsRequested(List<string> fields) =>
+            fields.Any(field =>
+                field.Contains("gezag", StringComparison.CurrentCultureIgnoreCase) &&
+                !field.StartsWith("indicatieGezagMinderjarige"));
+
         public static List<string> GetGezagBsns(List<ApiModels.Gezag.AbstractGezagsrelatie> gezagsrelaties)
         {
             var gezagBsns = new List<string>();

@@ -22,7 +22,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 	private static PersonenFieldsSettings _persoonFieldsSettings => new();
 	private static PersonenBeperktFieldsSettings _persoonBeperktFieldsSettings => new();
 
-	public GbaPersonenApiService(
+    public GbaPersonenApiService(
         IGetAndMapGbaPersonenService getAndMapPersoonService, 
 		IDomeinTabellenRepo domeinTabellenRepo)
 		: base(domeinTabellenRepo)
@@ -98,7 +98,9 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
                 }
 
                 model.Fields = GbaPersonenApiHelper.OpschortingBijhoudingLogicRaadplegen(model.Fields, x.persoon.OpschortingBijhouding);
-				if (!model.Fields.Contains("burgerservicenummer")){
+				
+				if (!model.Fields.Contains("burgerservicenummer") && GezagHelper.GezagIsRequested(model.Fields))
+                {
 					model.Fields.Add("burgerservicenummer");
                 }
 
@@ -150,17 +152,21 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 
             foreach (var x in personenPlIds.Where(x => x.persoon != null))
 			{
-				if (x.persoon is IPersoonMetGezag)
-				{
-					//_gezagService.VerrijkPersonenMetGezagIfRequested(model.Fields, gezag, gezagPersonen, ((IPersoonMetGezag persoon, long pl_id))x);
-				}
+                //if (x.persoon is IPersoonMetGezag)
+                //{
+                //	//_gezagService.VerrijkPersonenMetGezagIfRequested(model.Fields, gezag, gezagPersonen, ((IPersoonMetGezag persoon, long pl_id))x);
+                //}
 
-				x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.Fields, x.persoon.Rni, _persoonBeperktFieldsSettings.GbaFieldsSettings);
+                if (!model.Fields.Contains("burgerservicenummer") && GezagHelper.GezagIsRequested(model.Fields))
+                {
+                    model.Fields.Add("burgerservicenummer");
+                }
+
+                x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.Fields, x.persoon.Rni, _persoonBeperktFieldsSettings.GbaFieldsSettings);
 				if (x.persoon.Verblijfplaats != null)
 				{
 					_gbaPersonenBeperktApiHelper.AddVerblijfplaatsBeperktInOnderzoek(model.Fields, x.persoon.Verblijfplaats);
 				}
-
 
 				T target = ApplyGbaPersoonBeperktScope(x.persoon, model.Fields);
 				_gbaPersonenBeperktApiHelper.RemoveBeperktInOnderzoekFromPersonCategoryIfNoFieldsAreRequested(model.Fields, target);
