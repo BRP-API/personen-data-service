@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using System.Net.Http;
 using Rvig.Data.Base.Gezag.Repositories;
-using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
+using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag.Deprecated;
 
 namespace Rvig.HaalCentraalApi.Personen.Repositories;
 

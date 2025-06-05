@@ -1,13 +1,13 @@
-﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
-using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
+﻿using BRP = Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
+using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag.Deprecated;
 
 namespace Rvig.HaalCentraalApi.Personen.Mappers
 {
     public static class GezagsrelatieMapper
     {
-        public static IEnumerable<ApiModels.BRP.Deprecated.AbstractGezagsrelatie> Map(GezagResponse gezagResponse, List<GbaPersoon> gezagPersonen)
+        public static IEnumerable<BRP.AbstractGezagsrelatie> Map(GezagResponse gezagResponse, List<BRP.GbaPersoon> gezagPersonen)
         {
-            var result = new List<ApiModels.BRP.Deprecated.AbstractGezagsrelatie>();
+            var result = new List<BRP.AbstractGezagsrelatie>();
 
             if (gezagResponse == null) return result;
 
@@ -32,13 +32,13 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             return result;
         }
 
-        private static void MapGezagNietTeBepalen(List<GbaPersoon> gezagPersonen, List<ApiModels.BRP.Deprecated.AbstractGezagsrelatie> result, ApiModels.Gezag.AbstractGezagsrelatie? gezagsrelatie)
+        private static void MapGezagNietTeBepalen(List<BRP.GbaPersoon> gezagPersonen, List<BRP.AbstractGezagsrelatie> result, AbstractGezagsrelatie? gezagsrelatie)
         {
-            if (gezagsrelatie is ApiModels.Gezag.GezagNietTeBepalen gezagNietTeBepalen)
+            if (gezagsrelatie is GezagNietTeBepalen gezagNietTeBepalen)
             {
-                var minderjarige = gezagNietTeBepalen.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, gezagNietTeBepalen.Minderjarige.Burgerservicenummer) : new ApiModels.BRP.Deprecated.Minderjarige();
+                var minderjarige = gezagNietTeBepalen.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, gezagNietTeBepalen.Minderjarige.Burgerservicenummer) : new BRP.Minderjarige();
 
-                result.Add(new ApiModels.BRP.Deprecated.GezagNietTeBepalen
+                result.Add(new BRP.GezagNietTeBepalen
                 {
                     Minderjarige = minderjarige,
                     Toelichting = gezagNietTeBepalen.Toelichting,
@@ -47,13 +47,13 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             }
         }
 
-        private static void MapTijdelijkGeenGezag(List<GbaPersoon> gezagPersonen, List<ApiModels.BRP.Deprecated.AbstractGezagsrelatie> result, ApiModels.Gezag.AbstractGezagsrelatie? gezagsrelatie)
+        private static void MapTijdelijkGeenGezag(List<BRP.GbaPersoon> gezagPersonen, List<BRP.AbstractGezagsrelatie> result, AbstractGezagsrelatie? gezagsrelatie)
         {
-            if (gezagsrelatie is ApiModels.Gezag.TijdelijkGeenGezag tijdelijkGeenGezag)
+            if (gezagsrelatie is TijdelijkGeenGezag tijdelijkGeenGezag)
             {
-                var minderjarige = tijdelijkGeenGezag.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, tijdelijkGeenGezag.Minderjarige.Burgerservicenummer) : new ApiModels.BRP.Deprecated.Minderjarige();
+                var minderjarige = tijdelijkGeenGezag.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, tijdelijkGeenGezag.Minderjarige.Burgerservicenummer) : new BRP.Minderjarige();
 
-                result.Add(new ApiModels.BRP.Deprecated.TijdelijkGeenGezag
+                result.Add(new BRP.TijdelijkGeenGezag
                 {
                     Minderjarige = minderjarige,
                     Toelichting = tijdelijkGeenGezag.Toelichting,
@@ -62,15 +62,15 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             }
         }
 
-        private static void MapVoogdij(List<GbaPersoon> gezagPersonen, List<ApiModels.BRP.Deprecated.AbstractGezagsrelatie> result, ApiModels.Gezag.AbstractGezagsrelatie? gezagsrelatie)
+        private static void MapVoogdij(List<BRP.GbaPersoon> gezagPersonen, List<BRP.AbstractGezagsrelatie> result, AbstractGezagsrelatie? gezagsrelatie)
         {
-            if (gezagsrelatie is ApiModels.Gezag.Voogdij voogdij)
+            if (gezagsrelatie is Voogdij voogdij)
             {
                 var derden = MapPersonenToBekendeDerden(gezagPersonen, voogdij.Derden);
 
-                var minderjarige = voogdij.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, voogdij.Minderjarige.Burgerservicenummer) : new ApiModels.BRP.Deprecated.Minderjarige();
+                var minderjarige = voogdij.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, voogdij.Minderjarige.Burgerservicenummer) : new BRP.Minderjarige();
 
-                result.Add(new ApiModels.BRP.Deprecated.Voogdij
+                result.Add(new BRP.Voogdij
                 {
                     Derden = derden,
                     Minderjarige = minderjarige,
@@ -79,15 +79,15 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             }
         }
 
-        private static void MapGezamenlijkGezag(List<GbaPersoon> gezagPersonen, List<ApiModels.BRP.Deprecated.AbstractGezagsrelatie> result, ApiModels.Gezag.AbstractGezagsrelatie? gezagsrelatie)
+        private static void MapGezamenlijkGezag(List<BRP.GbaPersoon> gezagPersonen, List<BRP.AbstractGezagsrelatie> result, AbstractGezagsrelatie? gezagsrelatie)
         {
-            if (gezagsrelatie is ApiModels.Gezag.GezamenlijkGezag gezamenlijkGezag)
+            if (gezagsrelatie is GezamenlijkGezag gezamenlijkGezag)
             {
-                var ouder = gezamenlijkGezag.Ouder != null ? MapPersoonToGezagOuder(gezagPersonen, gezamenlijkGezag.Ouder.Burgerservicenummer) : new ApiModels.BRP.Deprecated.GezagOuder();
+                var ouder = gezamenlijkGezag.Ouder != null ? MapPersoonToGezagOuder(gezagPersonen, gezamenlijkGezag.Ouder.Burgerservicenummer) : new BRP.GezagOuder();
                 var derde = MapPersoonToDerde(gezagPersonen, gezamenlijkGezag.Derde);
-                var minderjarige = gezamenlijkGezag.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, gezamenlijkGezag.Minderjarige.Burgerservicenummer) : new ApiModels.BRP.Deprecated.Minderjarige();
+                var minderjarige = gezamenlijkGezag.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, gezamenlijkGezag.Minderjarige.Burgerservicenummer) : new BRP.Minderjarige();
 
-                result.Add(new ApiModels.BRP.Deprecated.GezamenlijkGezag
+                result.Add(new BRP.GezamenlijkGezag
                 {
                     Derde = derde,
                     Minderjarige = minderjarige,
@@ -97,15 +97,15 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             }
         }
 
-        private static void MapTweehoofdigOuderlijkGezag(List<GbaPersoon> gezagPersonen, List<ApiModels.BRP.Deprecated.AbstractGezagsrelatie> result, ApiModels.Gezag.AbstractGezagsrelatie? gezagsrelatie)
+        private static void MapTweehoofdigOuderlijkGezag(List<BRP.GbaPersoon> gezagPersonen, List<BRP.AbstractGezagsrelatie> result, AbstractGezagsrelatie? gezagsrelatie)
         {
-            if (gezagsrelatie is ApiModels.Gezag.TweehoofdigOuderlijkGezag tweehoofdigOuderlijkGezag)
+            if (gezagsrelatie is TweehoofdigOuderlijkGezag tweehoofdigOuderlijkGezag)
             {
                 var ouders = tweehoofdigOuderlijkGezag.Ouders?.Select(o => MapPersoonToGezagOuder(gezagPersonen, o.Burgerservicenummer)).ToList();
 
-                var minderjarige = tweehoofdigOuderlijkGezag.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, tweehoofdigOuderlijkGezag.Minderjarige.Burgerservicenummer) : new ApiModels.BRP.Deprecated.Minderjarige();
+                var minderjarige = tweehoofdigOuderlijkGezag.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, tweehoofdigOuderlijkGezag.Minderjarige.Burgerservicenummer) : new BRP.Minderjarige();
 
-                result.Add(new ApiModels.BRP.Deprecated.TweehoofdigOuderlijkGezag
+                result.Add(new BRP.TweehoofdigOuderlijkGezag
                 {
                     Minderjarige = minderjarige,
                     Ouders = ouders,
@@ -114,14 +114,14 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             }
         }
 
-        private static void MapEenhoofdigOuderlijkGezag(List<GbaPersoon> gezagPersonen, List<ApiModels.BRP.Deprecated.AbstractGezagsrelatie> result, ApiModels.Gezag.AbstractGezagsrelatie? gezagsrelatie)
+        private static void MapEenhoofdigOuderlijkGezag(List<BRP.GbaPersoon> gezagPersonen, List<BRP.AbstractGezagsrelatie> result, AbstractGezagsrelatie? gezagsrelatie)
         {
-            if (gezagsrelatie is ApiModels.Gezag.EenhoofdigOuderlijkGezag eenhoofdigOuderlijkGezag)
+            if (gezagsrelatie is EenhoofdigOuderlijkGezag eenhoofdigOuderlijkGezag)
             {
-                var ouder = eenhoofdigOuderlijkGezag.Ouder != null ? MapPersoonToGezagOuder(gezagPersonen, eenhoofdigOuderlijkGezag.Ouder.Burgerservicenummer) : new ApiModels.BRP.Deprecated.GezagOuder();
-                var minderjarige = eenhoofdigOuderlijkGezag.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, eenhoofdigOuderlijkGezag.Minderjarige.Burgerservicenummer) : new ApiModels.BRP.Deprecated.Minderjarige();
+                var ouder = eenhoofdigOuderlijkGezag.Ouder != null ? MapPersoonToGezagOuder(gezagPersonen, eenhoofdigOuderlijkGezag.Ouder.Burgerservicenummer) : new BRP.GezagOuder();
+                var minderjarige = eenhoofdigOuderlijkGezag.Minderjarige != null ? MapPersoonToMinderjarige(gezagPersonen, eenhoofdigOuderlijkGezag.Minderjarige.Burgerservicenummer) : new BRP.Minderjarige();
 
-                result.Add(new ApiModels.BRP.Deprecated.EenhoofdigOuderlijkGezag
+                result.Add(new BRP.EenhoofdigOuderlijkGezag
                 {
                     Minderjarige = minderjarige,
                     Ouder = ouder,
@@ -130,16 +130,16 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             }
         }
 
-        private static ApiModels.BRP.Deprecated.GezagOuder MapPersoonToGezagOuder(List<GbaPersoon> personen, string bsn)
+        private static BRP.GezagOuder MapPersoonToGezagOuder(List<BRP.GbaPersoon> personen, string bsn)
         {
             var persoon = personen.FirstOrDefault(p => p.Burgerservicenummer == bsn);
 
-            if (persoon == null) return new ApiModels.BRP.Deprecated.GezagOuder()
+            if (persoon == null) return new BRP.GezagOuder()
             {
                 Burgerservicenummer = bsn
             };
 
-            return new ApiModels.BRP.Deprecated.GezagOuder
+            return new BRP.GezagOuder
             {
                 Burgerservicenummer = persoon.Burgerservicenummer,
                 Geslacht = persoon.Geslacht,
@@ -147,16 +147,16 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             };
         }
 
-        private static ApiModels.BRP.Deprecated.Minderjarige MapPersoonToMinderjarige(List<GbaPersoon> personen, string bsn)
+        private static BRP.Minderjarige MapPersoonToMinderjarige(List<BRP.GbaPersoon> personen, string bsn)
         {
             var persoon = personen.FirstOrDefault(p => p.Burgerservicenummer == bsn);
 
-            if (persoon == null) return new ApiModels.BRP.Deprecated.Minderjarige()
+            if (persoon == null) return new BRP.Minderjarige()
             {
                 Burgerservicenummer = bsn
             };
 
-            return new ApiModels.BRP.Deprecated.Minderjarige
+            return new BRP.Minderjarige
             {
                 Burgerservicenummer = persoon.Burgerservicenummer,
                 Geboorte = MapGeboorte(persoon),
@@ -165,16 +165,16 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             };
         }
 
-        private static List<ApiModels.BRP.Deprecated.BekendeDerde>? MapPersonenToBekendeDerden(List<GbaPersoon> personen, IEnumerable<ApiModels.Gezag.Derde>? derden)
+        private static List<BRP.BekendeDerde>? MapPersonenToBekendeDerden(List<BRP.GbaPersoon> personen, IEnumerable<Derde>? derden)
         {
             if (derden == null) return null;
 
-            var retval = new List<ApiModels.BRP.Deprecated.BekendeDerde>();
+            var retval = new List<BRP.BekendeDerde>();
 
             foreach (var gezagDerde in derden)
             {
                 var brpDerde = MapPersoonToDerde(personen, gezagDerde);
-                if(brpDerde is ApiModels.BRP.Deprecated.BekendeDerde bekendeDerde)
+                if(brpDerde is BRP.BekendeDerde bekendeDerde)
                 {
                     retval.Add(bekendeDerde);
                 }
@@ -183,21 +183,21 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             return retval;
         }
 
-        private static ApiModels.BRP.Deprecated.Derde? MapPersoonToDerde(List<GbaPersoon> personen, ApiModels.Gezag.Derde? derde)
+        private static BRP.Derde? MapPersoonToDerde(List<BRP.GbaPersoon> personen, Derde? derde)
         {
             if (derde == null) return null;
-            if (derde is ApiModels.Gezag.OnbekendeDerde) return new ApiModels.BRP.Deprecated.OnbekendeDerde();
+            if (derde is OnbekendeDerde) return new BRP.OnbekendeDerde();
 
-            var bsn = ((ApiModels.Gezag.BekendeDerde)derde).Burgerservicenummer;
+            var bsn = ((BekendeDerde)derde).Burgerservicenummer;
 
             var persoon = personen.FirstOrDefault(p => p.Burgerservicenummer == bsn);
 
-            if (persoon == null) return new ApiModels.BRP.Deprecated.BekendeDerde()
+            if (persoon == null) return new BRP.BekendeDerde()
             {
                 Burgerservicenummer = bsn,
             };
 
-            return new ApiModels.BRP.Deprecated.BekendeDerde
+            return new BRP.BekendeDerde
             {
                 Burgerservicenummer = persoon.Burgerservicenummer,
                 Geslacht = persoon.Geslacht,
@@ -205,9 +205,9 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             };
         }
 
-        private static NaamBasis? MapNaam(GbaPersoon persoon)
+        private static BRP.NaamBasis? MapNaam(BRP.GbaPersoon persoon)
         {
-            return persoon.Naam != null ? new NaamBasis
+            return persoon.Naam != null ? new BRP.NaamBasis
             {
                 Voornamen = persoon.Naam?.Voornamen,
                 AdellijkeTitelPredicaat = persoon.Naam?.AdellijkeTitelPredicaat,
@@ -216,9 +216,9 @@ namespace Rvig.HaalCentraalApi.Personen.Mappers
             } : null;
         }
 
-        private static GeboorteBasis? MapGeboorte(GbaPersoon persoon)
+        private static BRP.GeboorteBasis? MapGeboorte(BRP.GbaPersoon persoon)
         {
-            return persoon.Geboorte != null ? new GeboorteBasis()
+            return persoon.Geboorte != null ? new BRP.GeboorteBasis()
             {
                 Datum = persoon.Geboorte?.Datum
             } : null;

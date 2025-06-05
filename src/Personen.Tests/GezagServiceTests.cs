@@ -1,17 +1,17 @@
 ﻿using NSubstitute;
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
-using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
+using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag.Deprecated;
 using Rvig.HaalCentraalApi.Personen.Interfaces;
 using Rvig.HaalCentraalApi.Personen.Repositories;
 using Rvig.HaalCentraalApi.Personen.Services;
-using Gezag = Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
+using Gezag = Rvig.HaalCentraalApi.Personen.ApiModels.Gezag.Deprecated;
 
 namespace Personen.Tests
 {
 
     public class GezagServiceTests
     {
-        private readonly GezagService _gezagService;
+        private readonly GezagServiceDeprecated _gezagService;
         private readonly IRepoGezagsrelatie _gezagRepositoryMock;
         private readonly IGezagPersonenService _personenServiceMock;
 
@@ -19,7 +19,7 @@ namespace Personen.Tests
         {
             _personenServiceMock = Substitute.For<IGezagPersonenService>();
             _gezagRepositoryMock = Substitute.For<IRepoGezagsrelatie>();
-            _gezagService = new GezagService(_personenServiceMock, null, _gezagRepositoryMock);
+            _gezagService = new GezagServiceDeprecated(_personenServiceMock, null, _gezagRepositoryMock);
         }
 
         [Fact]

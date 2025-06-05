@@ -20,30 +20,17 @@
 #pragma warning disable 8625 // Disable "CS8625 Cannot convert null literal to non-nullable reference type"
 #pragma warning disable 8765 // Disable "CS8765 Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes)."
 
-namespace Brp.Gezag.Mock.Generated
+namespace Rvig.HaalCentraalApi.Personen.ApiModels.Gezag.Deprecated
 {
     using System = global::System;
 
-    [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
-
-    public abstract class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
-    {
-        /// <remarks>
-        /// De volgende situaties kunnen (gelijktijdig) voorkomen:
-        /// <br/>- Bij aanwezigheid van juridische kinderen wordt het gezag van deze persoon over diens kinderen teruggegeven. Het kan zijn dat omwille van het reduceren van BRP bevragingen de leeftijd van de kinderen uit de lijst met kinderen van de ouder wordt gebruikt om kinderen die al de leeftijd van 18 hebben bereikt niet te bevragen. dit heeft wel impact op de als minderjarige overleden kinderen; daar wordt dan geen gezagsuitspraak gedaan.
-        /// <br/>- Is de persoon minderjarig dan wordt het gezag van de ouder(s) over deze persoon teruggegeven.
-        /// </remarks>
-        /// <returns>OK</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("api/v1/opvragenBevoegdheidTotGezag")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<GezagResponse>> OpvragenBevoegdheidTotGezag([Microsoft.AspNetCore.Mvc.FromHeader] string oIN, [Microsoft.AspNetCore.Mvc.FromBody] GezagRequest body);
-
-    }
+    
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class GezagRequest
     {
         [Newtonsoft.Json.JsonProperty("burgerservicenummer", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.List<string> Burgerservicenummer { get; set; }
+        public System.Collections.Generic.ICollection<string> Burgerservicenummer { get; set; }
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
 
@@ -60,7 +47,7 @@ namespace Brp.Gezag.Mock.Generated
     public partial class GezagResponse
     {
         [Newtonsoft.Json.JsonProperty("personen", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.List<Persoon> Personen { get; set; }
+        public System.Collections.Generic.ICollection<Persoon> Personen { get; set; }
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
 
@@ -80,7 +67,7 @@ namespace Brp.Gezag.Mock.Generated
         public string Burgerservicenummer { get; set; }
 
         [Newtonsoft.Json.JsonProperty("gezag", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public Gezag Gezag { get; set; }
+        public System.Collections.Generic.ICollection<AbstractGezagsrelatie> Gezag { get; set; }
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
 
@@ -90,12 +77,6 @@ namespace Brp.Gezag.Mock.Generated
             get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
             set { _additionalProperties = value; }
         }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Gezag : System.Collections.ObjectModel.Collection<AbstractGezagsrelatie>
-    {
 
     }
 
@@ -150,7 +131,7 @@ namespace Brp.Gezag.Mock.Generated
     public partial class TweehoofdigOuderlijkGezag : AbstractGezagsrelatie
     {
         [Newtonsoft.Json.JsonProperty("ouders", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.List<GezagOuder> Ouders { get; set; }
+        public System.Collections.Generic.ICollection<GezagOuder> Ouders { get; set; }
 
     }
 
@@ -164,6 +145,7 @@ namespace Brp.Gezag.Mock.Generated
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonInheritanceConverter), "type")]
     [JsonInheritanceAttribute("BekendeDerde", typeof(BekendeDerde))]
+    [JsonInheritanceAttribute("OnbekendeDerde", typeof(OnbekendeDerde))]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class Derde
     {
@@ -187,6 +169,11 @@ namespace Brp.Gezag.Mock.Generated
 
     }
 
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class OnbekendeDerde : Derde
+    {
+    }
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class GezamenlijkGezag : AbstractGezagsrelatie
     {
@@ -202,7 +189,7 @@ namespace Brp.Gezag.Mock.Generated
     public partial class Voogdij : AbstractGezagsrelatie
     {
         [Newtonsoft.Json.JsonProperty("derden", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.List<BekendeDerde> Derden { get; set; }
+        public System.Collections.Generic.ICollection<BekendeDerde> Derden { get; set; }
 
     }
 
