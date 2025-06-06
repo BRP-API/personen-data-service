@@ -1,210 +1,81 @@
-# language: nl
-@api
-Functionaliteit: gezagsrelaties vragen met fields
+#language: nl
 
-  Regel: Het vragen van één of meerdere velden van 'gezag' levert alle velden van 'gezag' die van toepassing zijn op de persoon
+Functionaliteit: vragen van gezagsrelaties bij raadplegen met burgerservicenummer
 
-    Abstract Scenario: gezag vragen met fields <fields> geeft alle van velden van alle soorten gezag van toepassing op de persoon
-      Gegeven de persoon met burgerservicenummer '000000048' heeft een 'kind' met de volgende gegevens
-        | burgerservicenummer (01.20) |
-        |                   000000012 |
-      En de persoon heeft een 'kind' met de volgende gegevens
-        | burgerservicenummer (01.20) |
-        |                   000000024 |
-      En de persoon heeft een 'partner' met de volgende gegevens
-        | burgerservicenummer (01.20) |
-        |                   000000061 |
-      En voor de persoon geldt het volgende gezag
-        | naam                             | waarde                   |
-        | type                             | EenhoofdigOuderlijkGezag |
-        | minderjarige.burgerservicenummer |                000000012 |
-        | ouder.burgerservicenummer        |                000000048 |
-      En voor de persoon geldt ook het volgende gezag
-        | naam                             | waarde                    |
-        | type                             | TweehoofdigOuderlijkGezag |
-        | minderjarige.burgerservicenummer |                 000000024 |
-      En het gezag heeft de volgende ouders
-        | burgerservicenummer |
-        |           000000048 |
-        |           000000061 |
-      En voor de persoon geldt ook het volgende gezag
-        | naam                             | waarde           |
-        | type                             | GezamenlijkGezag |
-        | minderjarige.burgerservicenummer |        000000036 |
-        | ouder.burgerservicenummer        |        000000061 |
-        | derde.type                       | BekendeDerde     |
-        | derde.burgerservicenummer        |        000000048 |
-      En voor de persoon geldt ook het volgende gezag
-        | naam                             | waarde             |
-        | type                             | GezagNietTeBepalen |
-        | toelichting                      | test               |
-        | minderjarige.burgerservicenummer |          000000052 |
-      En voor de persoon geldt ook het volgende gezag
-        | naam                             | waarde    |
-        | type                             | Voogdij   |
-        | minderjarige.burgerservicenummer | 000000060 |
-      En het gezag heeft de volgende derden
-        | type         | burgerservicenummer |
-        | BekendeDerde |           000000048 |
-      En voor de persoon geldt ook het volgende gezag
-        | naam                             | waarde             |
-        | type                             | TijdelijkGeenGezag |
-        | toelichting                      | test               |
-        | minderjarige.burgerservicenummer |          000000063 |
-      Als personen wordt gezocht met de volgende parameters
-        | naam                | waarde                          |
-        | type                | RaadpleegMetBurgerservicenummer |
-        | burgerservicenummer |                       000000048 |
-        | fields              | <fields>                        |
-      Dan heeft de response een persoon met een 'gezag' met de volgende gegevens
-        | naam                             | waarde                   |
-        | type                             | EenhoofdigOuderlijkGezag |
-        | minderjarige.burgerservicenummer |                000000012 |
-        | ouder.burgerservicenummer        |                000000048 |
-      En heeft de persoon een 'gezag' met de volgende gegevens
-        | naam                             | waarde                    |
-        | type                             | TweehoofdigOuderlijkGezag |
-        | minderjarige.burgerservicenummer |                 000000024 |
-      En heeft 'gezag' een 'ouder' met de volgende gegevens
-        | naam                | waarde    |
-        | burgerservicenummer | 000000048 |
-      En heeft 'gezag' een 'ouder' met de volgende gegevens
-        | naam                | waarde    |
-        | burgerservicenummer | 000000061 |
-      En heeft de persoon een 'gezag' met de volgende gegevens
-        | naam                             | waarde           |
-        | type                             | GezamenlijkGezag |
-        | minderjarige.burgerservicenummer |        000000036 |
-        | ouder.burgerservicenummer        |        000000061 |
-        | derde.type                       | BekendeDerde     |
-        | derde.burgerservicenummer        |        000000048 |
-      En heeft de persoon een 'gezag' met de volgende gegevens
-        | naam                             | waarde             |
-        | type                             | GezagNietTeBepalen |
-        | toelichting                      | test               |
-        | minderjarige.burgerservicenummer |          000000052 |
-      En heeft de persoon een 'gezag' met de volgende gegevens
-        | naam                             | waarde    |
-        | type                             | Voogdij   |
-        | minderjarige.burgerservicenummer | 000000060 |
-      En heeft 'gezag' een 'derde' met de volgende gegevens
-        | naam                | waarde       |
-        | type                | BekendeDerde |
-        | burgerservicenummer |    000000048 |
-      En heeft de persoon een 'gezag' met de volgende gegevens
-        | naam                             | waarde             |
-        | type                             | TijdelijkGeenGezag |
-        | toelichting                      | test               |
-        | minderjarige.burgerservicenummer |          000000063 |
+  Scenario: geleverde persoon heeft eenhoofdig ouderlijk gezag
+    Gegeven de minderjarige 'P1'
+    En de meerderjarige 'P2'
+    En 'P1' heeft de volgende gezagsrelaties
+    * eenhoofdig ouderlijk gezag over 'P1' met ouder 'P2'
+    Als 'gezag' wordt gevraagd van personen gezocht met burgerservicenummer van 'P1'
+    Dan heeft 'P1' de volgende gezagsrelaties
+    * het gezag over 'P1' is eenhoofdig ouderlijk gezag met ouder 'P2'
 
-      Voorbeelden:
-        | fields                                     |
-        | gezag                                      |
-        | gezag.type                                 |
-        | gezag.minderjarige                         |
-        | gezag.ouders                               |
-        | gezag.ouder                                |
-        | gezag.derde                                |
-        | gezag.derden                               |
-        | gezag.minderjarige.burgerservicenummer     |
-        | gezag.ouders.burgerservicenummer           |
-        | gezag.ouder.burgerservicenummer            |
-        | gezag.derde.burgerservicenummer            |
-        | gezag.derden.burgerservicenummer           |
-        | gezag.ouders,gezag.ouder                   |
-        | gezag.type,gezag.minderjarige,gezag.ouders |
+  @deprecated # tag kan weg als GezagMock kan switchen tussen deprecated en niet-deprecated gezagsrelaties
+  Scenario: geleverde persoon heeft gezamenlijk ouderlijk gezag
+    Gegeven de minderjarige 'P1'
+    En de meerderjarige 'P2'
+    En de meerderjarige 'P3'
+    En 'P1' heeft de volgende gezagsrelaties
+    * gezamenlijk ouderlijk gezag over 'P1' met ouder 'P2' en ouder 'P3'
+    Als 'gezag' wordt gevraagd van personen gezocht met burgerservicenummer van 'P1'
+    Dan heeft 'P1' de volgende gezagsrelaties
+    * het gezag over 'P1' is gezamenlijk ouderlijk gezag met ouder 'P2' en ouder 'P3'
 
-    Abstract Scenario: gezag vragen met fields <fields> dat niet van toepassing is op de persoon geeft alle velden van gezag die wel van toepassing zijn op de persoon
-      Gegeven de persoon met burgerservicenummer '000000012' heeft een ouder '1' met de volgende gegevens
-        | burgerservicenummer (01.20) |
-        |                   000000048 |
-      En voor de persoon geldt het volgende gezag
-        | naam                             | waarde                   |
-        | type                             | EenhoofdigOuderlijkGezag |
-        | minderjarige.burgerservicenummer |                000000012 |
-        | ouder.burgerservicenummer        |                000000048 |
-      Als personen wordt gezocht met de volgende parameters
-        | naam                | waarde                          |
-        | type                | RaadpleegMetBurgerservicenummer |
-        | burgerservicenummer |                       000000012 |
-        | fields              | <fields>                        |
-      Dan heeft de response een persoon met een 'gezag' met de volgende gegevens
-        | naam                             | waarde                   |
-        | type                             | EenhoofdigOuderlijkGezag |
-        | minderjarige.burgerservicenummer |                000000012 |
-        | ouder.burgerservicenummer        |                000000048 |
+  Scenario: geleverde persoon heeft gezamenlijk gezag
+    Gegeven de minderjarige 'P1'
+    En de meerderjarige 'P2'
+    En de meerderjarige 'P3'
+    En 'P1' heeft de volgende gezagsrelaties
+    * gezamenlijk gezag over 'P1' met ouder 'P2' en derde 'P3'
+    Als 'gezag' wordt gevraagd van personen gezocht met burgerservicenummer van 'P1'
+    Dan heeft 'P1' de volgende gezagsrelaties
+    * het gezag over 'P1' is gezamenlijk gezag met ouder 'P2' en derde 'P3'
 
-      Voorbeelden:
-        | fields                           |
-        | gezag.ouders                     |
-        | gezag.derde                      |
-        | gezag.derden                     |
-        | gezag.ouders.burgerservicenummer |
-        | gezag.derde.burgerservicenummer  |
-        | gezag.derden.burgerservicenummer |
-        | gezag.ouders,gezag.derden        |
+  Scenario: geleverde persoon heeft gezamenlijk gezag met onbekende derde
+    Gegeven de minderjarige 'P1'
+    En de meerderjarige 'P2'
+    En 'P1' heeft de volgende gezagsrelaties
+    * gezamenlijk gezag over 'P1' met ouder 'P2' en een onbekende derde
+    Als 'gezag' wordt gevraagd van personen gezocht met burgerservicenummer van 'P1'
+    Dan heeft 'P1' de volgende gezagsrelaties
+    * het gezag over 'P1' is gezamenlijk gezag met ouder 'P2' en een onbekende derde
 
-    Scenario: er is gezag van toepassing op de persoon, maar dit wordt niet gevraagd
-      Gegeven de persoon met burgerservicenummer '000000048' heeft een 'kind' met de volgende gegevens
-        | burgerservicenummer (01.20) |
-        |                   000000012 |
-      En de persoon heeft een 'kind' met de volgende gegevens
-        | burgerservicenummer (01.20) |
-        |                   000000024 |
-      En de persoon heeft een 'partner' met de volgende gegevens
-        | burgerservicenummer (01.20) |
-        |                   000000061 |
-      En voor de persoon geldt het volgende gezag
-        | naam                             | waarde                   |
-        | type                             | EenhoofdigOuderlijkGezag |
-        | minderjarige.burgerservicenummer |                000000012 |
-        | ouder.burgerservicenummer        |                000000048 |
-      Als personen wordt gezocht met de volgende parameters
-        | naam                | waarde                          |
-        | type                | RaadpleegMetBurgerservicenummer |
-        | burgerservicenummer |                       000000048 |
-        | fields              | burgerservicenummer             |
-      Dan heeft de response een persoon met de volgende gegevens
-        | naam                | waarde    |
-        | burgerservicenummer | 000000048 |
+  Scenario: geleverde persoon heeft voogdij
+    Gegeven de minderjarige 'P1'
+    En 'P1' heeft de volgende gezagsrelaties
+    * voogdij over 'P1'
+    Als 'gezag' wordt gevraagd van personen gezocht met burgerservicenummer van 'P1'
+    Dan heeft 'P1' de volgende gezagsrelaties
+    * het gezag over 'P1' is voogdij
 
-    @fout-case
-    Scenario: De fields parameter bevat het pad naar een niet bestaand veld in gezag
-      Als personen wordt gezocht met de volgende parameters
-        | naam                | waarde                          |
-        | type                | RaadpleegMetBurgerservicenummer |
-        | burgerservicenummer |                       000000048 |
-        | fields              | gezag.bestaatNiet               |
-      Dan heeft de response de volgende gegevens
-        | naam     | waarde                                                      |
-        | type     | https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1 |
-        | title    | Een of meerdere parameters zijn niet correct.               |
-        | status   |                                                         400 |
-        | detail   | De foutieve parameter(s) zijn: fields[0].                   |
-        | code     | paramsValidation                                            |
-        | instance | /haalcentraal/api/brp/personen                              |
-      En heeft de response invalidParams met de volgende gegevens
-        | code   | name      | reason                                       |
-        | fields | fields[0] | Parameter bevat een niet bestaande veldnaam. |
+  Scenario: geleverde persoon heeft voogdij met derde
+    Gegeven de minderjarige 'P1'
+    En de meerderjarige 'P2'
+    En 'P1' heeft de volgende gezagsrelaties
+    * voogdij over 'P1' met derde 'P2'
+    Als 'gezag' wordt gevraagd van personen gezocht met burgerservicenummer van 'P1'
+    Dan heeft 'P1' de volgende gezagsrelaties
+    * het gezag over 'P1' is voogdij met derde 'P2'
 
-  Regel: Het toelichting veld bij een 'niet te bepalen' gezagsrelatie wordt niet geleverd
+  Scenario: geleverde persoon heeft tijdelijk geen gezag
+    Gegeven de minderjarige 'P1'
+    En 'P1' heeft de volgende gezagsrelaties
+    * tijdelijk geen gezag over 'P1' met de toelichting 'dit is de reden dat er tijdelijk geen gezag is'
+    Als 'gezag' wordt gevraagd van personen gezocht met burgerservicenummer van 'P1'
+    Dan heeft 'P1' de volgende gezagsrelaties
+    * is het gezag over 'P1' tijdelijk geen gezag met de toelichting 'dit is de reden dat er tijdelijk geen gezag is'
 
-    Scenario: Gezag kan niet worden bepaald voor de gevraagde persoon en de response bevat een toelichting
-      Gegeven de persoon met burgerservicenummer '000000048' heeft een 'kind' met de volgende gegevens
-        | burgerservicenummer (01.20) |
-        |                   000000012 |
-      En voor de persoon geldt het volgende gezag
-        | naam                             | waarde             |
-        | type                             | GezagNietTeBepalen |
-        | toelichting                      | test               |
-        | minderjarige.burgerservicenummer |          000000052 |
-      Als personen wordt gezocht met de volgende parameters
-        | naam                | waarde                          |
-        | type                | RaadpleegMetBurgerservicenummer |
-        | burgerservicenummer |                       000000048 |
-        | fields              | gezag                           |
-      Dan heeft de response een persoon met een 'gezag' met de volgende gegevens
-        | naam                             | waarde             |
-        | type                             | GezagNietTeBepalen |
-        | toelichting                      | test               |
-        | minderjarige.burgerservicenummer |          000000052 |
+  Scenario: gezag van geleverde persoon is niet te bepalen
+    Gegeven de minderjarige 'P1'
+    En 'P1' heeft de volgende gezagsrelaties
+    * gezag over 'P1' is niet te bepalen met de toelichting 'dit is de reden dat het gezag niet te bepalen is'
+    Als 'gezag' wordt gevraagd van personen gezocht met burgerservicenummer van 'P1'
+    Dan heeft 'P1' de volgende gezagsrelaties
+    * is het gezag over 'P1' niet te bepalen met de toelichting 'dit is de reden dat het gezag niet te bepalen is'
+
+  Scenario: geleverde persoon heeft geen gezagsrelaties
+    Gegeven de minderjarige 'P1'
+    En 'P1' heeft geen gezaghouder
+    Als 'gezag' wordt gevraagd van personen gezocht met burgerservicenummer van 'P1'
+    Dan heeft 'P1' geen gezaghouder
