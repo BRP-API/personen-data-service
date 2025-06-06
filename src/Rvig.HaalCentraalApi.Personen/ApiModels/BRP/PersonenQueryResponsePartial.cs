@@ -24,11 +24,28 @@ namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP
 
             foreach (var sourceProp in sourceProps)
             {
-                if (string.Equals(sourceProp.Name, "gezag", StringComparison.OrdinalIgnoreCase))
+                var targetProp = targetProps.FirstOrDefault(p => p.Name == sourceProp.Name && p.CanWrite);
+                if (targetProp == null)
                     continue;
 
-                var targetProp = targetProps.FirstOrDefault(p => p.Name == sourceProp.Name && p.PropertyType == sourceProp.PropertyType && p.CanWrite);
-                if (targetProp != null)
+                if (sourceProp.Name == "Personen" && sourceProp.PropertyType.IsGenericType)
+                {
+                    var sourceList = sourceProp.GetValue(response) as IEnumerable;
+                    if (sourceList != null)
+                    {
+                        var targetListType = targetProp.PropertyType.GetGenericArguments().First();
+                        var targetList = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(targetListType));
+
+                        foreach (var sourcePerson in sourceList)
+                        {
+                            var mappedPerson = MapGbaPersoonWithoutGezag(sourcePerson, targetListType);
+                            if (mappedPerson != null)
+                                targetList.Add(mappedPerson);
+                        }
+                        targetProp.SetValue(result, targetList);
+                    }
+                }
+                else
                 {
                     var value = sourceProp.GetValue(response);
                     targetProp.SetValue(result, value);
@@ -36,6 +53,32 @@ namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP
             }
 
             return (PersonenQueryResponse)result;
+        }
+
+        private static object? MapGbaPersoonWithoutGezag(object sourcePerson, Type targetType)
+        {
+            if (sourcePerson == null) return null;
+
+            var result = Activator.CreateInstance(targetType);
+            var sourceProps = sourcePerson.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var targetProps = targetType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (var sourceProp in sourceProps)
+            {
+                var targetProp = targetProps.FirstOrDefault(p => p.Name == sourceProp.Name && p.CanWrite);
+
+                if (targetProp != null)
+                {
+                    if (string.Equals(sourceProp.Name, "gezag", StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetProp.SetValue(result, new List<Gezagsrelatie>());
+                        continue;
+                    }
+                    var value = sourceProp.GetValue(sourcePerson);
+                    targetProp.SetValue(result, value);
+                }
+            }
+            return result;
         }
     }
 }

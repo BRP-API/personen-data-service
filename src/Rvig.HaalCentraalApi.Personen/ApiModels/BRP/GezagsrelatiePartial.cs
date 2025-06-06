@@ -111,21 +111,13 @@ public partial class Gezagsrelatie
                 Voornamen = m.Naam?.Voornamen,
                 Voorvoegsel = m.Naam?.Voorvoegsel,
                 Geslachtsnaam = m.Naam?.Geslachtsnaam,
-                AdellijkeTitelPredicaat = new()
-                {
-                    Code = m.Naam?.AdellijkeTitelPredicaat?.Code,
-                    Omschrijving = m.Naam?.AdellijkeTitelPredicaat?.Omschrijving
-                }
+                AdellijkeTitelPredicaat = MapAdellijkeTitelPredicaatType(m.Naam?.AdellijkeTitelPredicaat)
             },
             Geboorte = new()
             {
                 Datum = m.Geboorte?.Datum
             },
-            Geslacht = new()
-            {
-                Code = m.Geslacht?.Code,
-                Omschrijving = m.Geslacht?.Omschrijving
-            }
+            Geslacht = MapGeslacht(m.Geslacht)
         };
     }
 
@@ -139,13 +131,28 @@ public partial class Gezagsrelatie
                 Voornamen = o.Naam?.Voornamen,
                 Voorvoegsel = o.Naam?.Voorvoegsel,
                 Geslachtsnaam = o.Naam?.Geslachtsnaam,
-                AdellijkeTitelPredicaat = new()
-                {
-                    Code = o.Naam?.AdellijkeTitelPredicaat?.Code,
-                    Omschrijving = o.Naam?.AdellijkeTitelPredicaat?.Omschrijving
-                }
-            }
+                AdellijkeTitelPredicaat = MapAdellijkeTitelPredicaatType(o.Naam?.AdellijkeTitelPredicaat)
+            },
+            Geslacht = MapGeslacht(o.Geslacht)
         };
+    }
+
+    private static AdellijkeTitelPredicaatType? MapAdellijkeTitelPredicaatType(Gezag.AdellijkeTitelPredicaatType? adellijkeTitelPredicaatType)
+    {
+        return adellijkeTitelPredicaatType != null ? new()
+        {
+            Code = adellijkeTitelPredicaatType.Code,
+            Omschrijving = adellijkeTitelPredicaatType.Omschrijving
+        } : null;
+    }
+
+    private static Geslachtsaanduiding? MapGeslacht(Gezag.Geslachtsaanduiding geslacht)
+    {
+        return geslacht != null ? new()
+        {
+            Code = geslacht.Code,
+            Omschrijving = geslacht.Omschrijving
+        } : null;
     }
 
     private static Derde MapDerde(Gezag.Derde derde)
@@ -168,12 +175,9 @@ public partial class Gezagsrelatie
                 Voornamen = bekendeDerde.Naam?.Voornamen,
                 Voorvoegsel = bekendeDerde.Naam?.Voorvoegsel,
                 Geslachtsnaam = bekendeDerde.Naam?.Geslachtsnaam,
-                AdellijkeTitelPredicaat = new()
-                {
-                    Code = bekendeDerde.Naam?.AdellijkeTitelPredicaat?.Code,
-                    Omschrijving = bekendeDerde.Naam?.AdellijkeTitelPredicaat?.Omschrijving
-                }
-            }
+                AdellijkeTitelPredicaat = MapAdellijkeTitelPredicaatType(bekendeDerde.Naam?.AdellijkeTitelPredicaat)
+            },
+            Geslacht = MapGeslacht(bekendeDerde.Geslacht)
         };
     }
 }
