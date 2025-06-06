@@ -1,24 +1,24 @@
-﻿using Brp.Gezag.Mock.Generated;
+﻿using Brp.Gezag.Mock.Generated.Deprecated;
 using GezagMock.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
-using ControllerBase = Brp.Gezag.Mock.Generated.ControllerBase;
+using ControllerBase = Brp.Gezag.Mock.Generated.Deprecated.ControllerBase;
 
 namespace GezagMock.Controllers
 {
     [ApiController]
-    [Route("api/v2")]
-    public class GezagsrelatieController : ControllerBase
+    [Route("api/v1")]
+    public class GezagsrelatieControllerDeprecated : ControllerBase
     {
-        private readonly GezagsrelatieRepository _repository;
+        private readonly GezagsrelatieRepositoryDeprecated _repository;
 
-        public GezagsrelatieController(GezagsrelatieRepository repository)
+        public GezagsrelatieControllerDeprecated(GezagsrelatieRepositoryDeprecated repository)
         {
             _repository = repository;
         }
 
         [HttpPost("OpvragenBevoegdheidTotGezag")]
-        public override async Task<ActionResult<GezagResponse>> OpvragenBevoegdheidTotGezag([FromHeader(Name = "Accept-Gezag-Version")] AcceptGezagVersion accept_Gezag_Version, [FromBody] GezagRequest body)
+        public override async Task<ActionResult<GezagResponse>> OpvragenBevoegdheidTotGezag([FromHeader] string? oIN, [FromBody] GezagRequest body)
         {
             if (!ModelState.IsValid)
             {

@@ -4,6 +4,7 @@ sed -i '' 's/^\([[:space:]]*\)\(properties\)/\1additionalProperties: false\n&/g'
 sed -i '' 's/^\([[:space:]]*\)\(properties\)/\1additionalProperties: false\n&/g' ./specificatie/resolved/openapi-v1.yaml
 
 npx nswag run src/GezagMock/server.nswag
+npx nswag run src/GezagMock/serverDeprecated.nswag
 npx nswag run src/DataTransferObjects.nswag
 npx nswag run src/DataTransferObjectsDeprecated.nswag
 npx nswag run src/GezagApiDtos.nswag

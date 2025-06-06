@@ -3,7 +3,7 @@
   "defaultVariables": null,
   "documentGenerator": {
     "fromDocument": {
-      "url": "../../specificatie/brp-api-gezag/resolved/openapi.yaml",
+      "url": "../../specificatie/brp-api-gezag/openapi.yaml",
       "output": null,
       "newLineBehavior": "Auto"
     }
@@ -33,7 +33,7 @@
       "wrapResponseMethods": [],
       "generateResponseClasses": true,
       "responseClass": "SwaggerResponse",
-      "namespace": "Brp.Gezag.Mock.Generated",
+      "namespace": "Brp.Gezag.Mock.Generated.Deprecated",
       "requiredPropertiesMustBeDefined": true,
       "dateType": "System.DateTimeOffset",
       "jsonConverters": null,
@@ -67,7 +67,7 @@
       "templateDirectory": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "Generated/Generated.cs",
+      "output": "Generated/Deprecated/Generated.cs",
       "newLineBehavior": "Auto"
     }
   }

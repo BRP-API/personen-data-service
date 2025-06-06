@@ -1,5 +1,6 @@
 using Brp.Shared.Infrastructure.Logging;
 using Brp.Shared.Infrastructure.Utils;
+using GezagMock.Middleware;
 using GezagMock.Repositories;
 using Serilog;
 
@@ -21,6 +22,7 @@ try
     builder.Services.AddControllers().AddNewtonsoftJson();
 
     builder.Services.AddScoped<GezagsrelatieRepository>();
+    builder.Services.AddScoped<GezagsrelatieRepositoryDeprecated>();
 
     var app = builder.Build();
 
@@ -31,6 +33,8 @@ try
     app.UseAuthorization();
 
     app.MapControllers();
+    
+    app.UseMiddleware<VersionRoutingMiddleware>();
 
     app.Run();
 }
