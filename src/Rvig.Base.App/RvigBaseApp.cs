@@ -21,6 +21,7 @@ using Rvig.HaalCentraalApi.Shared.Exceptions;
 using Rvig.Data.Base.WebApi;
 using Serilog;
 using Brp.Shared.Infrastructure.ProblemDetails;
+using Rvig.HaalCentraalApi.Personen.Middleware;
 
 namespace Rvig.Base.App;
 
@@ -101,7 +102,9 @@ public static class RvigBaseApp
 			app.SetupSerilogRequestLogging();
 			app.UseMiddleware<UnhandledExceptionHandler>();
 
-			app.UseExceptionHandler(new ExceptionHandlerOptions
+			app.UseMiddleware<GbaApiVersionRoutingMiddleware>();
+
+            app.UseExceptionHandler(new ExceptionHandlerOptions
 			{
 				AllowStatusCode404Response = true,
 				ExceptionHandlingPath = "/error"
