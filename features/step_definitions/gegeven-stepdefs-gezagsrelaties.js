@@ -80,53 +80,102 @@ function gegevenDePersoonHeeftGezagsrelaties(aanduiding) {
     }
 }
 
+function deleteNietDeprecatedGezagsrelatieProperties(context, gezag) {
+    if(context.isDeprecatedScenario) {
+        delete gezag.minderjarige.geboorte;
+        delete gezag.minderjarige.naam;
+        if(gezag.ouder) {
+            delete gezag.ouder.naam;
+        }
+        if(gezag.ouders) {
+            gezag.ouders.forEach(o => delete o.naam);
+        }
+        if(gezag.derde) {
+            delete gezag.derde.naam;
+        }
+        if(gezag.derden) {
+            gezag.derden.forEach(d => delete d.naam);
+        }
+    }
+}
+
 Given('{aanduiding} heeft de volgende gezagsrelaties', gegevenDePersoonHeeftGezagsrelaties);
 Given('{aanduiding} heeft geen gezaghouder', gegevenDePersoonHeeftGezagsrelaties);
 
 Given('eenhoofdig ouderlijk gezag over {aanduiding} met ouder {aanduiding}', function (minderjarige, ouder) {
-   let persoon = this.context.gezag.find(g => g.burgerservicenummer === this.context.bsnCurrentGezagPersoon);
+    let persoon = this.context.gezag.find(g => g.burgerservicenummer === this.context.bsnCurrentGezagPersoon);
 
-   persoon.gezag.push(createGezag(this.context, 'eenhoofdig ouderlijk gezag', minderjarige, ouder, undefined));
+    let gezag = createGezag(this.context, 'eenhoofdig ouderlijk gezag', minderjarige, ouder);
+    deleteNietDeprecatedGezagsrelatieProperties(this.context, gezag);
+
+    persoon.gezag.push(gezag);
 });
 
 Given('gezamenlijk ouderlijk gezag over {aanduiding} met ouder {aanduiding} en ouder {aanduiding}', function (minderjarige, ouder1, ouder2) {
-   let persoon = this.context.gezag.find(g => g.burgerservicenummer === this.context.bsnCurrentGezagPersoon);
+    let persoon = this.context.gezag.find(g => g.burgerservicenummer === this.context.bsnCurrentGezagPersoon);
 
-   persoon.gezag.push(createGezag(this.context, 'gezamenlijk ouderlijk gezag', minderjarige, ouder1, ouder2));
+    let gezag = createGezag(this.context, 'gezamenlijk ouderlijk gezag', minderjarige, ouder1, ouder2);
+    deleteNietDeprecatedGezagsrelatieProperties(this.context, gezag);
+
+    persoon.gezag.push(gezag);
 });
 
 Given('gezamenlijk gezag over {aanduiding} met ouder {aanduiding} en derde {aanduiding}', function (minderjarige, ouder1, ouder2) {
-   let persoon = this.context.gezag.find(g => g.burgerservicenummer === this.context.bsnCurrentGezagPersoon);
+    let persoon = this.context.gezag.find(g => g.burgerservicenummer === this.context.bsnCurrentGezagPersoon);
 
-   persoon.gezag.push(createGezag(this.context, 'gezamenlijk gezag', minderjarige, ouder1, ouder2));
+    let gezag = createGezag(this.context, 'gezamenlijk gezag', minderjarige, ouder1, ouder2);
+    deleteNietDeprecatedGezagsrelatieProperties(this.context, gezag);
+
+    persoon.gezag.push(gezag);
 });
 
 Given('gezamenlijk gezag over {aanduiding} met ouder {aanduiding} en een onbekende derde', function (minderjarige, ouder1) {
    let persoon = this.context.gezag.find(g => g.burgerservicenummer === this.context.bsnCurrentGezagPersoon);
 
-   persoon.gezag.push(createGezag(this.context, 'gezamenlijk gezag', minderjarige, ouder1, undefined));
+    let gezag = createGezag(this.context, 'gezamenlijk gezag', minderjarige, ouder1);
+    deleteNietDeprecatedGezagsrelatieProperties(this.context, gezag);
+
+   persoon.gezag.push(gezag);
 });
 
 Given('voogdij over {aanduiding}', function (minderjarige) {
    let persoon = this.context.gezag.find(g => g.burgerservicenummer === this.context.bsnCurrentGezagPersoon);
 
-   persoon.gezag.push(createGezag(this.context, 'voogdij', minderjarige, undefined, undefined));
+    let gezag = createGezag(this.context, 'voogdij', minderjarige);
+    deleteNietDeprecatedGezagsrelatieProperties(this.context, gezag);
+
+   persoon.gezag.push(gezag);
 });
 
 Given('voogdij over {aanduiding} met derde {aanduiding}', function (minderjarige, ouder1) {
    let persoon = this.context.gezag.find(g => g.burgerservicenummer === this.context.bsnCurrentGezagPersoon);
 
-   persoon.gezag.push(createGezag(this.context, 'voogdij', minderjarige, ouder1, undefined));
+    let gezag = createGezag(this.context, 'voogdij', minderjarige, ouder1);
+    deleteNietDeprecatedGezagsrelatieProperties(this.context, gezag);
+
+   persoon.gezag.push(gezag);
 });
 
 Given('tijdelijk geen gezag over {aanduiding} met de toelichting {toelichting}', function (minderjarige, toelichting) {
    let persoon = this.context.gezag.find(g => g.burgerservicenummer === this.context.bsnCurrentGezagPersoon);
 
-   persoon.gezag.push(createGezag(this.context, 'tijdelijk geen gezag', minderjarige, undefined, undefined, toelichting));
+    let gezag = createGezag(this.context, 'tijdelijk geen gezag', minderjarige, undefined, undefined, toelichting);
+    deleteNietDeprecatedGezagsrelatieProperties(this.context, gezag);
+
+   persoon.gezag.push(gezag);
 });
 
 Given('gezag over {aanduiding} is niet te bepalen met de toelichting {toelichting}', function (minderjarige, toelichting) {
    let persoon = this.context.gezag.find(g => g.burgerservicenummer === this.context.bsnCurrentGezagPersoon);
 
-   persoon.gezag.push(createGezag(this.context, 'niet te bepalen', minderjarige, undefined, undefined, toelichting));
+    let gezag = createGezag(this.context, 'niet te bepalen', minderjarige, undefined, undefined, toelichting);
+    deleteNietDeprecatedGezagsrelatieProperties(this.context, gezag);
+
+   persoon.gezag.push(gezag);
+});
+
+Given('het gezag is in onderzoek', function () {
+   let persoon = this.context.gezag.find(g => g.burgerservicenummer === this.context.bsnCurrentGezagPersoon);
+   let gezag = persoon.gezag.at(-1);
+    gezag.inOnderzoek = true;
 });

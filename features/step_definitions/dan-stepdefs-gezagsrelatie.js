@@ -56,34 +56,74 @@ function initExpected(context, type, aanduidingMinderjarige, aanduidingMeerderja
     }
 }
 
-Then(/^(?:is )?het gezag over '([a-zA-Z0-9À-ž-]*)' (?:is )?(eenhoofdig ouderlijk gezag|gezamenlijk gezag) met ouder '([a-zA-Z0-9À-ž-]*)'(?: en een onbekende derde)?$/, function (aanduidingMinderjarige, type, aanduidingOuder) {
-    initExpected(this.context, type, aanduidingMinderjarige, aanduidingOuder);
+Then('(is )het gezag over {aanduiding} (is )eenhoofdig ouderlijk gezag met ouder {aanduiding}', function (aanduidingMinderjarige, aanduidingOuder) {
+    initExpected(this.context, 'eenhoofdig ouderlijk gezag', aanduidingMinderjarige, aanduidingOuder);
 });
 
-Then(/^(?:is )?het gezag over '([a-zA-Z0-9À-ž-]*)' (?:is )?(gezamenlijk gezag|gezamenlijk ouderlijk gezag) met ouder '([a-zA-Z0-9À-ž-]*)' en (?:ouder|derde) '([a-zA-Z0-9À-ž-]*)'$/, function (aanduidingMinderjarige, type, aanduidingMeerderjarige1, aanduidingMeerderjarige2) {
-    initExpected(this.context, type, aanduidingMinderjarige, aanduidingMeerderjarige1, aanduidingMeerderjarige2);
+Then('(is )het gezag over {aanduiding} (is )gezamenlijk gezag met ouder {aanduiding} en een onbekende derde', function (aanduidingMinderjarige, aanduidingOuder) {
+    initExpected(this.context, 'gezamenlijk gezag', aanduidingMinderjarige, aanduidingOuder);
 });
-       
-Then(/^(?:is )?het gezag over '([a-zA-Z0-9À-ž-]*)' (?:is )?voogdij(?: met derde '([a-zA-Z0-9À-ž-]*)')?$/, function (aanduidingMinderjarige, aanduidingMeerderjarige) {
+
+Then('(is )het gezag over {aanduiding} (is )gezamenlijk ouderlijk gezag met ouder {aanduiding} en ouder {aanduiding}', function (aanduidingMinderjarige, aanduidingMeerderjarige1, aanduidingMeerderjarige2) {
+    initExpected(this.context, 'gezamenlijk ouderlijk gezag', aanduidingMinderjarige, aanduidingMeerderjarige1, aanduidingMeerderjarige2);
+});
+
+Then('(is )het gezag over {aanduiding} (is )gezamenlijk gezag met ouder {aanduiding} en derde {aanduiding}', function (aanduidingMinderjarige, aanduidingMeerderjarige1, aanduidingMeerderjarige2) {
+    initExpected(this.context, 'gezamenlijk gezag', aanduidingMinderjarige, aanduidingMeerderjarige1, aanduidingMeerderjarige2);
+});
+
+Then('(is )het gezag over {aanduiding} (is )voogdij', function (aanduidingMinderjarige) {
+    initExpected(this.context, 'voogdij', aanduidingMinderjarige);
+});
+
+Then('(is )het gezag over {aanduiding} (is )voogdij met derde {aanduiding}', function (aanduidingMinderjarige, aanduidingMeerderjarige) {
     initExpected(this.context, 'voogdij', aanduidingMinderjarige, aanduidingMeerderjarige);
 });
 
-Then('is het gezag over {aanduiding} {tijdelijk geen gezag of niet te bepalen} met de toelichting {toelichting}', function (aanduidingMinderjarige, type, toelichting) {
-    initExpected(this.context, type, aanduidingMinderjarige, undefined, undefined, toelichting);
+Then('is het gezag over {aanduiding} tijdelijk geen gezag met de toelichting {toelichting}', function (aanduidingMinderjarige, toelichting) {
+    initExpected(this.context, 'tijdelijk geen gezag', aanduidingMinderjarige, undefined, undefined, toelichting);
 });
 
-Then(/^heeft de (minderjarige|ouder|derde) de volgende gegevens$/, function (type, dataTable) {
-    let expected = this.context.expected.personen.at(-1).gezag.at(-1);
+Then('is het gezag over {aanduiding} niet te bepalen met de toelichting {toelichting}', function (aanduidingMinderjarige, toelichting) {
+    initExpected(this.context, 'niet te bepalen', aanduidingMinderjarige, undefined, undefined, toelichting);
+});
+
+function setGezagsrelatiePropertiesFrom(context, type, dataTable) {
+    let expected = context.expected.personen.at(-1).gezag.at(-1);
 
     setObjectPropertiesFrom(expected[type], dataTable);
+}
+
+Then('heeft de minderjarige de volgende gegevens', function (dataTable) {
+    setGezagsrelatiePropertiesFrom(this.context, 'minderjarige', dataTable);
 });
 
-Then(/^heeft de (minderjarige|ouder|derde) geen (\w*)$/, function (type, property) {
-    let expected = this.context.expected.personen.at(-1).gezag.at(-1);
+Then('heeft de ouder de volgende gegevens', function (dataTable) {
+    setGezagsrelatiePropertiesFrom(this.context, 'ouder', dataTable);
+});
+
+Then('heeft de derde de volgende gegevens', function (dataTable) {
+    setGezagsrelatiePropertiesFrom(this.context, 'derde', dataTable);
+});
+
+function deleteGezagsrelatieProperty(context, type, property) {
+    let expected = context.expected.personen.at(-1).gezag.at(-1);
 
     if(expected[type][property]) {
         delete expected[type][property];
     }
+}
+
+Then('heeft de minderjarige geen {word}', function (type, property) {
+    deleteGezagsrelatieProperty(this.context, 'minderjarige', property);
+});
+
+Then('heeft de ouder geen {word}', function (type, property) {
+    deleteGezagsrelatieProperty(this.context, 'ouder', property);
+});
+
+Then('heeft de derde geen {word}', function (type, property) {
+    deleteGezagsrelatieProperty(this.context, 'derde', property);
 });
 
 Then('heeft {aanduiding} geen gezaghouder', function (aanduidingMinderjarige) {
