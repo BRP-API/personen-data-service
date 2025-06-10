@@ -30,11 +30,13 @@ try
 
     app.SetupSerilogRequestLogging();
 
+    app.UseMiddleware<VersionRoutingMiddleware>();
+
+    app.UseRouting();
+
     app.UseAuthorization();
 
     app.MapControllers();
-    
-    app.UseMiddleware<VersionRoutingMiddleware>();
 
     app.Run();
 }
