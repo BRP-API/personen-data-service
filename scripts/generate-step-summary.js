@@ -12,7 +12,8 @@ const fileMap = new Map([
     ["./../test-reports/cucumber-js/step-definitions/test-result-data-api-summary.txt", "docs data api context"],
     ["./../test-reports/cucumber-js/step-definitions/test-result-gezag-api-summary.txt", "docs gezag api context"],
     ["./../test-reports/cucumber-js/step-definitions/test-result-gezag-api-deprecated-summary.txt", "docs gezag api deprecated context"],
-    ["./../test-reports/cucumber-js/personen/test-result-summary.txt", "personen"]
+    ["./../test-reports/cucumber-js/personen/test-result-summary.txt", "personen"],
+    ["./../test-reports/cucumber-js/personen/test-result-deprecated-summary.txt", "personen (deprecated)"]
 ]);
 
 fileMap.forEach((caption, filePath) => {
