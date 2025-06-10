@@ -634,7 +634,7 @@ namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP
         [Newtonsoft.Json.JsonProperty("naam", Required = Newtonsoft.Json.Required.Always)]
         public NaamBasis Naam { get; set; } = new NaamBasis();
 
-        [Newtonsoft.Json.JsonProperty("geslacht", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("geslacht", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Geslachtsaanduiding Geslacht { get; set; }
 
     }

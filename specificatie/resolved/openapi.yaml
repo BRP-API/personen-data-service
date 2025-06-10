@@ -799,7 +799,6 @@ components:
           $ref: '#/components/schemas/Geslachtsaanduiding'
       required:
         - naam
-        - geslacht
     GezamenlijkOuderlijkGezag:
       allOf:
         - $ref: '#/components/schemas/Gezagsrelatie'
