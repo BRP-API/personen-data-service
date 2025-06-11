@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
+namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 
 public partial class GbaNationaliteit
 {

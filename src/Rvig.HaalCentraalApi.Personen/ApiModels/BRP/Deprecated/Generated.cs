@@ -24,6 +24,7 @@ using InOnderzoek=Rvig.HaalCentraalApi.Shared.ApiModels.Universal.GbaInOnderzoek
 
 namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated
 {
+    using System;
     using System = global::System;
 
     
@@ -195,7 +196,7 @@ namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class PersonenQueryResponse
     {
-
+       
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]

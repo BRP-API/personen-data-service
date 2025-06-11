@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated; // deprecated dtos
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP; // actual dtos
 using Rvig.HaalCentraalApi.Shared.Validation;
 using Rvig.HaalCentraalApi.Personen.Services;
 using Rvig.HaalCentraalApi.Shared.Controllers;
 using Rvig.HaalCentraalApi.Personen.Helpers;
 using Elastic.CommonSchema;
 
-using BRP = Rvig.HaalCentraalApi.Personen.ApiModels.BRP; // actual dtos
 
 namespace Rvig.HaalCentraalApi.Personen.Controllers;
 
@@ -33,28 +32,27 @@ public class GbaApiPersonenController : GbaApiBaseController
         
         (PersonenQueryResponse personenResponse, List<long>? plIds, List<string>? bsns) = await _gbaService.GetPersonen(model);
         
-        var response = BRP.PersonenQueryResponse.MapFrom(personenResponse);
-        response = await HandleGezagRequest(model, response, vraagtBsn, bsns); // actual version
+        var response = await HandleGezagRequest(model, personenResponse, vraagtBsn, bsns); // actual version
         
         AddPlIdsToResponseHeaders(plIds);
         return Ok(response);
     }
 
-    private async Task<BRP.PersonenQueryResponse> HandleGezagRequest(PersonenQuery model, BRP.PersonenQueryResponse personenResponse, bool vraagtBsn, List<string>? bsns)
+    private async Task<PersonenQueryResponse> HandleGezagRequest(PersonenQuery model, PersonenQueryResponse personenResponse, bool vraagtBsn, List<string>? bsns)
     {
         if (!GezagHelper.GezagIsRequested(model.Fields)) return personenResponse;
 
         var personenResponseMetGezag = await _gezagService.GetGezag(personenResponse, model.Fields, bsns);
         if (!vraagtBsn)
         {
-            if (personenResponseMetGezag is BRP.RaadpleegMetBurgerservicenummerResponse response && response != null)
+            if (personenResponseMetGezag is RaadpleegMetBurgerservicenummerResponse response && response != null)
             {
                 foreach (var p in response.Personen)
                 {
                     p.Burgerservicenummer = null;
                 }
             }
-            else if (personenResponseMetGezag is BRP.ZoekMetAdresseerbaarObjectIdentificatieResponse zoekResponse && zoekResponse != null)
+            else if (personenResponseMetGezag is ZoekMetAdresseerbaarObjectIdentificatieResponse zoekResponse && zoekResponse != null)
             {
                 foreach (var p in zoekResponse.Personen)
                 {

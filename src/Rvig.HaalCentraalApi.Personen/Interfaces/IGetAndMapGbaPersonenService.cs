@@ -1,4 +1,4 @@
-﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
+﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 
 namespace Rvig.HaalCentraalApi.Personen.Interfaces;
 public interface IGetAndMapGbaPersonenService

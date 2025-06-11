@@ -33,7 +33,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
             var gezagPersonen = await GetGezagDeprecatedIfRequested(fields, bsns);
             if (gezagPersonen.Any())
             {
-                if(personenResponse is RaadpleegMetBurgerservicenummerResponse r1)
+                if (personenResponse is RaadpleegMetBurgerservicenummerResponse r1)
                 {
                     await VerrijkPersonenMetGezag(r1, fields, bsns);
                 }
@@ -73,12 +73,12 @@ namespace Rvig.HaalCentraalApi.Personen.Services
 
         public async Task<IEnumerable<Persoon>> GetGezagDeprecatedIfRequested(List<string> fields, List<string> bsns)
         {
-            if(GezagHelper.GezagIsRequested(fields))
+            if (GezagHelper.GezagIsRequested(fields))
             {
                 GezagResponse response = (await _gezagsrelatieRepo.GetGezagDeprecated(bsns!)) ?? new GezagResponse();
                 return response.Personen.ToList();
             }
-            
+
             return new List<Persoon>();
         }
 
@@ -122,9 +122,9 @@ namespace Rvig.HaalCentraalApi.Personen.Services
         {
             var gezagPersonen = await _gezagPersonenService.GetGezagPersonen(gezagBsns);
 
-            return gezagPersonen.ToList();
-        }
+            var mappedGezagPersonen = gezagPersonen.Select(p => GbaPersoon.MapFrom(p)).ToList();
 
-       
+            return mappedGezagPersonen;
+        }
     }
 }

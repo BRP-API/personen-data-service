@@ -1,5 +1,5 @@
 ﻿using Rvig.Data.Base.Providers;
-using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Shared.Util;
 using System.Globalization;
 using System.Text.RegularExpressions;

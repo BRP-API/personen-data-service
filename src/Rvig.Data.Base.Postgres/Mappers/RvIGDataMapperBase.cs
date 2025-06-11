@@ -1,11 +1,11 @@
 ﻿using Rvig.Data.Base.Postgres.DatabaseModels;
 using Rvig.Data.Base.Postgres.Helpers;
 using Rvig.Data.Base.Postgres.Mappers.Helpers;
-using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Shared.Helpers;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
-using GbaNaamBasis = Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated.NaamBasis;
-using GbaGeboorteBeperkt = Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated.GeboorteBasis;
+using GbaNaamBasis = Rvig.HaalCentraalApi.Personen.ApiModels.BRP.NaamBasis;
+using GbaGeboorteBeperkt = Rvig.HaalCentraalApi.Personen.ApiModels.BRP.GeboorteBasis;
 using GbaInOnderzoek = Rvig.HaalCentraalApi.Shared.ApiModels.Universal.GbaInOnderzoek;
 
 namespace Rvig.Data.Base.Postgres.Mappers;

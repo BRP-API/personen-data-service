@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
+namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 
 public partial class ZoekMetAdresseerbaarObjectIdentificatie
 {

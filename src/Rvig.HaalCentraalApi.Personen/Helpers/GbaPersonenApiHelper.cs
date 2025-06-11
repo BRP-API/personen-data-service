@@ -1,4 +1,4 @@
-﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
+﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Personen.Fields;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
 using Rvig.HaalCentraalApi.Shared.Fields;
@@ -174,19 +174,19 @@ public class GbaPersonenApiHelper : GbaPersonenApiHelperBase
 		}
 	}
 
-	private bool IsGezagDefault(AbstractGezagsrelatie gezag)
-	{
-		return gezag switch
-		{
-			EenhoofdigOuderlijkGezag eenhoofdigOuderlijkGezag => eenhoofdigOuderlijkGezag.Minderjarige == null && eenhoofdigOuderlijkGezag.Ouder == null,
-			TweehoofdigOuderlijkGezag tweehoofdigOuderlijkGezag => tweehoofdigOuderlijkGezag.Minderjarige == null && tweehoofdigOuderlijkGezag.Ouders?.Any() == false,
-			GezagNietTeBepalen gezagNietTeBepalen => gezagNietTeBepalen != null,
-			GezamenlijkGezag gezamenlijkGezag => gezamenlijkGezag.Minderjarige == null && gezamenlijkGezag.Ouder == null && gezamenlijkGezag.Derde == null,
-			TijdelijkGeenGezag tijdelijkGeenGezag => tijdelijkGeenGezag != null,
-			Voogdij voogdij => voogdij.Minderjarige == null && voogdij.Derden?.Any() == false,
-			_ => throw new CustomInvalidOperationException($"Onbekend type gezag: {gezag.GetType().Name}")
-		};
-	}
+	//private bool IsGezagDefault(AbstractGezagsrelatie gezag)
+	//{
+	//	return gezag switch
+	//	{
+	//		EenhoofdigOuderlijkGezag eenhoofdigOuderlijkGezag => eenhoofdigOuderlijkGezag.Minderjarige == null && eenhoofdigOuderlijkGezag.Ouder == null,
+	//		TweehoofdigOuderlijkGezag tweehoofdigOuderlijkGezag => tweehoofdigOuderlijkGezag.Minderjarige == null && tweehoofdigOuderlijkGezag.Ouders?.Any() == false,
+	//		GezagNietTeBepalen gezagNietTeBepalen => gezagNietTeBepalen != null,
+	//		GezamenlijkGezag gezamenlijkGezag => gezamenlijkGezag.Minderjarige == null && gezamenlijkGezag.Ouder == null && gezamenlijkGezag.Derde == null,
+	//		TijdelijkGeenGezag tijdelijkGeenGezag => tijdelijkGeenGezag != null,
+	//		Voogdij voogdij => voogdij.Minderjarige == null && voogdij.Derden?.Any() == false,
+	//		_ => throw new CustomInvalidOperationException($"Onbekend type gezag: {gezag.GetType().Name}")
+	//	};
+	//}
 
 	private bool IsOuderDefault(GbaOuder ouder)
 	{

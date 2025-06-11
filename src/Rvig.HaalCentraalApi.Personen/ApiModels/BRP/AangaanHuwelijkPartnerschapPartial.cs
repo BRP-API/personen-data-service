@@ -1,8 +1,8 @@
 using Newtonsoft.Json;
 
-namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
+namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 
-public partial class GeboorteBasis
+public partial class GbaAangaanHuwelijkPartnerschap
 {
     [JsonIgnore]
     public int? DatumJaar => !string.IsNullOrWhiteSpace(Datum) && !Datum.Equals("00000000") && Datum.Length >= 4 ? int.Parse(Datum.Substring(0, 4)) : null;
