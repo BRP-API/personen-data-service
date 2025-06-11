@@ -1,4 +1,5 @@
 ﻿using NSubstitute;
+using BRP = Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
 using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag.Deprecated;
 using Rvig.HaalCentraalApi.Personen.Interfaces;
@@ -115,7 +116,7 @@ namespace Personen.Tests
                 gezagOuder
             };
 
-            var mockGezagPersonen = new List<GbaPersoon>()
+            var mockGezagPersonen = new List<BRP.GbaPersoon>()
             {
                 new() { Burgerservicenummer = bsnMinderjarige },
                 new() { Burgerservicenummer = bsnOuder }
@@ -184,7 +185,7 @@ namespace Personen.Tests
                 gezagOuder
             };
 
-            var mockGezagPersonen = new List<GbaPersoon>()
+            var mockGezagPersonen = new List<BRP.GbaPersoon>()
             {
                 new() { Burgerservicenummer = bsnMinderjarige },
                 new() { Burgerservicenummer = bsnOuder }
