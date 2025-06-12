@@ -5,8 +5,20 @@ public partial class PersonenQueryResponse
 {
     public static PersonenQueryResponse MapFrom(BRP.PersonenQueryResponse personenResponse)
     {
-        // TODO: Implement mapping
+        switch(personenResponse)
+        {
+            case BRP.RaadpleegMetBurgerservicenummerResponse response:
+                return MapFrom(response);
+            default:
+                return new RaadpleegMetBurgerservicenummerResponse(); ;
+        }
+    }
 
-        return new RaadpleegMetBurgerservicenummerResponse();
+    private static RaadpleegMetBurgerservicenummerResponse MapFrom(BRP.RaadpleegMetBurgerservicenummerResponse response)
+    {
+        return new RaadpleegMetBurgerservicenummerResponse
+        {
+            Personen = response.Personen.Select(p => GbaPersoon.MapFrom(p)).ToList(),
+        };
     }
 }

@@ -68,16 +68,16 @@ public partial class GbaPersoon : IPersoonMetGezag
             SoortVerbintenis = MapWaardetabel(p.SoortVerbintenis),
             Naam = MapNaamBasis(p.Naam),
             Geboorte = MapGeboorte(p.Geboorte),
-            AangaanHuwelijkPartnerschap = new()
+            AangaanHuwelijkPartnerschap = p.AangaanHuwelijkPartnerschap != null ? new()
             {
                 Datum = p.AangaanHuwelijkPartnerschap?.Datum,
                 Land = MapWaardetabel(p.AangaanHuwelijkPartnerschap?.Land),
                 Plaats = MapWaardetabel(p.AangaanHuwelijkPartnerschap?.Plaats)
-            },
-            OntbindingHuwelijkPartnerschap = new()
+            } : null,
+            OntbindingHuwelijkPartnerschap = p.OntbindingHuwelijkPartnerschap != null ? new()
             {
                 Datum = p.OntbindingHuwelijkPartnerschap?.Datum
-            },
+            } : null,
             InOnderzoek = MapInOnderzoek(p.InOnderzoek),
         }).ToList();
     }
@@ -114,15 +114,17 @@ public partial class GbaPersoon : IPersoonMetGezag
             Voornamen = naam.Voornamen,
             Voorvoegsel = naam.Voorvoegsel,
             Geslachtsnaam = naam.Geslachtsnaam,
-            AdellijkeTitelPredicaat = new()
+            AdellijkeTitelPredicaat = naam.AdellijkeTitelPredicaat != null ? new()
             {
+                Code = naam.AdellijkeTitelPredicaat?.Code,
+                Omschrijving = naam.AdellijkeTitelPredicaat?.Omschrijving,
                 Soort = naam.AdellijkeTitelPredicaat?.Soort switch
                 {
                     BRP.AdellijkeTitelPredicaatSoort.Titel => AdellijkeTitelPredicaatSoort.Titel,
                     BRP.AdellijkeTitelPredicaatSoort.Predicaat => AdellijkeTitelPredicaatSoort.Predicaat,
                     _ => null
                 },
-            },
+            } : null,
         } : null;
     }
 
@@ -229,15 +231,17 @@ public partial class GbaPersoon : IPersoonMetGezag
         return naam != null ? new GbaNaamPersoon
         {
             Voornamen = naam.Voornamen,
-            AdellijkeTitelPredicaat = new()
+            AdellijkeTitelPredicaat = naam.AdellijkeTitelPredicaat != null ? new()
             {
+                Code = naam.AdellijkeTitelPredicaat?.Code,
+                Omschrijving = naam.AdellijkeTitelPredicaat?.Omschrijving,
                 Soort = naam.AdellijkeTitelPredicaat?.Soort switch
                 {
                     BRP.AdellijkeTitelPredicaatSoort.Titel => AdellijkeTitelPredicaatSoort.Titel,
                     BRP.AdellijkeTitelPredicaatSoort.Predicaat => AdellijkeTitelPredicaatSoort.Predicaat,
                     _ => null
                 },
-            },
+            } : null,
             Voorvoegsel = naam.Voorvoegsel,
             Geslachtsnaam = naam.Geslachtsnaam,
             AanduidingNaamgebruik = MapWaardetabel(naam.AanduidingNaamgebruik),
