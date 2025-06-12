@@ -46,7 +46,7 @@
       "queryNullValue": "",
       "className": "{controller}Client",
       "operationGenerationMode": "MultipleClientsFromOperationId",
-      "additionalNamespaceUsages": [Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Common],
+      "additionalNamespaceUsages": [],
       "additionalContractNamespaceUsages": [],
       "generateOptionalParameters": false,
       "generateJsonMethods": false,
