@@ -20,6 +20,7 @@ npx nswag run src/GezagMock/server.nswag
 npx nswag run src/GezagMock/serverDeprecated.nswag
 npx nswag run src/DataTransferObjects.nswag
 npx nswag run src/DataTransferObjectsDeprecated.nswag
+npx nswag run src/DataTransferObjectsCommon.nswag
 npx nswag run src/GezagApiDtos.nswag
 npx nswag run src/GezagApiDtosDeprecated.nswag
 

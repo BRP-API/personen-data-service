@@ -1,11 +1,9 @@
 ﻿using Rvig.Data.Base.Postgres.DatabaseModels;
 using Rvig.Data.Base.Postgres.Helpers;
 using Rvig.Data.Base.Postgres.Mappers.Helpers;
-using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Shared.Helpers;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
-using GbaNaamBasis = Rvig.HaalCentraalApi.Personen.ApiModels.BRP.NaamBasis;
-using GbaGeboorteBeperkt = Rvig.HaalCentraalApi.Personen.ApiModels.BRP.GeboorteBasis;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Common;
 
 namespace Rvig.Data.Base.Postgres.Mappers;
 
@@ -141,22 +139,22 @@ public class RvIGDataMapperBase
 		};
 	}
 
-	protected async Task<GbaNaamBasis?> MapNaam(lo3_pl_persoon dbPersoon, GbaNaamBasis naam)
+	protected async Task<NaamBasis?> MapNaam(lo3_pl_persoon dbPersoon, NaamBasis naam)
 	{
-		foreach (var propertyName in ObjectHelper.GetPropertyNames<GbaNaamBasis>())
+		foreach (var propertyName in ObjectHelper.GetPropertyNames<NaamBasis>())
 		{
 			switch (propertyName)
 			{
-				case nameof(GbaNaamBasis.Voornamen):
+				case nameof(NaamBasis.Voornamen):
 					naam.Voornamen = dbPersoon.diak_voor_naam ?? dbPersoon.voor_naam;
 					break;
-				case nameof(GbaNaamBasis.Geslachtsnaam):
+				case nameof(NaamBasis.Geslachtsnaam):
 					naam.Geslachtsnaam = dbPersoon.diak_geslachts_naam ?? dbPersoon.geslachts_naam;
 					break;
-				case nameof(GbaNaamBasis.Voorvoegsel):
+				case nameof(NaamBasis.Voorvoegsel):
 					naam.Voorvoegsel = dbPersoon.geslachts_naam_voorvoegsel;
 					break;
-				case nameof(GbaNaamBasis.AdellijkeTitelPredicaat):
+				case nameof(NaamBasis.AdellijkeTitelPredicaat):
 					if (!string.IsNullOrWhiteSpace(dbPersoon.titel_predicaat))
 					{
 						var adellijkeTitelPredicaatOmschrijvingSoort = await _domeinTabellenHelper.GetAdellijkeTitelPredikaatOmschrijvingEnSoort(dbPersoon.titel_predicaat);
@@ -169,7 +167,7 @@ public class RvIGDataMapperBase
 					}
 					break;
 				default:
-					throw new CustomNotImplementedException($"Mapping not implemented for {nameof(GbaNaamBasis)} property {propertyName}");
+					throw new CustomNotImplementedException($"Mapping not implemented for {nameof(NaamBasis)} property {propertyName}");
 			}
 		}
 
@@ -226,23 +224,23 @@ public class RvIGDataMapperBase
 		return GbaMappingHelper.MapBinnenOfBuitenlandsePlaats(geboorteLandCode, geboortePlaatsCode, plaatsOmschrijving);
 	}
 
-	protected void MapGeboorteBeperkt(lo3_pl_persoon dbPersoon, GbaGeboorteBeperkt geboorte)
+	protected void MapGeboorteBeperkt(lo3_pl_persoon dbPersoon, GeboorteBasis geboorte)
 	{
-		foreach (var propertyName in ObjectHelper.GetPropertyNames<GbaGeboorteBeperkt>())
+		foreach (var propertyName in ObjectHelper.GetPropertyNames<GeboorteBasis>())
 		{
 			switch (propertyName)
 			{
-				case nameof(GbaGeboorteBeperkt.Datum):
+				case nameof(GeboorteBasis.Datum):
 					geboorte.Datum = GbaMappingHelper.ParseToDatumOnvolledig(dbPersoon.geboorte_datum);
 					break;
 				// These are auto mapped in Datum.
-				case nameof(GbaGeboorteBeperkt.DatumJaar):
-				case nameof(GbaGeboorteBeperkt.DatumMaand):
-				case nameof(GbaGeboorteBeperkt.DatumDag):
+				case nameof(GeboorteBasis.DatumJaar):
+				case nameof(GeboorteBasis.DatumMaand):
+				case nameof(GeboorteBasis.DatumDag):
 					break;
 
 				default:
-					throw new CustomNotImplementedException($"Mapping not implemented for {nameof(GbaGeboorteBeperkt)} property {propertyName}");
+					throw new CustomNotImplementedException($"Mapping not implemented for {nameof(GeboorteBasis)} property {propertyName}");
 			}
 		}
 	}
@@ -307,7 +305,7 @@ public class RvIGDataMapperBase
 					partner.Geslacht = GbaMappingHelper.ParseToGeslachtEnum(dbPartner.geslachts_aand);
 					break;
 				case nameof(GbaPartner.Naam):
-					partner.Naam = await MapNaam(dbPartner, new GbaNaamBasis());
+					partner.Naam = await MapNaam(dbPartner, new NaamBasis());
 					break;
 				case nameof(GbaPartner.InOnderzoek):
 					partner.InOnderzoek = MapGbaInOnderzoek(dbPartner.onderzoek_gegevens_aand, dbPartner.onderzoek_start_datum, dbPartner.onderzoek_eind_datum);

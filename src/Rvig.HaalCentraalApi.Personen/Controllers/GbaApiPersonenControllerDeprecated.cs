@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Common;
 using BRP = Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Shared.Validation;
 using Rvig.HaalCentraalApi.Personen.Services;
@@ -24,7 +25,7 @@ public class GbaApiPersonenControllerDeprecated : GbaApiBaseController
 
     [HttpPost]
     [Route("personen")]
-    public async Task<IActionResult> GetPersonen([FromBody] BRP.PersonenQuery model)
+    public async Task<IActionResult> GetPersonen([FromBody] PersonenQuery model)
     {
         await ValidateUnusableQueryParams(model);
 
@@ -41,7 +42,7 @@ public class GbaApiPersonenControllerDeprecated : GbaApiBaseController
         return Ok(mappedResponse);
     }
 
-    private async Task<PersonenQueryResponse> HandleGezagRequest(BRP.PersonenQuery model, PersonenQueryResponse personenResponse, bool vraagtBsn, List<string>? bsns)
+    private async Task<PersonenQueryResponse> HandleGezagRequest(PersonenQuery model, PersonenQueryResponse personenResponse, bool vraagtBsn, List<string>? bsns)
     {
         if (!GezagHelper.GezagIsRequested(model.Fields)) return personenResponse;
 

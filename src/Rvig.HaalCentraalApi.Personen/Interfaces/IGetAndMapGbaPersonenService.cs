@@ -1,4 +1,5 @@
-﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
+﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Common;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 
 namespace Rvig.HaalCentraalApi.Personen.Interfaces;
 public interface IGetAndMapGbaPersonenService

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Rvig.HaalCentraalApi.Personen.ApiModels.BRP; // actual dtos
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Common;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Shared.Validation;
 using Rvig.HaalCentraalApi.Personen.Services;
 using Rvig.HaalCentraalApi.Shared.Controllers;

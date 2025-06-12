@@ -1,4 +1,6 @@
-﻿namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
+﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Common;
+
+namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 public partial class Gezagsrelatie
 {
     public static List<Gezagsrelatie> MapFrom(ICollection<Gezag.Gezagsrelatie> gezagsrelatie)
@@ -10,7 +12,7 @@ public partial class Gezagsrelatie
             return result;
         }
 
-        foreach (var item in gezagsrelatie)
+          foreach (var item in gezagsrelatie)
         {
             switch (item)
             {

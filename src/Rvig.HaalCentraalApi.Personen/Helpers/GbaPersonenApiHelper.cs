@@ -1,4 +1,5 @@
 ﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Common;
 using Rvig.HaalCentraalApi.Personen.Fields;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
 using Rvig.HaalCentraalApi.Shared.Fields;
