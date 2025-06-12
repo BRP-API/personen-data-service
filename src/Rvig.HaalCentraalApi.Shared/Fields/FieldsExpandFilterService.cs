@@ -185,7 +185,7 @@ public class FieldsFilterService
 		var propertyTree = GetPropertyTree(propertyName, target.GetType(), parameterName, propertyName);
 		var propertyType = propertyTree.Last().PropertyType;
 
-		var childProperties = propertyType.GetProperties().Select(x => x.GetCustomAttribute<DataMemberAttribute>()?.Name).Where(x => x != null).ToList();
+		var childProperties = propertyType.GetProperties().Select(x => x.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName).Where(x => x != null).ToList();
 
 		if (!childProperties.Any())
 		{

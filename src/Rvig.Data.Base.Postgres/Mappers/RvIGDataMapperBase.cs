@@ -6,7 +6,6 @@ using Rvig.HaalCentraalApi.Shared.Helpers;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
 using GbaNaamBasis = Rvig.HaalCentraalApi.Personen.ApiModels.BRP.NaamBasis;
 using GbaGeboorteBeperkt = Rvig.HaalCentraalApi.Personen.ApiModels.BRP.GeboorteBasis;
-using GbaInOnderzoek = Rvig.HaalCentraalApi.Shared.ApiModels.Universal.GbaInOnderzoek;
 
 namespace Rvig.Data.Base.Postgres.Mappers;
 
@@ -128,14 +127,14 @@ public class RvIGDataMapperBase
 									: null;
 	}
 
-	protected static GbaInOnderzoek? MapGbaInOnderzoek(int? inOnderzoekAanduiding, int? inOnderzoekBeginDatum, int? inOnderzoekEindDatum)
+	protected static InOnderzoek? MapGbaInOnderzoek(int? inOnderzoekAanduiding, int? inOnderzoekBeginDatum, int? inOnderzoekEindDatum)
 	{
 		if ((!inOnderzoekAanduiding.HasValue && !inOnderzoekBeginDatum.HasValue) || inOnderzoekEindDatum.HasValue)
 		{
 			return null;
 		}
 
-		return new GbaInOnderzoek
+		return new InOnderzoek
 		{
 			AanduidingGegevensInOnderzoek = (inOnderzoekAanduiding?.ToString().PadLeft(6, '0')),
 			DatumIngangOnderzoek = GbaMappingHelper.ParseToDatumOnvolledig(inOnderzoekBeginDatum)

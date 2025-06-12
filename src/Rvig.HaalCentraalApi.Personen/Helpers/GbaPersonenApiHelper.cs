@@ -2,7 +2,6 @@
 using Rvig.HaalCentraalApi.Personen.Fields;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
 using Rvig.HaalCentraalApi.Shared.Fields;
-using GbaInOnderzoek = Rvig.HaalCentraalApi.Shared.ApiModels.Universal.GbaInOnderzoek;
 
 namespace Rvig.HaalCentraalApi.Personen.Helpers;
 
@@ -205,7 +204,7 @@ public class GbaPersonenApiHelper : GbaPersonenApiHelperBase
 			&& (partner.SoortVerbintenis == null || _fieldsExpandFilterService.IsDefault(partner.SoortVerbintenis, partner.SoortVerbintenis.GetType()));
 	}
 
-	private bool IsDefaultInGeboorteNaamBurgerservicenummerInOnderzoek(GbaGeboorte? geboorte, NaamBasis? naam, string? burgerservicenummer, GbaInOnderzoek? inOnderzoek)
+	private bool IsDefaultInGeboorteNaamBurgerservicenummerInOnderzoek(GbaGeboorte? geboorte, NaamBasis? naam, string? burgerservicenummer, InOnderzoek? inOnderzoek)
 	{
 		return IsGeboorteDefault(geboorte)
 			&& IsNaamDefault(naam)
@@ -224,7 +223,7 @@ public class GbaPersonenApiHelper : GbaPersonenApiHelperBase
 				&& (geboorte.DatumDag == null || _fieldsExpandFilterService.IsDefault(geboorte.DatumDag, geboorte.DatumDag.GetType()));
 	}
 
-	private bool IsInOnderzoek(GbaInOnderzoek? inOnderzoek)
+	private bool IsInOnderzoek(InOnderzoek? inOnderzoek)
 	{
 		return inOnderzoek == null || _fieldsExpandFilterService.IsDefault(inOnderzoek, inOnderzoek.GetType())
 			|| (inOnderzoek.AanduidingGegevensInOnderzoek == null || _fieldsExpandFilterService.IsDefault(inOnderzoek.AanduidingGegevensInOnderzoek, inOnderzoek.AanduidingGegevensInOnderzoek.GetType()))
