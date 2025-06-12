@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
+using BRP = Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Shared.Validation;
 using Rvig.HaalCentraalApi.Personen.Services;
 using Rvig.HaalCentraalApi.Shared.Controllers;
 using Rvig.HaalCentraalApi.Personen.Helpers;
 using Elastic.CommonSchema;
-using Deprecated = Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
 
 namespace Rvig.HaalCentraalApi.Personen.Controllers;
 
@@ -24,15 +24,16 @@ public class GbaApiPersonenControllerDeprecated : GbaApiBaseController
 
     [HttpPost]
     [Route("personen")]
-    public async Task<IActionResult> GetPersonen([FromBody] PersonenQuery model)
+    public async Task<IActionResult> GetPersonen([FromBody] BRP.PersonenQuery model)
     {
         await ValidateUnusableQueryParams(model);
 
         var vraagtBsn = model.Fields.Contains("burgerservicenummer");
 
-        (PersonenQueryResponse personenResponse, List<long>? plIds, List<string>? bsns) = await _gbaService.GetPersonen(model);
+        (BRP.PersonenQueryResponse personenResponse, List<long>? plIds, List<string>? bsns) = await _gbaService.GetPersonen(model);
 
-        var mappedResponse = Deprecated.PersonenQueryResponse.MapFrom(personenResponse);
+        // Map var de BRP variant naar de deprecated variant
+        var mappedResponse = personenResponse.Map();
 
         mappedResponse = await HandleGezagRequest(model, mappedResponse, vraagtBsn, bsns); // deprecated version
 
@@ -40,7 +41,7 @@ public class GbaApiPersonenControllerDeprecated : GbaApiBaseController
         return Ok(mappedResponse);
     }
 
-    private async Task<Deprecated.PersonenQueryResponse> HandleGezagRequest(PersonenQuery model, Deprecated.PersonenQueryResponse personenResponse, bool vraagtBsn, List<string>? bsns)
+    private async Task<PersonenQueryResponse> HandleGezagRequest(BRP.PersonenQuery model, PersonenQueryResponse personenResponse, bool vraagtBsn, List<string>? bsns)
     {
         if (!GezagHelper.GezagIsRequested(model.Fields)) return personenResponse;
 
@@ -48,14 +49,14 @@ public class GbaApiPersonenControllerDeprecated : GbaApiBaseController
 
         if (!vraagtBsn)
         {
-            if (personenResponseMetGezag is Deprecated.RaadpleegMetBurgerservicenummerResponse response && response != null)
+            if (personenResponseMetGezag is RaadpleegMetBurgerservicenummerResponse response && response != null)
             {
                 foreach (var p in response.Personen)
                 {
                     p.Burgerservicenummer = null;
                 }
             }
-            else if (personenResponseMetGezag is Deprecated.ZoekMetAdresseerbaarObjectIdentificatieResponse zoekResponse && zoekResponse != null)
+            else if (personenResponseMetGezag is ZoekMetAdresseerbaarObjectIdentificatieResponse zoekResponse && zoekResponse != null)
             {
                 foreach (var p in zoekResponse.Personen)
                 {

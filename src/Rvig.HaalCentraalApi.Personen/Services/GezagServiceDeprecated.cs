@@ -122,7 +122,7 @@ namespace Rvig.HaalCentraalApi.Personen.Services
         {
             var gezagPersonen = await _gezagPersonenService.GetGezagPersonen(gezagBsns);
 
-            var mappedGezagPersonen = gezagPersonen.Select(p => GbaPersoon.MapFrom(p)).ToList();
+            var mappedGezagPersonen = gezagPersonen.Select(p => p.Map()).ToList();
 
             return mappedGezagPersonen;
         }

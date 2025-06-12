@@ -1,32 +1,31 @@
-﻿
-namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
+﻿namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
 
-public partial class PersonenQueryResponse
+public static class QueryResponseMappers
 {
-    public static PersonenQueryResponse MapFrom(BRP.PersonenQueryResponse personenResponse)
+    public static PersonenQueryResponse? Map(this BRP.PersonenQueryResponse personenResponse)
     {
         switch (personenResponse)
         {
             case BRP.RaadpleegMetBurgerservicenummerResponse response:
-                return MapFrom(response);
-            case BRP.ZoekMetGeslachtsnaamEnGeboortedatumResponse response:
-                return MapFrom(response);
+                return response.Map();
+            case BRP.ZoekMetAdresseerbaarObjectIdentificatieResponse response:
+                return response.Map();
             default:
-                return new RaadpleegMetBurgerservicenummerResponse(); ;
+                return null;
         }
     }
 
-    private static RaadpleegMetBurgerservicenummerResponse MapFrom(BRP.RaadpleegMetBurgerservicenummerResponse response)
+    private static RaadpleegMetBurgerservicenummerResponse Map(this BRP.RaadpleegMetBurgerservicenummerResponse response)
     {
         return new RaadpleegMetBurgerservicenummerResponse
         {
-            Personen = response.Personen.Select(p => GbaPersoon.MapFrom(p)).ToList()
+            Personen = response.Personen.Select(p => p.Map()).ToList()
         };
     }
     
-    private static ZoekMetGeslachtsnaamEnGeboortedatumResponse MapFrom(BRP.ZoekMetGeslachtsnaamEnGeboortedatumResponse response)
+    private static ZoekMetAdresseerbaarObjectIdentificatieResponse Map(this BRP.ZoekMetAdresseerbaarObjectIdentificatieResponse response)
     {
-        return new ZoekMetGeslachtsnaamEnGeboortedatumResponse
+        return new ZoekMetAdresseerbaarObjectIdentificatieResponse
         {
             Personen = response.Personen.Select(p => p.Map()).ToList()
         };
