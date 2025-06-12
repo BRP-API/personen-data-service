@@ -43,6 +43,8 @@ namespace Rvig.HaalCentraalApi.Personen.Services
                             p.Gezag = BRP.Gezagsrelatie.MapFrom(gezag.Gezag);
                         }
                     });
+
+                    return r1;
                 }
                 else if (personenResponse is ZoekMetAdresseerbaarObjectIdentificatieResponse r2)
                 {
@@ -54,6 +56,8 @@ namespace Rvig.HaalCentraalApi.Personen.Services
                             p.Gezag = BRP.Gezagsrelatie.MapFrom(gezag.Gezag);
                         }
                     });
+
+                    return r2;
                 }
             }
             return personenResponse;
