@@ -9,6 +9,8 @@ public partial class PersonenQueryResponse
         {
             case BRP.RaadpleegMetBurgerservicenummerResponse response:
                 return MapFrom(response);
+            case BRP.ZoekMetAdresseerbaarObjectIdentificatieResponse response:
+                return MapFrom(response);
             case BRP.ZoekMetGeslachtsnaamEnGeboortedatumResponse response:
                 return MapFrom(response);
             case BRP.ZoekMetNaamEnGemeenteVanInschrijvingResponse response:
@@ -29,6 +31,14 @@ public partial class PersonenQueryResponse
         return new RaadpleegMetBurgerservicenummerResponse
         {
             Personen = response.Personen.Select(p => GbaPersoon.MapFrom(p)).ToList()
+        };
+    }
+
+    private static ZoekMetAdresseerbaarObjectIdentificatieResponse MapFrom(BRP.ZoekMetAdresseerbaarObjectIdentificatieResponse response)
+    {
+        return new ZoekMetAdresseerbaarObjectIdentificatieResponse
+        {
+            Personen = response.Personen.Select(p => p.Map()).ToList()
         };
     }
 
