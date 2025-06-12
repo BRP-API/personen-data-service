@@ -1,4 +1,3 @@
-using Rvig.HaalCentraalApi.Shared.ApiModels.Universal;
 
 namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
 
@@ -91,9 +90,9 @@ public static class Mappers
         } : null;
     }
 
-    public static Shared.ApiModels.Universal.GbaInOnderzoek? Map(this Shared.ApiModels.Universal.GbaInOnderzoek? inOnderzoek)
+    public static InOnderzoek? Map(this BRP.InOnderzoek? inOnderzoek)
     {
-        return inOnderzoek != null ? new Shared.ApiModels.Universal.GbaInOnderzoek
+        return inOnderzoek != null ? new InOnderzoek
         {
             AanduidingGegevensInOnderzoek = inOnderzoek.AanduidingGegevensInOnderzoek,
             DatumIngangOnderzoek = inOnderzoek.DatumIngangOnderzoek,

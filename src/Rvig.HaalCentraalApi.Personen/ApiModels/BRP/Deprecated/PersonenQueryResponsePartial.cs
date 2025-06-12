@@ -41,6 +41,14 @@ public static class QueryResponseMappers
         };
     }
 
+    private static ZoekMetGeslachtsnaamEnGeboortedatumResponse Map(this BRP.ZoekMetGeslachtsnaamEnGeboortedatumResponse response)
+    {
+        return new ZoekMetGeslachtsnaamEnGeboortedatumResponse
+        {
+            Personen = response.Personen.Select(p => p.Map()).ToList()
+        };
+    }
+
     private static ZoekMetNaamEnGemeenteVanInschrijvingResponse Map(this BRP.ZoekMetNaamEnGemeenteVanInschrijvingResponse response)
     {
         return new ZoekMetNaamEnGemeenteVanInschrijvingResponse

@@ -46,9 +46,7 @@
       "queryNullValue": "",
       "className": "{controller}Client",
       "operationGenerationMode": "MultipleClientsFromOperationId",
-      "additionalNamespaceUsages": [
-        "InOnderzoek=Rvig.HaalCentraalApi.Shared.ApiModels.Universal.GbaInOnderzoek"
-      ],
+      "additionalNamespaceUsages": [],
       "additionalContractNamespaceUsages": [],
       "generateOptionalParameters": false,
       "generateJsonMethods": false,
@@ -81,7 +79,6 @@
       "generateDataAnnotations": false,
       "excludedTypeNames": [
         "Foutbericht",
-        "InOnderzoek",
         "InvalidParam",
         "BadRequestFoutbericht"
       ],
