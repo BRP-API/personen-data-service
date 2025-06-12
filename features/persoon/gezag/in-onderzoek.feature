@@ -5,17 +5,12 @@ Functionaliteit: doorgeven van indicatie in onderzoek
   Regel: wanneer de Gezag API een gezagsrelatie levert waarvan het inOnderzoek veld is gevuld, dan wordt dit veld doorgegeven
 
     Scenario: gezag wordt gevraagd en de Gezag API levert een gezagsrelatie met inOnderzoek veld
-      Gegeven de persoon met burgerservicenummer '000000048' heeft de volgende gegevens
-      | geslachtsnaam (02.40) |
-      | Hoogh                 |
-      En voor de persoon geldt het volgende gezag
-      | type                     | minderjarige.burgerservicenummer | ouder.burgerservicenummer | inOnderzoek |
-      | EenhoofdigOuderlijkGezag | 000000048                        | 000000012                 | true        |
-      Als personen wordt gezocht met de volgende parameters
-      | naam                | waarde                          |
-      | type                | RaadpleegMetBurgerservicenummer |
-      | burgerservicenummer | 000000048                       |
-      | fields              | gezag                           |
-      Dan heeft de response een persoon met een 'gezag' met de volgende gegevens
-      | type                     | inOnderzoek | ouder.burgerservicenummer | minderjarige.burgerservicenummer | minderjarige.naam.geslachtsnaam |
-      | EenhoofdigOuderlijkGezag | true        | 000000012                 | 000000048                        | Hoogh                           |
+      Gegeven de minderjarige 'P1'
+      En de meerderjarige 'P2'
+      En 'P1' heeft de volgende gezagsrelaties
+      * eenhoofdig ouderlijk gezag over 'P1' met ouder 'P2'
+      En het gezag is in onderzoek
+      Als 'gezag' wordt gevraagd van personen gezocht met burgerservicenummer van 'P1'
+      Dan heeft 'P1' de volgende gezagsrelaties
+      * het gezag over 'P1' is eenhoofdig ouderlijk gezag met ouder 'P2'
+      En is het gezag in onderzoek

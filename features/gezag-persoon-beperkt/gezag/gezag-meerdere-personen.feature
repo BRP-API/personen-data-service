@@ -1,6 +1,6 @@
 #language: nl
 
-@api
+@api @deprecated
 Functionaliteit: gezagsrelaties van de bewoners van een adresseerbaar object
 
 

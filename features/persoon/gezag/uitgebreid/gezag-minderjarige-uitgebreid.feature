@@ -1,5 +1,5 @@
 # language: nl
-@api
+@api @deprecated
 Functionaliteit: gezagsrelaties van een minderjarige
 
   Regel: wanneer gezag wordt gevraagd wordt indien aanwezig naam, geslacht en geboorte geleverd

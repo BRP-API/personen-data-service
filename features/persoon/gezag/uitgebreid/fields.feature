@@ -1,5 +1,5 @@
 # language: nl
-@api
+@api @deprecated
 Functionaliteit: gezagsrelaties vragen met fields
 
   Regel: Het vragen van één of meerdere velden van 'gezag' levert alle velden van 'gezag' die van toepassing zijn op de persoon
