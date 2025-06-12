@@ -11,6 +11,14 @@ public partial class PersonenQueryResponse
                 return MapFrom(response);
             case BRP.ZoekMetGeslachtsnaamEnGeboortedatumResponse response:
                 return MapFrom(response);
+            case BRP.ZoekMetNaamEnGemeenteVanInschrijvingResponse response:
+                return MapFrom(response);
+            case BRP.ZoekMetNummeraanduidingIdentificatieResponse response:
+                return MapFrom(response);
+            case BRP.ZoekMetPostcodeEnHuisnummerResponse response:
+                return MapFrom(response);
+            case BRP.ZoekMetStraatHuisnummerEnGemeenteVanInschrijvingResponse response:
+                return MapFrom(response);
             default:
                 return new RaadpleegMetBurgerservicenummerResponse(); ;
         }
@@ -23,10 +31,42 @@ public partial class PersonenQueryResponse
             Personen = response.Personen.Select(p => GbaPersoon.MapFrom(p)).ToList()
         };
     }
-    
+
     private static ZoekMetGeslachtsnaamEnGeboortedatumResponse MapFrom(BRP.ZoekMetGeslachtsnaamEnGeboortedatumResponse response)
     {
         return new ZoekMetGeslachtsnaamEnGeboortedatumResponse
+        {
+            Personen = response.Personen.Select(p => p.Map()).ToList()
+        };
+    }
+
+    private static ZoekMetNaamEnGemeenteVanInschrijvingResponse MapFrom(BRP.ZoekMetNaamEnGemeenteVanInschrijvingResponse response)
+    {
+        return new ZoekMetNaamEnGemeenteVanInschrijvingResponse
+        {
+            Personen = response.Personen.Select(p => p.Map()).ToList()
+        };
+    }
+
+    private static ZoekMetNummeraanduidingIdentificatieResponse MapFrom(BRP.ZoekMetNummeraanduidingIdentificatieResponse response)
+    {
+        return new ZoekMetNummeraanduidingIdentificatieResponse
+        {
+            Personen = response.Personen.Select(p => p.Map()).ToList()
+        };
+    }
+
+    private static ZoekMetPostcodeEnHuisnummerResponse MapFrom(BRP.ZoekMetPostcodeEnHuisnummerResponse response)
+    {
+        return new ZoekMetPostcodeEnHuisnummerResponse
+        {
+            Personen = response.Personen.Select(p => p.Map()).ToList()
+        };
+    }
+    
+    private static ZoekMetStraatHuisnummerEnGemeenteVanInschrijvingResponse MapFrom(BRP.ZoekMetStraatHuisnummerEnGemeenteVanInschrijvingResponse response)
+    {
+        return new ZoekMetStraatHuisnummerEnGemeenteVanInschrijvingResponse
         {
             Personen = response.Personen.Select(p => p.Map()).ToList()
         };
