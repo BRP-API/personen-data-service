@@ -4,24 +4,6 @@ namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
 
 public static class Mappers
 {
-    public static GbaPersoonBeperkt Map(this BRP.GbaPersoonBeperkt persoon)
-    {
-        return new GbaPersoonBeperkt
-        {
-            Burgerservicenummer = persoon.Burgerservicenummer,
-            Geboorte = persoon.Geboorte.Map(),
-            GeheimhoudingPersoonsgegevens = persoon.GeheimhoudingPersoonsgegevens,
-            Geslacht = persoon.Geslacht.Map(),
-            PersoonInOnderzoek = persoon.PersoonInOnderzoek.Map(),
-            Naam = persoon.Naam.Map(),
-            OpschortingBijhouding = persoon.OpschortingBijhouding.Map(),
-            GemeenteVanInschrijving = persoon.GemeenteVanInschrijving.Map(),
-            Verblijfplaats = persoon.Verblijfplaats.Map(),
-            Rni = persoon.Rni.Map(),
-            Verificatie = persoon.Verificatie.Map(),
-        };
-    }
-
     public static GbaGezagPersoonBeperkt Map(this BRP.GbaGezagPersoonBeperkt persoon)
     {
         return new GbaGezagPersoonBeperkt
@@ -37,7 +19,24 @@ public static class Mappers
             Verblijfplaats = persoon.Verblijfplaats.Map(),
             Rni = persoon.Rni.Map(),
             Verificatie = persoon.Verificatie.Map(),
-            Gezag = null // Gezag wordt na de mapping toegevoegd in de GezagService
+        };
+    }
+
+    public static GbaPersoonBeperkt Map(this BRP.GbaPersoonBeperkt persoon)
+    {
+        return new GbaPersoonBeperkt
+        {
+            Burgerservicenummer = persoon.Burgerservicenummer,
+            Geboorte = persoon.Geboorte.Map(),
+            GeheimhoudingPersoonsgegevens = persoon.GeheimhoudingPersoonsgegevens,
+            Geslacht = persoon.Geslacht.Map(),
+            PersoonInOnderzoek = persoon.PersoonInOnderzoek.Map(),
+            Naam = persoon.Naam.Map(),
+            OpschortingBijhouding = persoon.OpschortingBijhouding.Map(),
+            GemeenteVanInschrijving = persoon.GemeenteVanInschrijving.Map(),
+            Verblijfplaats = persoon.Verblijfplaats.Map(),
+            Rni = persoon.Rni.Map(),
+            Verificatie = persoon.Verificatie.Map(),
         };
     }
 
