@@ -1,28 +1,22 @@
-﻿namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
+﻿using Rvig.HaalCentraalApi.Shared.Exceptions;
+
+namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
 
 public static class QueryResponseMappers
 {
-    public static PersonenQueryResponse? Map(this BRP.PersonenQueryResponse personenResponse)
+    public static PersonenQueryResponse Map(this BRP.PersonenQueryResponse personenResponse)
     {
-        switch (personenResponse)
+        return personenResponse switch
         {
-            case BRP.RaadpleegMetBurgerservicenummerResponse response:
-                return response.Map();
-            case BRP.ZoekMetAdresseerbaarObjectIdentificatieResponse response:
-                return response.Map();
-            case BRP.ZoekMetGeslachtsnaamEnGeboortedatumResponse response:
-                return response.Map();
-            case BRP.ZoekMetNaamEnGemeenteVanInschrijvingResponse response:
-                return response.Map();
-            case BRP.ZoekMetNummeraanduidingIdentificatieResponse response:
-                return response.Map();
-            case BRP.ZoekMetPostcodeEnHuisnummerResponse response:
-                return response.Map();
-            case BRP.ZoekMetStraatHuisnummerEnGemeenteVanInschrijvingResponse response:
-                return response.Map();
-            default:
-                return null;
-        }
+            BRP.RaadpleegMetBurgerservicenummerResponse response => response.Map(),
+            BRP.ZoekMetAdresseerbaarObjectIdentificatieResponse response => response.Map(),
+            BRP.ZoekMetGeslachtsnaamEnGeboortedatumResponse response => response.Map(),
+            BRP.ZoekMetNaamEnGemeenteVanInschrijvingResponse response => response.Map(),
+            BRP.ZoekMetNummeraanduidingIdentificatieResponse response => response.Map(),
+            BRP.ZoekMetPostcodeEnHuisnummerResponse response => response.Map(),
+            BRP.ZoekMetStraatHuisnummerEnGemeenteVanInschrijvingResponse response => response.Map(),
+            _ => throw new CustomInvalidOperationException($"Onbekend type response: {personenResponse}"),
+        };
     }
 
     private static RaadpleegMetBurgerservicenummerResponse Map(this BRP.RaadpleegMetBurgerservicenummerResponse response)
