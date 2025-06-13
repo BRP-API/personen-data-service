@@ -6,6 +6,7 @@ using Rvig.HaalCentraalApi.Personen.Interfaces;
 using Rvig.HaalCentraalApi.Personen.Repositories;
 using Rvig.HaalCentraalApi.Personen.Services;
 using Gezag = Rvig.HaalCentraalApi.Personen.ApiModels.Gezag.Deprecated;
+using Rvig.HaalCentraalApi.Shared.Interfaces;
 
 namespace Personen.Tests
 {
@@ -15,12 +16,14 @@ namespace Personen.Tests
         private readonly GezagServiceDeprecated _gezagService;
         private readonly IRepoGezagsrelatie _gezagRepositoryMock;
         private readonly IGezagPersonenService _personenServiceMock;
+        private readonly IDomeinTabellenRepo _domeinTabellenRepoMock;
 
         public GezagServiceTests()
         {
             _personenServiceMock = Substitute.For<IGezagPersonenService>();
             _gezagRepositoryMock = Substitute.For<IRepoGezagsrelatie>();
-            _gezagService = new GezagServiceDeprecated(_personenServiceMock, null, _gezagRepositoryMock);
+            _domeinTabellenRepoMock = Substitute.For<IDomeinTabellenRepo>();
+            _gezagService = new GezagServiceDeprecated(_personenServiceMock, _domeinTabellenRepoMock, _gezagRepositoryMock);
         }
 
         [Fact]
