@@ -1,6 +1,6 @@
 ﻿using Npgsql;
 using Rvig.Data.Base.Postgres.Repositories.Queries;
-using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Common;
 using System.Text.RegularExpressions;
 
 namespace Rvig.Data.Personen.Repositories.Queries.Helper

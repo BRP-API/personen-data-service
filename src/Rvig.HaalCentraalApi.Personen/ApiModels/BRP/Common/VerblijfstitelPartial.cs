@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
+namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Common;
 
 public partial class GbaVerblijfstitel
 {
