@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Common;
-using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Shared.Validation;
 using Rvig.HaalCentraalApi.Personen.Services;
 using Rvig.HaalCentraalApi.Shared.Controllers;
 using Rvig.HaalCentraalApi.Personen.Helpers;
-using Elastic.CommonSchema;
 
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Common;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 
 namespace Rvig.HaalCentraalApi.Personen.Controllers;
 
@@ -33,7 +32,7 @@ public class GbaApiPersonenController : GbaApiBaseController
         
         (PersonenQueryResponse personenResponse, List<long>? plIds, List<string>? bsns) = await _gbaService.GetPersonen(model);
         
-        var response = await HandleGezagRequest(model, personenResponse, vraagtBsn, bsns); // actual version
+        var response = await HandleGezagRequest(model, personenResponse, vraagtBsn, bsns);
         
         AddPlIdsToResponseHeaders(plIds);
         return Ok(response);
