@@ -11,7 +11,6 @@ Functionaliteit: vragen van gezagsrelaties bij raadplegen met burgerservicenumme
     Dan heeft 'P1' de volgende gezagsrelaties
     * het gezag over 'P1' is eenhoofdig ouderlijk gezag met ouder 'P2'
 
-  @deprecated # tag kan weg als GezagMock kan switchen tussen deprecated en niet-deprecated gezagsrelaties
   Scenario: geleverde persoon heeft gezamenlijk ouderlijk gezag
     Gegeven de minderjarige 'P1'
     En de meerderjarige 'P2'
