@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Common;
-using BRP = Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Shared.Validation;
 using Rvig.HaalCentraalApi.Personen.Services;
 using Rvig.HaalCentraalApi.Shared.Controllers;
 using Rvig.HaalCentraalApi.Personen.Helpers;
-using Elastic.CommonSchema;
+
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Common;
+using BRP = Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
 
 namespace Rvig.HaalCentraalApi.Personen.Controllers;
@@ -33,10 +33,9 @@ public class GbaApiPersonenControllerDeprecated : GbaApiBaseController
 
         (BRP.PersonenQueryResponse personenResponse, List<long>? plIds, List<string>? bsns) = await _gbaService.GetPersonen(model);
 
-        // Map var de BRP variant naar de deprecated variant
         var mappedResponse = personenResponse.Map();
 
-        mappedResponse = await HandleGezagRequest(model, mappedResponse, vraagtBsn, bsns); // deprecated version
+        mappedResponse = await HandleGezagRequest(model, mappedResponse, vraagtBsn, bsns);
 
         AddPlIdsToResponseHeaders(plIds);
         return Ok(mappedResponse);
