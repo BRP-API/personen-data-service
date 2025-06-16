@@ -112,7 +112,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
             }
 		}
 
-		var response = new RaadpleegMetBurgerservicenummerResponse { Personen = result.ConvertAll(gbaPersoon => gbaPersoon.persoon) ?? new List<GbaPersoon>() };
+		var response = new RaadpleegMetBurgerservicenummerResponse { Personen = result.ConvertAll(gbaPersoon => gbaPersoon.persoon) };
 		var plIds = result.Select(x => x.pl_id).ToList();
 
 		return (response, plIds, bsns); 
@@ -177,7 +177,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 			}
 		}
 
-		var response = result.ConvertAll(gbaPersoon => gbaPersoon.persoon) ?? new List<T>();
+		var response = result.ConvertAll(gbaPersoon => gbaPersoon.persoon);
         var plIds = result.Select(x => x.pl_id).ToList();
 
         return (response, plIds, bsns);
