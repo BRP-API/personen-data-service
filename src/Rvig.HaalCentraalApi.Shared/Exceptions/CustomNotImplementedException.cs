@@ -23,8 +23,4 @@ public class CustomNotImplementedException : NotImplementedException, IHaalCentr
 	{
 		Details = message;
 	}
-
-	protected CustomNotImplementedException(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
-	{
-	}
 }
