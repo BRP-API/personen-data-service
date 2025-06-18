@@ -2,13 +2,17 @@
 
 # This stage is used when running from VS in fast mode (Default for Debug configuration)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS base
+# Disable config change monitoring for better container performance
+# See https://github.com/Contrast-Security-OSS/agent-operator/blob/master/docs/public/08-tips.md
+ENV DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE=false
 WORKDIR /app
 
-
 # This stage is used to build the service project
-FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 ARG BUILD_CONFIGURATION=Release
+ARG TARGETARCH
 WORKDIR /src
+
 COPY ["Personen.Data.Service/Personen.Data.Service.csproj", "Personen.Data.Service/"]
 COPY ["Rvig.Base.App/Rvig.Base.App.csproj", "Rvig.Base.App/"]
 COPY ["Brp.Shared.Infrastructure/Brp.Shared.Infrastructure.csproj", "Brp.Shared.Infrastructure/"]
@@ -19,22 +23,28 @@ COPY ["Rvig.HaalCentraalApi.Shared/Rvig.HaalCentraalApi.Shared.csproj", "Rvig.Ha
 COPY ["Rvig.Data.Base.Postgres/Rvig.Data.Base.Postgres.csproj", "Rvig.Data.Base.Postgres/"]
 COPY ["Rvig.Data.Personen/Rvig.Data.Personen.csproj", "Rvig.Data.Personen/"]
 COPY ["Rvig.HaalCentraalApi.Personen/Rvig.HaalCentraalApi.Personen.csproj", "Rvig.HaalCentraalApi.Personen/"]
+
 RUN dotnet restore "./Personen.Data.Service/Personen.Data.Service.csproj"
+
 COPY . .
+
 WORKDIR "/src/Personen.Data.Service"
-RUN dotnet build "./Personen.Data.Service.csproj" -c "$BUILD_CONFIGURATION" -o /app/build
+RUN dotnet build "./Personen.Data.Service.csproj" -c "$BUILD_CONFIGURATION" -o /app/build --arch "$TARGETARCH"
 
-# This stage is used to publish the service project to be copied to the final stage
-FROM build AS publish
+FROM --platform=$BUILDPLATFORM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Personen.Data.Service.csproj" -c "$BUILD_CONFIGURATION" -o /app/publish /p:UseAppHost=false
+ARG TARGETARCH
+RUN dotnet publish "./Personen.Data.Service.csproj" -c "$BUILD_CONFIGURATION" -o /app/publish /p:UseAppHost=false --arch "$TARGETARCH"
 
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-# See https://github.com/Contrast-Security-OSS/agent-operator/blob/master/docs/public/08-tips.md
-ENV DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE=false
+RUN addgroup -g 1000 -S brp-api && \
+    adduser -u 1000 -S -D -g brp-api brp-api-user && \
+    chown -R brp-api-user:brp-api /app
+
+# Set user for running the application
+USER brp-api-user
 
 ENTRYPOINT ["dotnet", "Personen.Data.Service.dll"]
