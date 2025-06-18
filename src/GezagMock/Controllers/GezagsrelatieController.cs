@@ -2,10 +2,13 @@
 using GezagMock.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
+using ControllerBase = Brp.Gezag.Mock.Generated.ControllerBase;
+
 namespace GezagMock.Controllers
 {
     [ApiController]
-    public class GezagsrelatieController : Brp.Gezag.Mock.Generated.ControllerBase
+    [Route("api/v2")]
+    public class GezagsrelatieController : ControllerBase
     {
         private readonly GezagsrelatieRepository _repository;
 
@@ -13,7 +16,9 @@ namespace GezagMock.Controllers
         {
             _repository = repository;
         }
-        public override async Task<ActionResult<GezagResponse>> OpvragenBevoegdheidTotGezag([FromHeader] string? oIN, [FromBody] GezagRequest body)
+
+        [HttpPost("OpvragenBevoegdheidTotGezag")]
+        public override async Task<ActionResult<GezagResponse>> OpvragenBevoegdheidTotGezag([FromHeader(Name = "Accept-Gezag-Version")] AcceptGezagVersion accept_Gezag_Version, [FromBody] GezagRequest body)
         {
             if (!ModelState.IsValid)
             {
@@ -25,7 +30,7 @@ namespace GezagMock.Controllers
                 Personen = new List<Persoon>()
             };
 
-            foreach(var bsn in body.Burgerservicenummer)
+            foreach (var bsn in body.Burgerservicenummer)
             {
                 var p = await _repository.Zoek(bsn);
                 if (p != null && p.Any())

@@ -28,9 +28,5 @@ public class InvalidRequestBodyException : Exception, IHaalCentraalException
     {
         Details = message;
     }
-
-    protected InvalidRequestBodyException(SerializationInfo info, StreamingContext context) : base(info, context)
-    {
-		Details = "Request body is geen geldige JSON.";
-	}
+   
 }

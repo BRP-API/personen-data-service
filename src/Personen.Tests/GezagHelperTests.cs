@@ -1,5 +1,5 @@
 ﻿using Rvig.HaalCentraalApi.Personen.Helpers;
-using Gezag = Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
+using Gezag = Rvig.HaalCentraalApi.Personen.ApiModels.Gezag.Deprecated;
 
 namespace Personen.Tests
 {

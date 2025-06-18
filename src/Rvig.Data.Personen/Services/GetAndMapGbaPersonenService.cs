@@ -4,6 +4,7 @@ using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
 using Rvig.HaalCentraalApi.Personen.Interfaces;
 using Rvig.Data.Base.Postgres.Services;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Common;
 
 namespace Rvig.Data.Personen.Services;
 public class GetAndMapGbaPersonenService : GetAndMapGbaServiceBase, IGetAndMapGbaPersonenService

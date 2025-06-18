@@ -1,5 +1,5 @@
 # language: nl
-@api
+@api @deprecated
 Functionaliteit: gezagsrelaties van een meerderjarige
 
   Regel: een meerderjarige krijgt voor een minderjarig kind met twee ouders met gezag de gezagsrelatie naar beide ouders geleverd

@@ -3,7 +3,7 @@
   "defaultVariables": null,
   "documentGenerator": {
     "fromDocument": {
-      "url": "../../specificatie/brp-api-gezag/openapi.yaml",
+      "url": "../../specificatie/brp-api-gezag/resolved/openapi.yaml",
       "output": null,
       "newLineBehavior": "Auto"
     }
