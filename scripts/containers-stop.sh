@@ -10,6 +10,5 @@ fi
 
 docker compose \
     -f .docker/gezag-mock.yml \
-    -f .docker/gezag-proxy-mock.yml \
     -f .docker/personen-data-service.yml \
     down --volumes
