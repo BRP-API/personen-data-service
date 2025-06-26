@@ -19,9 +19,8 @@ public class OpenIdConnectAuthenticationHandler : AuthenticationHandler<Authenti
 		IOptionsMonitor<AuthenticationSchemeOptions> options,
         ILoggerFactory logger,
         UrlEncoder encoder,
-        ISystemClock clock,
 		ILoggingHelper loggingHelper
-	) : base(options, logger, encoder, clock)
+	) : base(options, logger, encoder)
 	{
 		_loggingHelper = loggingHelper;
 	}

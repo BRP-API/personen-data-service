@@ -26,8 +26,4 @@ public class ServiceUnavailableException : Exception, IHaalCentraalException
 	{
 		Details = message;
 	}
-
-	protected ServiceUnavailableException(SerializationInfo info, StreamingContext context) : base(info, context)
-	{
-	}
 }

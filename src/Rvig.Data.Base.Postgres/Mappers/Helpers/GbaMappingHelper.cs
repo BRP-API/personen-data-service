@@ -1,5 +1,6 @@
 ﻿using Rvig.Data.Base.Providers;
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Common;
 using Rvig.HaalCentraalApi.Shared.Util;
 using System.Globalization;
 using System.Text.RegularExpressions;

@@ -53,9 +53,4 @@ public class InvalidParamsException : Exception, IHaalCentraalException
         Details = message;
         InvalidParams = new List<InvalidParams>();
     }
-
-    protected InvalidParamsException(SerializationInfo info, StreamingContext context) : base(info, context)
-    {
-        InvalidParams = new List<InvalidParams>();
-    }
 }
