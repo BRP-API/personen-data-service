@@ -272,84 +272,6 @@ Functionaliteit: gezagsrelaties vragen met fields
       Voorbeelden:
         | fields                                     |
         | gezag                                      |
-        | gezag.type                                 |
-        | gezag.minderjarige                         |
-        | gezag.ouders                               |
-        | gezag.ouder                                |
-        | gezag.derde                                |
-        | gezag.derden                               |
-        | gezag.minderjarige.burgerservicenummer     |
-        | gezag.ouders.burgerservicenummer           |
-        | gezag.ouder.burgerservicenummer            |
-        | gezag.derde.burgerservicenummer            |
-        | gezag.derden.burgerservicenummer           |
-        | gezag.ouders,gezag.ouder                   |
-        | gezag.type,gezag.minderjarige,gezag.ouders |
-
-    Abstract Scenario: gezag vragen met fields <fields> dat niet van toepassing is op de persoon geeft alle velden van gezag die wel van toepassing zijn op de persoon
-      Gegeven de persoon met burgerservicenummer '000000048' heeft de volgende gegevens
-        | naam                                 | waarde           |
-        | geslachtsaanduiding (04.10)          | V                |
-        | voornamen (02.10)                    | Carolina         |
-        | adellijke titel of predicaat (02.20) | JV               |
-        | voorvoegsel (02.30)                  | te               |
-        | geslachtsnaam (02.40)                | Hoogh            |
-        | aanduiding naamgebruik (61.10)       | E                |
-        | geboortedatum (03.10)                | morgen - 35 jaar |
-      En de persoon met burgerservicenummer '000000012' heeft de volgende gegevens
-        | naam                                 | waarde           |
-        | geslachtsaanduiding (04.10)          | M                |
-        | voornamen (02.10)                    | Jan Peter        |
-        | adellijke titel of predicaat (02.20) | JH               |
-        | voorvoegsel (02.30)                  | te               |
-        | geslachtsnaam (02.40)                | Hoogh            |
-        | aanduiding naamgebruik (61.10)       | E                |
-        | geboortedatum (03.10)                | morgen - 12 jaar |
-      Gegeven de persoon heeft een ouder '1' met de volgende gegevens
-        | burgerservicenummer (01.20) |
-        |                   000000048 |
-      En voor de persoon geldt het volgende gezag
-        | naam                             | waarde                   |
-        | type                             | EenhoofdigOuderlijkGezag |
-        | minderjarige.burgerservicenummer |                000000012 |
-        | ouder.burgerservicenummer        |                000000048 |
-      Als personen wordt gezocht met de volgende parameters
-        | naam                | waarde                          |
-        | type                | RaadpleegMetBurgerservicenummer |
-        | burgerservicenummer |                       000000012 |
-        | fields              | <fields>                        |
-      Dan heeft de response een persoon met een 'gezag' met de volgende gegevens
-        | naam                                                   | waarde                   |
-        | type                                                   | EenhoofdigOuderlijkGezag |
-        | minderjarige.burgerservicenummer                       |                000000012 |
-        | minderjarige.naam.voornamen                            | Jan Peter                |
-        | minderjarige.naam.voorvoegsel                          | te                       |
-        | minderjarige.naam.geslachtsnaam                        | Hoogh                    |
-        | minderjarige.naam.adellijkeTitelPredicaat.code         | JH                       |
-        | minderjarige.naam.adellijkeTitelPredicaat.omschrijving | jonkheer                 |
-        | minderjarige.naam.adellijkeTitelPredicaat.soort        | predicaat                |
-        | minderjarige.geboorte.datum                            | morgen - 12 jaar         |
-        | minderjarige.geslacht.code                             | M                        |
-        | minderjarige.geslacht.omschrijving                     | man                      |
-        | ouder.burgerservicenummer                              |                000000048 |
-        | ouder.naam.voornamen                                   | Carolina                 |
-        | ouder.naam.voorvoegsel                                 | te                       |
-        | ouder.naam.geslachtsnaam                               | Hoogh                    |
-        | ouder.naam.adellijkeTitelPredicaat.code                | JV                       |
-        | ouder.naam.adellijkeTitelPredicaat.omschrijving        | jonkvrouw                |
-        | ouder.naam.adellijkeTitelPredicaat.soort               | predicaat                |
-        | ouder.geslacht.code                                    | V                        |
-        | ouder.geslacht.omschrijving                            | vrouw                    |
-
-      Voorbeelden:
-        | fields                           |
-        | gezag.ouders                     |
-        | gezag.derde                      |
-        | gezag.derden                     |
-        | gezag.ouders.burgerservicenummer |
-        | gezag.derde.burgerservicenummer  |
-        | gezag.derden.burgerservicenummer |
-        | gezag.ouders,gezag.derden        |
 
     Scenario: er is gezag van toepassing op de persoon, maar dit wordt niet gevraagd
       Gegeven de persoon met burgerservicenummer '000000012' heeft de volgende gegevens
@@ -427,8 +349,8 @@ Functionaliteit: gezagsrelaties vragen met fields
         | code     | paramsValidation                                            |
         | instance | /haalcentraal/api/brp/personen                              |
       En heeft de response invalidParams met de volgende gegevens
-        | code   | name      | reason                                       |
-        | fields | fields[0] | Parameter bevat een niet bestaande veldnaam. |
+        | code   | name      | reason                                        |
+        | fields | fields[0] | Parameter bevat een niet toegestane veldnaam. |
 
   Regel: Het toelichting veld bij een 'niet te bepalen' gezagsrelatie wordt niet geleverd
 
