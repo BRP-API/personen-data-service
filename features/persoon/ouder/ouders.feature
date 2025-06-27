@@ -174,6 +174,65 @@ Regel: de geleverde oudergegevens zijn de gegevens zoals die staan op de persoon
     | naam.voornamen        | Karel     |
     | ouderAanduiding       | 2         |
 
+  Scenario: Leveren van voorvoegsel van naam ouder 2 als beide ouders een voorvoegsel hebben
+    Gegeven de persoon met burgerservicenummer '000000012' heeft een ouder '1' met de volgende gegevens
+      | voorvoegsel (02.30) | geslachtsnaam (02.40) |
+      | van                 | Case                  |
+    En de persoon heeft een ouder '2' met de volgende gegevens
+      | voorvoegsel (02.30) | geslachtsnaam (02.40) |
+      | den                 | Test                  |
+    Als personen wordt gezocht met de volgende parameters
+      | naam                | waarde                          |
+      | type                | RaadpleegMetBurgerservicenummer |
+      | burgerservicenummer | 000000012                       |
+      | fields              | <fields> |
+    Dan heeft de response een persoon met een 'ouder' met de volgende gegevens
+      | naam               | waarde |
+      | ouderAanduiding    | 1      |
+      | naam.voorvoegsel   | van    |
+      | naam.geslachtsnaam | Case   |
+    En heeft de persoon een 'ouder' met de volgende gegevens
+      | naam               | waarde |
+      | ouderAanduiding    | 2      |
+      | naam.voorvoegsel   | den    |
+      | naam.geslachtsnaam | Test   |
+
+    Voorbeelden:
+      | fields                                                                   |
+      | ouders                                                                   |
+      | ouders.ouderAanduiding,ouders.naam                                       |
+      | ouders.ouderAanduiding,ouders.naam.geslachtsnaam,ouders.naam.voorvoegsel |
+
+  Scenario: Leveren van voorvoegsel van naam ouder 2 als ouder 1 geen voorvoegsel heeft
+    Gegeven de persoon met burgerservicenummer '000000012' heeft een ouder '1' met de volgende gegevens
+      | geslachtsnaam (02.40) |
+      | Case                  |
+    En de persoon heeft een ouder '2' met de volgende gegevens
+      | voorvoegsel (02.30) | geslachtsnaam (02.40) |
+      | den                 | Test                  |
+    Als personen wordt gezocht met de volgende parameters
+      | naam                | waarde                          |
+      | type                | RaadpleegMetBurgerservicenummer |
+      | burgerservicenummer | 000000012                       |
+      | fields              | <fields> |
+    Dan heeft de response een persoon met een 'ouder' met de volgende gegevens
+       | naam               | waarde |
+       | ouderAanduiding    | 1      |
+       | naam.geslachtsnaam | Case   |
+    En heeft de persoon een 'ouder' met de volgende gegevens
+      | naam               | waarde |
+      | ouderAanduiding    | 2      |
+      | naam.voorvoegsel   | den    |
+      | naam.geslachtsnaam | Test   |
+
+    Voorbeelden:
+      | fields                                                                   |
+      | ouders                                                                   |
+      | ouders.ouderAanduiding,ouders.naam                                       |
+      | ouders.ouderAanduiding,ouders.naam.geslachtsnaam,ouders.naam.voorvoegsel |
+
+
+
 Regel: Wanneer alleen gegevens in groep 81, 82, 83, 84, 85 en/of 86 zijn opgenomen en geen gegevens in groep 1, 2, 3, 4 of 62, dan wordt de ouder niet opgenomen
   Gebruik van de fields parameter heeft geen invloed op het leveren van een ouder
 

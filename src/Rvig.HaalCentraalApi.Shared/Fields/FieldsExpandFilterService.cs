@@ -226,44 +226,6 @@ public class FieldsFilterService
 	}
 
 	/// <summary>
-	/// Validates if the properties in the scope are valid
-	/// </summary>
-	/// <param name="scope"></param>
-	/// <param name="allowedScope">Properties that are allowed, if null, everything is allowed except the forbidden properties</param>
-	/// <param name="forbiddenScope">Properties that are not allowed, only applicable if allowedScope is null or empty</param>
-	/// <returns></returns>
-	private void ValidateScope(string scope, List<string> allowedScope, List<string> forbiddenScope, string parameterName)
-	{
-		var scopeProperties = scope.Split(',');
-
-		if (allowedScope != null && allowedScope.Any())
-		{
-			var unallowedProperties = scopeProperties.Where(scopeItem => !allowedScope.Any(allowed => scopeItem.StartsWith(allowed))).ToList();
-			if (unallowedProperties?.Any() == true)
-			{
-				var invalidParams = new List<InvalidParams>();
-				unallowedProperties.ForEach(unallowedProperty => invalidParams.Add(CreateThrowParameterValidationInvalidParam(parameterName, unallowedProperty)));
-
-				ThrowParameterValidationException(invalidParams);
-			}
-		}
-		else
-		{
-			if (forbiddenScope != null)
-			{
-				var unallowedProperties = scopeProperties.Where(scopeItem => forbiddenScope.Any(forbidden => scopeItem.StartsWith(forbidden))).ToList();
-				if (unallowedProperties?.Any() == true)
-				{
-					var invalidParams = new List<InvalidParams>();
-					unallowedProperties.ForEach(unallowedProperty => invalidParams.Add(CreateThrowParameterValidationInvalidParam(parameterName, unallowedProperty)));
-
-					ThrowParameterValidationException(invalidParams);
-				}
-			}
-		}
-	}
-
-	/// <summary>
 	/// Checks if the context property is not null
 	/// </summary>
 	/// <param name="rootObject"></param>
@@ -349,15 +311,50 @@ public class FieldsFilterService
 
 			if (isPropertyBranchDefault.parent?.GetType().IsGenericType == true && isPropertyBranchDefault.parent.GetType().GetInterfaces().Contains(typeof(IEnumerable)))
 			{
-				var parentList = ((IEnumerable)isPropertyBranchDefault.parent).Cast<object>().Select(parentItem => IsPropertyBranchDefault(parentItem, propertyBranch));
-				if (parentList != null && parentList.All(parentItem => parentItem.isDefault))
+				// Check if ANY item in the collection has non-default values for the remaining property path
+				var remainingPropertyTree = propertyTree.SkipWhile(x => x != propertyBranch).ToList();
+				var collection = (IEnumerable)isPropertyBranchDefault.parent;
+				var collectionItems = collection.Cast<object>().ToList();
+
+				if (collectionItems.Count == 0)
 				{
+					// Empty collection, prune everything from current branch
 					propertyTree.RemoveAll(propBranch => propertyTree.IndexOf(propBranch) >= propertyTree.IndexOf(propertyBranch));
 					break;
 				}
-				if (parentList != null)
+
+				var hasAnyNonDefaultItem = collectionItems.Any(item => !IsDefault(item, remainingPropertyTree));
+
+				if (!hasAnyNonDefaultItem)
 				{
-					isPropertyBranchDefault = parentList.FirstOrDefault();
+					// All items in the collection have default values for the remaining property path
+
+					if (propertyBranch != propertyTree[^1])
+					{
+						// current property branch is not the last one in the tree
+
+						// Truncate the property tree after the current branch to create empty parent objects
+						var currentBranchIndex = propertyTree.IndexOf(propertyBranch);
+						propertyTree.RemoveRange(currentBranchIndex + 1, propertyTree.Count - currentBranchIndex - 1);
+					}
+					else
+					{
+						// current property branch is the last one in the tree
+
+						// prune property branch since it has default values
+						propertyTree.RemoveAll(propBranch => propertyTree.IndexOf(propBranch) >= propertyTree.IndexOf(propertyBranch));
+					}
+					break;
+				}
+
+				// At least one collection item has non-default values
+				// Find the first item that has non-default values for the remaining path
+				var nonDefaultItem = collectionItems.FirstOrDefault(item => !IsDefault(item, remainingPropertyTree));
+				if (nonDefaultItem != null)
+				{
+					// Get the property value from this non-default item to continue the property tree traversal
+					var propertyValue = propertyBranch.GetValue(nonDefaultItem);
+					isPropertyBranchDefault = (propertyValue, false);
 				}
 			}
 			else
