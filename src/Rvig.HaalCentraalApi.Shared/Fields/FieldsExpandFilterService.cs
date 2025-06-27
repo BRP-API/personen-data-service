@@ -329,7 +329,7 @@ public class FieldsFilterService
 				{
 					// All items in the collection have default values for the remaining property path
 
-					if (propertyBranch != propertyTree.Last())
+					if (propertyBranch != propertyTree[^1])
 					{
 						// current property branch is not the last one in the tree
 
