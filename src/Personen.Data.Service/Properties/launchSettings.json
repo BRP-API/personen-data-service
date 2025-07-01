@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "https://localhost:44331;http://localhost:33346",
-      "dotnetRunMessages": "true"
+      "dotnetRunMessages": true
     },
     "WSL": {
       "commandName": "WSL2",

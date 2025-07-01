@@ -1,5 +1,6 @@
 using Brp.Shared.Infrastructure.Logging;
 using Brp.Shared.Infrastructure.Utils;
+using GezagMock.Middleware;
 using GezagMock.Repositories;
 using Serilog;
 
@@ -21,12 +22,17 @@ try
     builder.Services.AddControllers().AddNewtonsoftJson();
 
     builder.Services.AddScoped<GezagsrelatieRepository>();
+    builder.Services.AddScoped<GezagsrelatieRepositoryDeprecated>();
 
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
 
     app.SetupSerilogRequestLogging();
+
+    app.UseMiddleware<VersionRoutingMiddleware>();
+
+    app.UseRouting();
 
     app.UseAuthorization();
 

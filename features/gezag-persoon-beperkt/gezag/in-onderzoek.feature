@@ -5,20 +5,16 @@ Functionaliteit: doorgeven van indicatie in onderzoek
   Regel: wanneer de Gezag API een gezagsrelatie levert waarvan het inOnderzoek veld is gevuld, dan wordt dit veld doorgegeven
 
     Scenario: gezag wordt gevraagd en de Gezag API levert een gezagsrelatie met inOnderzoek veld
-    Gegeven adres 'A1' heeft de volgende gegevens
-      | gemeentecode (92.10) | identificatiecode verblijfplaats (11.80) |
-      | 0599                 | 0599010051001502                         |
-    En de persoon met burgerservicenummer '000000048' is ingeschreven op adres 'A1' met de volgende gegevens
-      | gemeente van inschrijving (09.10) |
-      | 0599                              |
-      En voor de persoon geldt het volgende gezag
-      | type                     | minderjarige.burgerservicenummer | ouder.burgerservicenummer | inOnderzoek |
-      | EenhoofdigOuderlijkGezag | 000000048                        | 000000012                 | true        |
-      Als personen wordt gezocht met de volgende parameters
-      | naam                             | waarde                                  |
-      | type                             | ZoekMetAdresseerbaarObjectIdentificatie |
-      | adresseerbaarObjectIdentificatie | 0599010051001502                        |
-      | fields                           | gezag                                   |
-      Dan heeft de response een persoon met een 'gezag' met de volgende gegevens
-      | type                     | inOnderzoek | ouder.burgerservicenummer | minderjarige.burgerservicenummer |
-      | EenhoofdigOuderlijkGezag | true        | 000000012                 | 000000048                        |
+      Gegeven adres 'A1'
+        | identificatiecode verblijfplaats (11.80) |
+        |                         0599010000219679 |
+      En de minderjarige 'P1'
+      En de meerderjarige 'P2'
+      En 'P1' is vandaag 2 jaar geleden ingeschreven op adres 'A1'
+      En 'P1' heeft de volgende gezagsrelaties
+      * eenhoofdig ouderlijk gezag over 'P1' met ouder 'P2'
+      En het gezag is in onderzoek
+      Als 'gezag' wordt gevraagd van personen gezocht met adresseerbaar object identificatie van 'A1'
+      Dan heeft 'P1' de volgende gezagsrelaties
+      * het gezag over 'P1' is eenhoofdig ouderlijk gezag met ouder 'P2'
+      En is het gezag in onderzoek

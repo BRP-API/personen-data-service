@@ -1,6 +1,6 @@
 #language: nl
 
-@api
+@api @skip-verify
 Functionaliteit: Zoeken
 
 Regel: Er moet een valide zoek type worden opgegeven

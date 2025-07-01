@@ -26,9 +26,5 @@ namespace Rvig.HaalCentraalApi.Shared.Exceptions
         {
             Details = message;
         }
-
-        protected UnsupportedMediaTypeException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
     }
 }

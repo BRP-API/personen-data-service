@@ -293,6 +293,6 @@ public class ErrorResponseService : IErrorResponseService
 	private string GetInstance(string path)
 	{
 		//return $"https://{_haalcentraalApiOptions.Value.BrpHostName}{path}";
-		return path;
+		return path.Replace("/v2", "");
 	}
 }

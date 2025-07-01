@@ -12,10 +12,3 @@ services:
     build:
       context: .
       dockerfile: GezagMock/Dockerfile
-
-  gezagproxymock:
-    container_name: gezagproxymock
-    image: ghcr.io/brp-api/gezag-proxy-mock:latest
-    build:
-      context: .
-      dockerfile: GezagProxyMock/Dockerfile
