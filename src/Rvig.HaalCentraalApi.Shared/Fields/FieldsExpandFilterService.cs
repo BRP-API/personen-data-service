@@ -183,7 +183,7 @@ public class FieldsFilterService
 		//1. set all the properties that exist in the scope from source to the target
 		foreach (var propertyName in scopeProperties)
 		{
-			var fieldToExamine = propertyName;
+			var fieldToExamine = RewriteDatumEnTabelwaardeFieldwaarden(propertyName);
 			if (filterSettings.ShortHandMappings != null && filterSettings.ShortHandMappings.Any() && filterSettings.ShortHandMappings.ContainsKey(fieldToExamine))
 			{
 				fieldToExamine = filterSettings.ShortHandMappings[fieldToExamine];
