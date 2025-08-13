@@ -79,14 +79,9 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 		{
 			_gbaPersonenApiHelper.HackLogicKinderenPartnersOuders(model.Fields, personenPlIds?.ToList()?.ConvertAll(gbaPersoon => gbaPersoon.persoon));
 
-			//var bsns = personenPlIds!.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
-			//var gezag = await _gezagService.GetGezagIfRequested(model.Fields, bsns);
-            //var gezagPersonen = await _gezagService.GetGezagPersonenIfRequested(model.Fields, gezag);
-
 			foreach (var x in personenPlIds!.Where(x => x.persoon != null))
             {
                 bsns.Add(x.persoon.Burgerservicenummer);
-                //_gezagService.VerrijkPersonenMetGezagIfRequested(model.Fields, gezag, gezagPersonen, x);
 
                 x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.Fields, x.persoon.Rni, _persoonFieldsSettings.GbaFieldsSettings);
                 if (x.persoon.Verblijfplaats != null)
@@ -148,16 +143,8 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 				|| x.persoon.OpschortingBijhouding?.Reden?.Code?.Equals("O") == true
 							&& inclusiefOverledenPersonen == true);
 
-            //var bsns = personenPlIds.Select(p => p.persoon.Burgerservicenummer).Where(bsn => !bsn.IsNullOrEmpty()).ToList();
-            //var gezag = await _gezagService.GetGezagIfRequested(model.Fields, bsns);
-            //var gezagPersonen = await _gezagService.GetGezagPersonenIfRequested(model.Fields, gezag);
-
             foreach (var x in personenPlIds.Where(x => x.persoon != null))
 			{
-                //if (x.persoon is IPersoonMetGezag)
-                //{
-                //	//_gezagService.VerrijkPersonenMetGezagIfRequested(model.Fields, gezag, gezagPersonen, ((IPersoonMetGezag persoon, long pl_id))x);
-                //}
                 bsns.Add(x.persoon.Burgerservicenummer);
 
                 if (!model.Fields.Contains("burgerservicenummer") && GezagHelper.GezagIsRequested(model.Fields))
