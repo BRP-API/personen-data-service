@@ -4,7 +4,6 @@ using Rvig.HaalCentraalApi.Shared.Helpers;
 using System.Reflection;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using System.Linq;
 
 namespace Rvig.HaalCentraalApi.Shared.Fields;
 public class FieldsFilterService
@@ -75,8 +74,7 @@ public class FieldsFilterService
                                           select scopeItem)
                 {
 					// vragen naar gezag sub-velden zijn niet toegestaan
-					unallowedProperties ??= [];
-                    unallowedProperties.Add(scopeItem);
+                    unallowedProperties?.Add(scopeItem);
                 }
 
                 if (unallowedProperties?.Any() == true)
