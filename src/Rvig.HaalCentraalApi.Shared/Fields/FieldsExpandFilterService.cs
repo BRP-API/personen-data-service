@@ -4,6 +4,7 @@ using Rvig.HaalCentraalApi.Shared.Helpers;
 using System.Reflection;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace Rvig.HaalCentraalApi.Shared.Fields;
 public class FieldsFilterService
@@ -69,17 +70,16 @@ public class FieldsFilterService
 					unallowedProperties = unallowedProperties.Where(scopeItem => !filterSettings.MandatoryProperties.Contains(scopeItem) && !filterSettings.SetChildPropertiesIfExistInScope.ContainsKey(scopeItem) && !filterSettings.SetPropertiesIfContextPropertyNotNull.ContainsKey(scopeItem)).ToList();
 				}
 
-				foreach (var scopeItem in scopeProperties)
-				{
-					if (scopeItem.StartsWith("gezag."))
-					{
-						// vragen naar gezag sub-velden zijn niet toegestaan
-						unallowedProperties ??= [];
-						unallowedProperties.Add(scopeItem);
-					}
-				}
-				
-				if (unallowedProperties?.Any() == true)
+                foreach (var scopeItem in from scopeItem in scopeProperties
+                                          where scopeItem.StartsWith("gezag.")
+                                          select scopeItem)
+                {
+					// vragen naar gezag sub-velden zijn niet toegestaan
+					unallowedProperties ??= [];
+                    unallowedProperties.Add(scopeItem);
+                }
+
+                if (unallowedProperties?.Any() == true)
 				{
 					var invalidParams = new List<InvalidParams>();
 					unallowedProperties.ForEach(unallowedProperty => invalidParams.Add(CreateThrowParameterValidationInvalidParam(filterSettings.ParameterName, unallowedProperty, true)));
