@@ -9,7 +9,6 @@ services:
       - HaalcentraalApi__MaxSearchResults=10
       - ASPNETCORE_URLS=http://+;
       - WebApi__Url=http://gezagmock:5020/api/v1
-      - ProtocolleringAuthorization__UseAuthorizationChecks=false
       - ProtocolleringAuthorization__UseProtocollering=false
       - Ecs__Path=/var/log/personen-data-service.json
       - Ecs__SecuredPath=/var/log/personen-data-service-secured.json

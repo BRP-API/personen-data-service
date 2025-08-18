@@ -1,6 +1,4 @@
 ﻿using Brp.Shared.Infrastructure.Logging;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +12,8 @@ using static System.Net.Mime.MediaTypeNames;
 using FluentValidation.AspNetCore;
 using Rvig.Base.App.Middleware;
 using Rvig.Base.App.Services;
-using Rvig.Base.App.Authentication;
 using FluentValidation;
 using Rvig.HaalCentraalApi.Shared;
-using Rvig.HaalCentraalApi.Shared.Exceptions;
 using Rvig.Data.Base.WebApi;
 using Serilog;
 using Brp.Shared.Infrastructure.ProblemDetails;
@@ -27,14 +23,13 @@ namespace Rvig.Base.App;
 
 public static class RvigBaseApp
 {
-	private static string? _currentAuthenticationType;
 	/// <summary>
 	/// Init app
 	/// </summary>
 	/// <param name="servicesToConfigure">Services to add as singletons. Key is interface, value is implementation.</param>
 	/// <param name="validatorsToConfigure">Validator types of specific child app. Used for validation of post request objects.</param>
 	/// <param name="controllerAssemblies">Controller resolving in other assemblies. E.g. typeof(EntitiesController).Assembly</param>
-	public static void Init(IDictionary<Type, Type> servicesToConfigure, List<Type> validatorsToConfigure, Func<WebApplicationBuilder, bool> useAuthorizationLayerFunc, string apiName, IEnumerable<Assembly>? controllerAssemblies = null)
+	public static void Init(IDictionary<Type, Type> servicesToConfigure, List<Type> validatorsToConfigure, string apiName, IEnumerable<Assembly>? controllerAssemblies = null)
 	{
 		Log.Logger = SerilogHelpers.SetupSerilogBootstrapLogger();
 
@@ -68,16 +63,6 @@ public static class RvigBaseApp
 
 			// Loading validators from child app.
 			validatorsToConfigure.ForEach(validator => builder.Services.AddValidatorsFromAssemblyContaining(validator));
-
-			bool useAuthorizationChecks = useAuthorizationLayerFunc(builder);
-
-			var authnTypes = !string.IsNullOrWhiteSpace(builder.Configuration["AuthenticationTypes"])
-				? builder.Configuration["AuthenticationTypes"]!.Split(",")
-				: new List<string>().ToArray();
-			string[] authenticationTypes = useAuthorizationChecks
-				?  authnTypes
-				: new List<string>().ToArray();
-			builder = ConfigureAuth(builder, authenticationTypes);
 
 			// Add services to the container.
 			builder.Services.AddRazorPages();
@@ -114,17 +99,6 @@ public static class RvigBaseApp
 
 			app.UseRouting();
 
-			if (useAuthorizationChecks)
-			{
-				app.UseAuthentication();
-				app.UseAuthorization();
-
-				if (_currentAuthenticationType?.Equals("jwtbearer") == true)
-				{
-					app.UseMiddleware<JwtBearerWwwAuthenticateMiddleware>();
-				}
-			}
-
 			// So we can grab the POST body to validate for unknown params. See ValidateUnusableQueryParamsAttribute.cs
 			app.UseMiddleware<EnableRequestBodyBufferingMiddleware>();
 
@@ -155,42 +129,5 @@ public static class RvigBaseApp
 		services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 		services.AddSingleton<IErrorResponseService, ErrorResponseService>();
 		services.AddSingleton<IHealthCheckApiService, HealthCheckApiService>();
-	}
-
-	private static WebApplicationBuilder ConfigureAuth(WebApplicationBuilder builder, IEnumerable<string> authenticationTypes)
-	{
-		if (authenticationTypes == null || !authenticationTypes.Any())
-		{
-			// no authentication required
-			return builder;
-		}
-		else if (authenticationTypes.Count() > 1)
-		{
-			throw new CustomInvalidOperationException("More than one authentication type was defined.");
-		}
-		_currentAuthenticationType = authenticationTypes.Single().ToLower();
-
-		return _currentAuthenticationType switch
-		{
-			"basic" => ConfigureBasicAuth(builder),
-			"openidconnect" => ConfigureOpenIdConnectAuth(builder),
-			_ => throw new CustomInvalidOperationException("Unknown authentication type was defined.")
-		};
-	}
-
-	private static WebApplicationBuilder ConfigureBasicAuth(WebApplicationBuilder builder)
-	{
-		builder.Services.AddAuthentication().AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", _ => { });
-		builder.Services.AddAuthorization(options => options.DefaultPolicy = new AuthorizationPolicyBuilder("BasicAuthentication").RequireAuthenticatedUser().Build());
-
-		return builder;
-	}
-
-	private static WebApplicationBuilder ConfigureOpenIdConnectAuth(WebApplicationBuilder builder)
-	{
-		builder.Services.AddAuthentication().AddScheme<AuthenticationSchemeOptions, OpenIdConnectAuthenticationHandler>("OpenIdConnectAuthentication", _ => { });
-		builder.Services.AddAuthorization(options => options.DefaultPolicy = new AuthorizationPolicyBuilder("OpenIdConnectAuthentication").RequireAuthenticatedUser().Build());
-
-		return builder;
 	}
 }
