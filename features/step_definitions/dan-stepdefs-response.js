@@ -10,6 +10,13 @@ Then(/^heeft de response de volgende headers$/, function (dataTable) {
     });
 });
 
+Then('heeft de response geen {string} header', function (headerNaam) {
+    const headers = this.context.response.headers;
+
+    const header = headers[headerNaam];
+    should.not.exist(header);
+});
+
 Then('bevat de request naar de gezag API de header {string} met waarde {string}', function (headerNaam, headerWaarde) {
     const headers = this.context.response.headers;
 

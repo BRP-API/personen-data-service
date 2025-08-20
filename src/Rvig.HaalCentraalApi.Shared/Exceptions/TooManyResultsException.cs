@@ -28,9 +28,5 @@ namespace Rvig.HaalCentraalApi.Shared.Exceptions
         {
             Details = message;
         }
-
-        protected TooManyResultsException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
     }
 }

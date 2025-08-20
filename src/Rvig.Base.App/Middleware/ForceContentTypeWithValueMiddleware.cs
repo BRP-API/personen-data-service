@@ -17,7 +17,7 @@ namespace Rvig.Base.App.Middleware
 			}
 			else if (!context.Request.Headers.ContainsKey("Accept"))
 			{
-				context.Request.Headers.Add("Accept", "application/json; charset=utf-8");
+                context.Request.Headers.Append("Accept", "application/json; charset=utf-8");
 			}
 			if (string.IsNullOrWhiteSpace(context.Request.ContentType))
 			{

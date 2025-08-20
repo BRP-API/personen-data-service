@@ -1,5 +1,4 @@
-#language: nl
-
+# language: nl
 @api
 Functionaliteit: geef geleverde persoonslijsten door aan protocollerings-API
 
@@ -53,17 +52,24 @@ Functionaliteit: geef geleverde persoonslijsten door aan protocollerings-API
       | geboortedatum | 1985-05-01                          |
       | fields        | naam.voornamen                      |
       Dan heeft de response 0 personen
-      En heeft de response de volgende headers
-      | naam            | waarde |
-      | x-geleverde-pls |        |
+      En heeft de response geen 'x-geleverde-pls' header
 
     @fout-case
     Scenario: raadplegen levert een foutmelding
       Als personen wordt gezocht met de volgende parameters
-      | naam                | waarde                          |
-      | type                | RaadpleegMetBurgerservicenummer |
-      | burgerservicenummer | 000000024                       |
-      | fields              | bestaatNiet                     |
-      Dan heeft de response de volgende headers
-      | naam            | waarde |
-      | x-geleverde-pls |        |
+        | naam                | waarde                          |
+        | type                | RaadpleegMetBurgerservicenummer |
+        | burgerservicenummer |                       000000024 |
+        | fields              | bestaatNiet                     |
+      Dan heeft de response de volgende gegevens
+        | naam     | waarde                                                      |
+        | type     | https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1 |
+        | title    | Een of meerdere parameters zijn niet correct.               |
+        | status   |                                                         400 |
+        | detail   | De foutieve parameter(s) zijn: fields[0].                   |
+        | code     | paramsValidation                                            |
+        | instance | /haalcentraal/api/brp/personen                              |
+      En heeft de response invalidParams met de volgende gegevens
+        | code   | name      | reason                                       |
+        | fields | fields[0] | Parameter bevat een niet bestaande veldnaam. |
+      En heeft de response geen 'x-geleverde-pls' header

@@ -104,26 +104,6 @@ public class LoggingHelper : ILoggingHelper
 				LogContext.PushProperty("RequestMethod", _httpContextAccessor.HttpContext.Request.Method);
 				LogContext.PushProperty("StatusCode", _httpContextAccessor.HttpContext.Response.StatusCode);
 
-				// Used for when we do not want request bodies to be serialized as strings.
-				//if (_httpContextAccessor.HttpContext.Request.Body != null && _httpContextAccessor.HttpContext.Request.Body.CanRead)
-				//{
-					//if (!_httpContextAccessor.HttpContext.Request.Body.CanSeek)
-					//{
-					//	// We only do this if the stream isn't *already* seekable,
-					//	// as EnableBuffering will create a new stream instance
-					//	// each time it's called
-					//	_httpContextAccessor.HttpContext.Request.EnableBuffering();
-					//}
-
-					//_httpContextAccessor.HttpContext.Request.Body.Position = 0;
-
-					//var reader = new StreamReader(_httpContextAccessor.HttpContext.Request.Body, Encoding.UTF8);
-
-					//var postBody = await reader.ReadToEndAsync();
-					//_httpContextAccessor.HttpContext.Request.Body.Position = 0;
-					//LogContext.PushProperty("Request", postBody);
-				//}
-
 				if (_httpContextAccessor.HttpContext.Items.Count > 0 && _httpContextAccessor.HttpContext.Items.ContainsKey("RequestBodySerialized"))
 				{
 					LogContext.PushProperty("Request", _httpContextAccessor.HttpContext.Items["RequestBodySerialized"]);
@@ -131,23 +111,6 @@ public class LoggingHelper : ILoggingHelper
 
 				if (_httpContextAccessor.HttpContext.Request.Headers.Count > 0)
 				{
-					if (_httpContextAccessor.HttpContext.Request.Headers.ContainsKey("Authorization")
-					&& _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Contains("Bearer"))
-					{
-						var authorizationHeaderValue = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
-						var userClientToken = authorizationHeaderValue?["Bearer ".Length..].Trim();
-						var handler = new JwtSecurityTokenHandler();
-						var jsonToken = handler.ReadToken(userClientToken);
-
-						var userClaims = new List<string>();
-						if (jsonToken is JwtSecurityToken token)
-						{
-							userClaims = token.Claims.Where(claim => claim.Type == "claims").Select(x => x.Value).ToList();
-						}
-						//var claims = Encoding.UTF8.GetString(Convert.FromBase64String(userClientToken!.Split(".")[1]));
-						//LogContext.PushProperty("Token", "Hallo Frank!");
-						LogContext.PushProperty("Token", userClaims);
-					}
 					if (_httpContextAccessor.HttpContext.Request.Headers.ContainsKey("Request-ID")
 					&& !string.IsNullOrWhiteSpace(_httpContextAccessor.HttpContext.Request.Headers["Request-ID"].ToString()))
 					{

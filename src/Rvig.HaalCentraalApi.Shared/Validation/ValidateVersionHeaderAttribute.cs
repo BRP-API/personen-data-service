@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Rvig.HaalCentraalApi.Shared.ApiModels.Universal;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
@@ -27,7 +28,7 @@ public class ValidateVersionHeaderAttribute : ResultFilterAttribute
 		{
 			throw new CustomInvalidOperationException("API version must always be set.");
 		}
-		context.HttpContext.Response.Headers.Add(_versionHeader, version);
+		context.HttpContext.Response.Headers.Append(_versionHeader, version);
         context.HttpContext.Items.Add(_versionHeader, version);
 
         context.HttpContext.Request.Headers.TryGetValue(_versionHeader, out var versionValue);
