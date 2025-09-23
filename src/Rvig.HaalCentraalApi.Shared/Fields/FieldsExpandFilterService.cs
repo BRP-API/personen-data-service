@@ -69,7 +69,15 @@ public class FieldsFilterService
 					unallowedProperties = unallowedProperties.Where(scopeItem => !filterSettings.MandatoryProperties.Contains(scopeItem) && !filterSettings.SetChildPropertiesIfExistInScope.ContainsKey(scopeItem) && !filterSettings.SetPropertiesIfContextPropertyNotNull.ContainsKey(scopeItem)).ToList();
 				}
 
-				if (unallowedProperties?.Any() == true)
+                foreach (var scopeItem in from scopeItem in scopeProperties
+                                          where scopeItem.StartsWith("gezag.")
+                                          select scopeItem)
+                {
+					// vragen naar gezag sub-velden zijn niet toegestaan
+                    unallowedProperties?.Add(scopeItem);
+                }
+
+                if (unallowedProperties?.Any() == true)
 				{
 					var invalidParams = new List<InvalidParams>();
 					unallowedProperties.ForEach(unallowedProperty => invalidParams.Add(CreateThrowParameterValidationInvalidParam(filterSettings.ParameterName, unallowedProperty, true)));
@@ -81,7 +89,7 @@ public class FieldsFilterService
 
 		foreach (var propertyName in scopeProperties)
 		{
-			var fieldToExamine = propertyName;
+			var fieldToExamine = RewriteDatumEnTabelwaardeFieldwaarden(propertyName);
 			if (filterSettings.ShortHandMappings != null && filterSettings.ShortHandMappings.Any() && filterSettings.ShortHandMappings.ContainsKey(fieldToExamine))
 			{
 				fieldToExamine = filterSettings.ShortHandMappings[fieldToExamine];
@@ -95,6 +103,55 @@ public class FieldsFilterService
 				GetPropertyTree(propertyOrMappedProperty, objectType, filterSettings.ParameterName, field);
 			}
 		}
+	}
+
+	private static readonly List<string> DatumEnTabelwaardeVeldnamen =
+	[
+		"aanduiding",
+		"aanduidingBijHuisnummer",
+		"aanduidingNaamgebruik",
+		"adellijkeTitelPredicaat",
+		"datum",
+		"datumEersteInschrijvingGBA",
+		"datumEinde",
+		"datumIngangFamilierechtelijkeBetrekking",
+		"datumIngang",
+		"datumIngangGeldigheid",
+		"datumInschrijvingInGemeente",
+		"datumVan",
+		"datumVestigingInNederland",
+		"einddatum",
+		"einddatumUitsluiting",
+		"functieAdres",
+		"gemeenteVanInschrijving",
+		"geslacht",
+		"indicatieGezagMinderjarige",
+		"land",
+		"landVanwaarIngeschreven",
+		"nationaliteit",
+		"plaats",
+		"redenOpname",
+		"soortVerbintenis"
+	];
+
+	/// <summary>
+	/// rewrite veldwaarden die verwijzen naar een (niet-bestaand) sub-velden van datum of tabelwaarde velden
+	/// naar een verwijzing van het datum of tabelwaarde veld
+	/// voorbeeld: geboorte.datum.jaar of geboorte.datum.nietBestaand wordt gewijzigd naar geboorte.datum 
+	/// </summary>
+	/// <param name="veld"></param>
+	/// <returns></returns>
+	private static string RewriteDatumEnTabelwaardeFieldwaarden(string veld)
+	{
+		var subvelden = veld.Split('.');
+		if (subvelden.Length == 1)
+		{
+			return veld;
+		}
+
+		return DatumEnTabelwaardeVeldnamen.Contains(subvelden[^2])
+			? string.Join('.', subvelden.Take(subvelden.Length - 1))
+			: veld;
 	}
 
 	/// <summary>
@@ -124,7 +181,7 @@ public class FieldsFilterService
 		//1. set all the properties that exist in the scope from source to the target
 		foreach (var propertyName in scopeProperties)
 		{
-			var fieldToExamine = propertyName;
+			var fieldToExamine = RewriteDatumEnTabelwaardeFieldwaarden(propertyName);
 			if (filterSettings.ShortHandMappings != null && filterSettings.ShortHandMappings.Any() && filterSettings.ShortHandMappings.ContainsKey(fieldToExamine))
 			{
 				fieldToExamine = filterSettings.ShortHandMappings[fieldToExamine];

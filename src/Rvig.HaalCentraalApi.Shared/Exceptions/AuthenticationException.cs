@@ -26,8 +26,4 @@ public class AuthenticationException : Exception, IHaalCentraalException
 	{
 		Details = message;
 	}
-
-	protected AuthenticationException(SerializationInfo info, StreamingContext context) : base(info, context)
-	{
-	}
 }

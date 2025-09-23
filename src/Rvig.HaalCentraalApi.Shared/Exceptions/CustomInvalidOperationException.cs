@@ -23,8 +23,4 @@ public class CustomInvalidOperationException : InvalidOperationException, IHaalC
 	{
 		Details = message;
 	}
-
-	protected CustomInvalidOperationException(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
-	{
-	}
 }

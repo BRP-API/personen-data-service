@@ -1,4 +1,4 @@
-﻿namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
+﻿namespace Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
 
 public interface IPersoonMetGezag
 {

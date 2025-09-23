@@ -2,12 +2,12 @@
 using Npgsql;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
 using Rvig.HaalCentraalApi.Shared.Options;
-using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.Data.Base.Postgres.DatabaseModels;
 using Rvig.Data.Base.Postgres.Repositories;
 using Rvig.Data.Personen.Repositories.Queries.Helper;
 using Rvig.HaalCentraalApi.Shared.Helpers;
 using System.Diagnostics;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Common;
 
 namespace Rvig.Data.Personen.Repositories;
 public interface IRvigPersoonBeperktRepo

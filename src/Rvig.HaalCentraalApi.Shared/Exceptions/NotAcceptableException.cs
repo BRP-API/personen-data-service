@@ -26,9 +26,5 @@ namespace Rvig.HaalCentraalApi.Shared.Exceptions
         {
             Details = message;
         }
-
-        protected NotAcceptableException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
     }
 }

@@ -37,9 +37,6 @@ env:
   GEZAG_MOCK_PROJECT_PATH: ./src/GezagMock
   GEZAG_MOCK_CSPROJ_FILE_PATH: ./src/GezagMock/GezagMock.csproj
   GEZAG_MOCK_CONTAINER_IMAGE: ghcr.io/brp-api/gezag-mock
-  GEZAG_PROXY_MOCK_PROJECT_PATH: ./src/GezagProxyMock
-  GEZAG_PROXY_MOCK_CSPROJ_FILE_PATH: ./src/GezagProxyMock/GezagProxyMock.csproj
-  GEZAG_PROXY_MOCK_CONTAINER_IMAGE: ghcr.io/brp-api/gezag-proxy-mock
   DATA_SERVICE_DOCKER_FILE_PATH: .docker/personen-data-service.yml
 
 jobs:
@@ -65,12 +62,6 @@ jobs:
         with:
           path-csproj-file: ${{ env.GEZAG_MOCK_CSPROJ_FILE_PATH }}
           build-run: ${{ steps.build-run-id.outputs.build-run }}
-      - name: Zet versie met build run in Gezag Proxy mock csproj
-        uses: ./.github/actions/zet-versie-met-build-run-in-csproj
-        id: proxy-mock-version
-        with:
-          path-csproj-file: ${{ env.GEZAG_PROXY_MOCK_CSPROJ_FILE_PATH }}
-          build-run: ${{ steps.build-run-id.outputs.build-run }}
 
       - name: Bepaal de gewijzigde applicatie(s) met dorny/paths-filter@v3.0.2
         uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36
@@ -85,8 +76,6 @@ jobs:
               - '${{ env.SHARED_PROJECT_PATH }}/**'
             mock:
               - '${{ env.GEZAG_MOCK_PROJECT_PATH }}/**'
-            proxy-mock:
-              - '${{ env.GEZAG_PROXY_MOCK_PROJECT_PATH }}/**'
   
       - name: Valideer .NET solution
         uses: ./.github/actions/valideer-dotnet-solution
@@ -200,16 +189,3 @@ jobs:
             ${{ env.GEZAG_MOCK_CONTAINER_IMAGE }}:latest
             ${{ env.GEZAG_MOCK_CONTAINER_IMAGE }}:${{ steps.mock-version.outputs.version }}-latest
             ${{ env.GEZAG_MOCK_CONTAINER_IMAGE }}:${{ steps.mock-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
-
-      - name: Build en push gezag proxy mock container images naar registry
-        if: always() && inputs.publishType == 'gezag-proxy-mock'
-        uses: docker/build-push-action@v6
-        with:
-          file: src/GezagProxyMock/Dockerfile
-          context: src
-          push: true
-          platforms: linux/arm64,linux/amd64
-          tags: |
-            ${{ env.GEZAG_PROXY_MOCK_CONTAINER_IMAGE }}:latest
-            ${{ env.GEZAG_PROXY_MOCK_CONTAINER_IMAGE }}:${{ steps.proxy-mock-version.outputs.version }}-latest
-            ${{ env.GEZAG_PROXY_MOCK_CONTAINER_IMAGE }}:${{ steps.proxy-mock-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}

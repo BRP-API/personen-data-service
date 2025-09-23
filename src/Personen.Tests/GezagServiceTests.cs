@@ -1,25 +1,29 @@
 ﻿using NSubstitute;
-using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
-using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
+using BRP = Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
+using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated;
+using Rvig.HaalCentraalApi.Personen.ApiModels.Gezag.Deprecated;
 using Rvig.HaalCentraalApi.Personen.Interfaces;
 using Rvig.HaalCentraalApi.Personen.Repositories;
 using Rvig.HaalCentraalApi.Personen.Services;
-using Gezag = Rvig.HaalCentraalApi.Personen.ApiModels.Gezag;
+using Gezag = Rvig.HaalCentraalApi.Personen.ApiModels.Gezag.Deprecated;
+using Rvig.HaalCentraalApi.Shared.Interfaces;
 
 namespace Personen.Tests
 {
 
     public class GezagServiceTests
     {
-        private readonly GezagService _gezagService;
+        private readonly GezagServiceDeprecated _gezagService;
         private readonly IRepoGezagsrelatie _gezagRepositoryMock;
         private readonly IGezagPersonenService _personenServiceMock;
+        private readonly IDomeinTabellenRepo _domeinTabellenRepoMock;
 
         public GezagServiceTests()
         {
             _personenServiceMock = Substitute.For<IGezagPersonenService>();
             _gezagRepositoryMock = Substitute.For<IRepoGezagsrelatie>();
-            _gezagService = new GezagService(_personenServiceMock, null, _gezagRepositoryMock);
+            _domeinTabellenRepoMock = Substitute.For<IDomeinTabellenRepo>();
+            _gezagService = new GezagServiceDeprecated(_personenServiceMock, _domeinTabellenRepoMock, _gezagRepositoryMock);
         }
 
         [Fact]
@@ -27,10 +31,10 @@ namespace Personen.Tests
         {
             // Arrange
             var fields = new List<string> { "adressering" };
-            var bsns = new List<string?> { "000000012", "000000013" };
+            var bsns = new List<string> { "000000012", "000000013" };
 
             // Act
-            var result = await _gezagService.GetGezagIfRequested(fields, bsns);
+            var result = await _gezagService.GetGezagDeprecatedIfRequested(fields, bsns);
 
             // Assert
             result.Count().Should().Be(0);
@@ -41,7 +45,7 @@ namespace Personen.Tests
         {
             // Arrange
             var fields = new List<string> { "gezag" };
-            var bsns = new List<string?> { "000000012", "000000013" };
+            var bsns = new List<string> { "000000012", "000000013" };
 
             var mockGezagResponse = new GezagResponse
             {
@@ -53,11 +57,11 @@ namespace Personen.Tests
             };
 
             _gezagRepositoryMock
-                .GetGezag(bsns!)
+                .GetGezagDeprecated(bsns!)
                 .Returns(mockGezagResponse);
 
             // Act
-            var result = await _gezagService.GetGezagIfRequested(fields, bsns);
+            var result = await _gezagService.GetGezagDeprecatedIfRequested(fields, bsns);
 
             // Assert
             result.Should().NotBeNull();
@@ -115,7 +119,7 @@ namespace Personen.Tests
                 gezagOuder
             };
 
-            var mockGezagPersonen = new List<GbaPersoon>()
+            var mockGezagPersonen = new List<BRP.GbaPersoon>()
             {
                 new() { Burgerservicenummer = bsnMinderjarige },
                 new() { Burgerservicenummer = bsnOuder }
@@ -184,7 +188,7 @@ namespace Personen.Tests
                 gezagOuder
             };
 
-            var mockGezagPersonen = new List<GbaPersoon>()
+            var mockGezagPersonen = new List<BRP.GbaPersoon>()
             {
                 new() { Burgerservicenummer = bsnMinderjarige },
                 new() { Burgerservicenummer = bsnOuder }
@@ -232,11 +236,11 @@ namespace Personen.Tests
 
             var inputPersoon = (new GbaPersoon { Burgerservicenummer = bsn }, 1L);
 
-            var expectedGezag = new List<Rvig.HaalCentraalApi.Personen.ApiModels.BRP.AbstractGezagsrelatie>
+            var expectedGezag = new List<Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated.AbstractGezagsrelatie>
             {
-                new Rvig.HaalCentraalApi.Personen.ApiModels.BRP.EenhoofdigOuderlijkGezag()
+                new Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated.EenhoofdigOuderlijkGezag()
                 {
-                    Minderjarige = new Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Minderjarige()
+                    Minderjarige = new Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated.Minderjarige()
                     {
                         Burgerservicenummer = bsn,
                         Naam = new NaamBasis()
@@ -327,9 +331,9 @@ namespace Personen.Tests
 
             var inputPersoon = (new GbaGezagPersoonBeperkt { Burgerservicenummer = bsn }, 1L);
 
-            var expectedGezag = new List<Rvig.HaalCentraalApi.Personen.ApiModels.BRP.AbstractGezagsrelatie>
+            var expectedGezag = new List<Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated.AbstractGezagsrelatie>
             {
-                new Rvig.HaalCentraalApi.Personen.ApiModels.BRP.EenhoofdigOuderlijkGezag()
+                new Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated.EenhoofdigOuderlijkGezag()
                 {
                     Minderjarige = new()
                     {
@@ -388,9 +392,9 @@ namespace Personen.Tests
 
             var inputPersoon = (new GbaGezagPersoonBeperkt { Burgerservicenummer = bsnOuder }, 1L);
 
-            var expectedGezag = new List<Rvig.HaalCentraalApi.Personen.ApiModels.BRP.AbstractGezagsrelatie>
+            var expectedGezag = new List<Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated.AbstractGezagsrelatie>
             {
-                new Rvig.HaalCentraalApi.Personen.ApiModels.BRP.EenhoofdigOuderlijkGezag()
+                new Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Deprecated.EenhoofdigOuderlijkGezag()
                 {
                     Minderjarige = new()
                     {
