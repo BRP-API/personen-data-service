@@ -15,13 +15,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
-    <PackageReference Include="JsonSubTypes" Version="1.9.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.33" />
-    <PackageReference Include="NJsonSchema" Version="10.7.2" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Rvig.Data.Base.WebApi\Rvig.Data.Base.WebApi.csproj" />
     <ProjectReference Include="..\Rvig.HaalCentraalApi.Shared\Rvig.HaalCentraalApi.Shared.csproj" />
   </ItemGroup>

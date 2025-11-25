@@ -9,7 +9,6 @@ using Rvig.Data.Base.Postgres;
 using Rvig.HaalCentraalApi.Shared.Options;
 using System.Reflection;
 using static System.Net.Mime.MediaTypeNames;
-using FluentValidation.AspNetCore;
 using Rvig.Base.App.Middleware;
 using Rvig.Base.App.Services;
 using FluentValidation;
@@ -61,9 +60,6 @@ public static class RvigBaseApp
 				builder.Services.AddSingleton(servicePair.Key, servicePair.Value);
 			}
 
-			// Loading validators from child app.
-			validatorsToConfigure.ForEach(validator => builder.Services.AddValidatorsFromAssemblyContaining(validator));
-
 			// Add services to the container.
 			builder.Services.AddRazorPages();
 			builder.Services.AddControllersWithViews();
@@ -73,8 +69,6 @@ public static class RvigBaseApp
 				// Removes the POST main body mentioned during required errors.
 				options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
 			}).AddNewtonsoftJson();
-
-			builder.Services.AddFluentValidationAutoValidation();
 
 			builder.Services.Configure<MvcOptions>(options => options.Filters.Add(new ProducesAttribute(Application.Json)));
 			builder.Services.Configure<ApiBehaviorOptions>(options =>
