@@ -13,8 +13,8 @@ When(/^de sql statements gegenereerd uit de gegeven stappen zijn uitgevoerd$/, a
         const sqlStatements = generateSqlStatementsFrom(this.context.data);
 
         this.context.aantalRijen = {
-            'lo3_pl': await queryRowCount(global.pool, 'inschrijving'),
-            'lo3_pl_persoon': await queryRowCount(global.pool, 'persoon')
+            'lo3_pl': await queryRowCount(globalThis.pool, 'inschrijving'),
+            'lo3_pl_persoon': await queryRowCount(globalThis.pool, 'persoon')
         }
 
         await execute(sqlStatements);
@@ -68,7 +68,7 @@ function validateResult(results) {
 }
 
 Then(/^zijn er geen rijen in tabel '([a-z0-9_]*)'$/, async function (tabelNaam) {
-    const actual = await queryRowCount(global.pool, tabelNaam);
+    const actual = await queryRowCount(globalThis.pool, tabelNaam);
 
     should.exist(actual);
     actual.should.equal(this.context.aantalRijen[tabelNaam]);

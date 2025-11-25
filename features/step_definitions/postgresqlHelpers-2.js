@@ -3,23 +3,23 @@ const { toDateOrString } = require('./brpDatum');
 const { deleteStatement } = require('./parameterizedSqlStatementFactory');
 
 function mustLog(result) {
-    return (result.rowCount === null || result.rowCount === 0) && global.scenario.tags.some(t => ['@protocollering'].includes(t));
+    return (result.rowCount === null || result.rowCount === 0) && globalThis.scenario.tags.some(t => ['@protocollering'].includes(t));
 }
 
 async function executeAndLogStatement(client, statement) {
-    global.logger.info('execute', statement);
+    globalThis.logger.info('execute', statement);
 
     try {
         const result = await client.query(statement.text, statement.values);
 
         if(mustLog(result)) {
-            global.logger.warn(`${global.scenario.name}. 0 rows affected`, statement);
+            globalThis.logger.warn(`${globalThis.scenario.name}. 0 rows affected`, statement);
         }
 
         return result;
     }
     catch(ex) {
-        global.logger.error(`exception in ${global.scenario.name}`, statement, ex);
+        globalThis.logger.error(`exception in ${globalThis.scenario.name}`, statement, ex);
         throw ex;
     }
 }
@@ -69,16 +69,16 @@ async function executeAutorisatieStatements(client, statements) {
 
 async function select(tableName, objecten) {
     if(!objecten) {
-        global.logger.info('geen objecten');
+        globalThis.logger.info('geen objecten');
         return;
     }
 
-    if (!global.pool) {
-        global.logger.info('geen pool');
+    if (!globalThis.pool) {
+        globalThis.logger.info('geen pool');
         return;
     }
 
-    const client = await global.pool.connect();
+    const client = await globalThis.pool.connect();
     const results = [];
 
     try {
@@ -95,7 +95,7 @@ async function select(tableName, objecten) {
         await client.query('COMMIT');
     }
     catch (ex) {
-        global.logger.error(ex.message);
+        globalThis.logger.error(ex.message);
         await client.query('ROLLBACK');
     }
     finally {
@@ -111,7 +111,7 @@ async function selectFirstOrDefault(tabelNaam, columnNames, whereColumnName, whe
         values: [whereValue]
     };
 
-    const client = await global.pool.connect();
+    const client = await globalThis.pool.connect();
     let result = [];
     try {
 
@@ -121,7 +121,7 @@ async function selectFirstOrDefault(tabelNaam, columnNames, whereColumnName, whe
         await client.query('COMMIT');
     }
     catch (ex) {
-        global.logger.error(ex.message);
+        globalThis.logger.error(ex.message);
         await client.query('ROLLBACK');
     }
     finally {
@@ -139,7 +139,7 @@ function setAdresIdForVerblijfplaatsen(persoon, adressen) {
                 ? match[1].split(',').map(c => c.trim())
                 : [];
             const adresIdIndex = columns.indexOf('adres_id');
-            global.logger.info(`adresIdIndex: ${adresIdIndex}`, columns);
+            globalThis.logger.info(`adresIdIndex: ${adresIdIndex}`, columns);
             if(adresIdIndex >= 0) {
                 statement.values[adresIdIndex] = adressen[statement.values[adresIdIndex]].adresId;
             }
@@ -148,12 +148,12 @@ function setAdresIdForVerblijfplaatsen(persoon, adressen) {
 }
 
 async function execute(sqlStatements) {
-    if(!global.pool) {
-        global.logger.info('geen pool');
+    if(!globalThis.pool) {
+        globalThis.logger.info('geen pool');
         return;
     }
 
-    const client = await global.pool.connect();
+    const client = await globalThis.pool.connect();
     try {
         await client.query('BEGIN');
 
@@ -171,7 +171,7 @@ async function execute(sqlStatements) {
         await client.query('COMMIT');
     }
     catch(ex) {
-        global.logger.error(ex.message);
+        globalThis.logger.error(ex.message);
         await client.query('ROLLBACK');
     }
     finally {
@@ -210,7 +210,7 @@ async function executeAndLogDeleteStatement(client, tabelNaam, id = undefined) {
 }
 
 async function deleteAllRowsInAllTables(client) {
-    global.logger.debug('delete all rows in all tables');
+    globalThis.logger.debug('delete all rows in all tables');
 
     for(const [key] of tableNameMap) {
         await executeAndLogDeleteStatement(client, key);
@@ -258,7 +258,7 @@ async function deleteInsertedAutorisatieRows(client, autorisaties) {
 }
 
 async function deleteInsertedRows(client, sqlData) {
-    global.logger.info('delete inserted rows', sqlData);
+    globalThis.logger.info('delete inserted rows', sqlData);
 
     if(!sqlData) {
         return;
@@ -270,19 +270,19 @@ async function deleteInsertedRows(client, sqlData) {
 }
 
 async function rollback(sqlContext, sqlData) {
-    if(!global.pool) {
-        global.logger.info('geen pool');
+    if(!globalThis.pool) {
+        globalThis.logger.info('geen pool');
         return;
     }
 
     if(!sqlContext.cleanup) {
-        global.logger.info('geen cleanup');
+        globalThis.logger.info('geen cleanup');
         return;
     }
 
     const deleteIndividualRecords = sqlContext.deleteIndividualRecords;
 
-    const client = await global.pool.connect();
+    const client = await globalThis.pool.connect();
 
     try {
         if(deleteIndividualRecords) {
@@ -293,7 +293,7 @@ async function rollback(sqlContext, sqlData) {
         }
     }
     catch(ex) {
-        global.logger.error(ex.stack);
+        globalThis.logger.error(ex.stack);
     }
     finally {
         client?.release();

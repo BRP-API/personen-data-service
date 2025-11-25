@@ -31,29 +31,29 @@ After({tags: '@fout-case'}, function() {
 });
 
 AfterAll(async function() {
-    if(global.pool === undefined) {
+    if(globalThis.pool === undefined) {
         return;
     }
 
-    global.logger.debug(`end pool. Counts => total: ${global.pool.totalCount}, idle: ${global.pool.idleCount}, waiting: ${global.pool.waitingCount}`);
-    await global.pool.end();
-    global.logger.debug(`pool ended. Counts => total: ${global.pool.totalCount}, idle: ${global.pool.idleCount}, waiting: ${global.pool.waitingCount}`);
+    globalThis.logger.debug(`end pool. Counts => total: ${globalThis.pool.totalCount}, idle: ${globalThis.pool.idleCount}, waiting: ${globalThis.pool.waitingCount}`);
+    await globalThis.pool.end();
+    globalThis.logger.debug(`pool ended. Counts => total: ${globalThis.pool.totalCount}, idle: ${globalThis.pool.idleCount}, waiting: ${globalThis.pool.waitingCount}`);
 });
 
 Before(function({ pickle }) {
-    global.scenario = {
+    globalThis.scenario = {
         name: pickle.name,
         tags: pickle.tags.map((t) => t.name)
     };
 
-    if(global.logger === undefined) {
-        global.logger = this.context.logger;
-        global.logger.debug('set global logger');
+    if(globalThis.logger === undefined) {
+        globalThis.logger = this.context.logger;
+        globalThis.logger.debug('set global logger');
     }
 
-    if(global.pool === undefined) {
-        global.logger.debug('create db pool');
-        global.pool = new Pool(this.context.sql.poolConfig);
+    if(globalThis.pool === undefined) {
+        globalThis.logger.debug('create db pool');
+        globalThis.pool = new Pool(this.context.sql.poolConfig);
     }
 
     if(this.context.logFileToAssert !== undefined && fs.existsSync(this.context.logFileToAssert)) {
@@ -76,26 +76,26 @@ Before(function({ pickle }) {
     this.context.isDataApiAanroep = this.context.parameters.api === 'data-api';
     this.context.isGezagApiAanroep = this.context.parameters.api === 'gezag-api';
 
-    global.logger.info(`scenario '${pickle.name}' met tags ${JSON.stringify(tags)} (deprecated: ${this.context.isDeprecatedScenario})`);
+    globalThis.logger.info(`scenario '${pickle.name}' met tags ${JSON.stringify(tags)} (deprecated: ${this.context.isDeprecatedScenario})`);
 });
 
 AfterStep(function({ pickleStep }) {
     switch(pickleStep.type) {
         case 'Context':
         case 'Unknown':
-            global.logger.info(`Gegeven ${pickleStep.text}`, this.context.data);
+            globalThis.logger.info(`Gegeven ${pickleStep.text}`, this.context.data);
             break;
         case 'Action':
-            global.logger.info(`Als ${pickleStep.text}`, {
+            globalThis.logger.info(`Als ${pickleStep.text}`, {
                 headers: this.context.response?.headers,
                 body: this.context.response?.data
             });
             break;
         case 'Outcome':
-            global.logger.info(`Dan ${pickleStep.text}`, this.context.expected);
+            globalThis.logger.info(`Dan ${pickleStep.text}`, this.context.expected);
             break;
         default:
-            global.logger.info(`Unsupported type ${pickleStep.type}`);
+            globalThis.logger.info(`Unsupported type ${pickleStep.type}`);
             break;
     }
 });
@@ -106,11 +106,11 @@ After(async function() {
         return;
     }
 
-    await rollbackDbChanges(this.context, global.pool);
+    await rollbackDbChanges(this.context, globalThis.pool);
 
     rollbackTempfiles(this.context);
 
-    await assertExpectedLogLines(this.context, global.logger, global.scenario);
+    await assertExpectedLogLines(this.context, globalThis.logger, globalThis.scenario);
 });
 
 async function rollbackDbChanges(context, pool) {

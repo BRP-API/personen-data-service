@@ -16,7 +16,7 @@ Then(/^heeft de persoon met burgerservicenummer '(\d*)' de volgende 'protocoller
     const pl_id = Number(persoonSqlData['inschrijving'][0].find(e => e[0] === 'pl_id')[1]);
     should.exist(pl_id);
 
-    const actual = await queryLastRow(global.pool, 'protocollering', 'request_datum', {pl_id: pl_id});
+    const actual = await queryLastRow(globalThis.pool, 'protocollering', 'request_datum', {pl_id: pl_id});
 
     should.exist(actual, `Geen 'protocollering' gegevens gevonden voor persoon met burgerservicenummer ${burgerservicenummer}`);
 
@@ -33,7 +33,7 @@ Then(/^is voor de geauthenticeerde consumer '(\d*)' protocollering regels vastge
     const tabelNaam = 'protocollering';
     const afnemerId = this.context.afnemerId ?? this.context.oAuth?.clients[0].afnemerID;
 
-    const actual = await queryRowCount(global.pool, tabelNaam, {afnemer_code: afnemerId})
+    const actual = await queryRowCount(globalThis.pool, tabelNaam, {afnemer_code: afnemerId})
 
     should.exist(actual);
     actual.should.equal(aantal);

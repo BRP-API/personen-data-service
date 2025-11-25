@@ -157,7 +157,7 @@ function wijzigKind(persoon, dataTable, isCorrectie = false, kindBsn = null) {
     
     let kind = getTeWijzigenKind(persoon, kindBsn, kindData);
     if (!kind) {
-        global.logger.warn(`geen kind met bsn ${kindData.burger_service_nr} gevonden`, persoon);
+        globalThis.logger.warn(`geen kind met bsn ${kindData.burger_service_nr} gevonden`, persoon);
         return;
     }
 
@@ -262,7 +262,7 @@ function wijzigPartner(persoon, dataTable, isCorrectie = false, mergeProperties 
 
     let partner = getTeWijzigenPartner(persoon, partnerBsn, partnerData);
     if (!partner) {
-        global.logger.warn(`geen partner met bsn ${partnerData.burger_service_nr} gevonden`, persoon);
+        globalThis.logger.warn(`geen partner met bsn ${partnerData.burger_service_nr} gevonden`, persoon);
         return;
     }
 

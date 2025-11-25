@@ -19,7 +19,7 @@ function gegevenDePersoonMetBsn(context, aanduiding, burgerservicenummer, dataTa
             persoon,
             dataTable
         );
-        global.logger.info(`persoon met '${aanduiding}'. Updaten met DataTable waarden`, dataTable);
+        globalThis.logger.info(`persoon met '${aanduiding}'. Updaten met DataTable waarden`, dataTable);
         return;
     }
 

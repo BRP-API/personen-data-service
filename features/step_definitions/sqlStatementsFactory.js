@@ -180,7 +180,7 @@ function generatePersoonSqlStatements(persoon) {
 
 function generateSqlStatementsFrom(data) {
     if(!data) {
-        global.logger.warn('no data to generate sql statements');
+        globalThis.logger.warn('no data to generate sql statements');
         return undefined;
     }
 
@@ -196,7 +196,7 @@ function generateSqlStatementsFrom(data) {
 
     for (const persoon of data.personen) {
         if(getBsn(persoon) === undefined) {
-            global.logger.info('persoon zonder burgerservicenummer. Geen sql statements generatie', persoon);
+            globalThis.logger.info('persoon zonder burgerservicenummer. Geen sql statements generatie', persoon);
         }
         else {
             sqlStatements.personen.push(generatePersoonSqlStatements(persoon));

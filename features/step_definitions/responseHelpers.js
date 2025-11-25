@@ -46,11 +46,11 @@ function vergelijkActualMetExpected(context, inAnyOrder = true) {
     }
 
     if(inAnyOrder) {
-        global.logger.debug("willekeurig collectie volgorde validatie");
+        globalThis.logger.debug("willekeurig collectie volgorde validatie");
         actual.should.deep.equalInAnyOrder(expected, `actual: ${JSON.stringify(actual, undefined, '\t')}\nexpected: ${JSON.stringify(expected, undefined, '\t')}`);
     }
     else {
-        global.logger.debug("vaste collectie volgorde validatie");
+        globalThis.logger.debug("vaste collectie volgorde validatie");
         actual.should.deep.equal(expected, `actual: ${JSON.stringify(actual, undefined, '\t')}\nexpected: ${JSON.stringify(expected, undefined, '\t')}`);
     }
 }

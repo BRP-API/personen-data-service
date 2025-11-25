@@ -101,13 +101,13 @@ Given('is ingeschreven op adres {string} met de volgende gegevens', function (ad
 
   inschrijvingOpVerblijfplaats(this.context, arrayOfArraysToDataTable(data, dataTable));
 
-  global.logger.info(`is ingeschreven op adres ${adresAanduiding} met de volgende gegevens`, getPersoon(this.context, undefined));
+  globalThis.logger.info(`is ingeschreven op adres ${adresAanduiding} met de volgende gegevens`, getPersoon(this.context, undefined));
 });
 
 Given('is ingeschreven op een buitenlands adres met de volgende gegevens', function (dataTable) {
   inschrijvingOpVerblijfplaats(this.context, dataTable)
 
-  global.logger.info(`is ingeschreven op de buitenlandse verblijfplaats met de volgende gegevens`, getPersoon(this.context, undefined));
+  globalThis.logger.info(`is ingeschreven op de buitenlandse verblijfplaats met de volgende gegevens`, getPersoon(this.context, undefined));
 });
 
 Given('is overleden met de volgende gegevens', function (dataTable) {
@@ -116,7 +116,7 @@ Given('is overleden met de volgende gegevens', function (dataTable) {
     dataTable
   );
 
-  global.logger.info(`is overleden met de volgende gegevens`, getPersoon(this.context, undefined));
+  globalThis.logger.info(`is overleden met de volgende gegevens`, getPersoon(this.context, undefined));
 });
 
 Given('is ingeschreven met de volgende gegevens', function (dataTable) {
@@ -125,7 +125,7 @@ Given('is ingeschreven met de volgende gegevens', function (dataTable) {
     dataTable
   );
 
-  global.logger.info(`is ingeschreven met de volgende gegevens`, getPersoon(this.context, undefined));
+  globalThis.logger.info(`is ingeschreven met de volgende gegevens`, getPersoon(this.context, undefined));
 });
 
 Given('heeft de volgende gezagsverhouding gegevens', function (dataTable) {
