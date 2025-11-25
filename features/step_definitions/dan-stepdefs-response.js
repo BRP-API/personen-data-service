@@ -5,9 +5,9 @@ const should = require('chai').use(deepEqualInAnyOrder).should();
 Then(/^heeft de response de volgende headers$/, function (dataTable) {
     const headers = this.context.response.headers;
 
-    dataTable.hashes().forEach(function(row) {
+    for (const row of dataTable.hashes()) {
         headers[row.naam].should.equal(row.waarde);
-    });
+    }
 });
 
 Then('heeft de response geen {string} header', function (headerNaam) {
