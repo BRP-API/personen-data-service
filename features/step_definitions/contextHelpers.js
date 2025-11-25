@@ -16,12 +16,12 @@ function getPersoon(context, aanduiding) {
 
 function getPersoonMetAanduiding(context, aanduiding) {
     if(!aanduiding) {
-        global.logger.error('geen persoon aanduiding opgegeven');
+        globalThis.logger.error('geen persoon aanduiding opgegeven');
         return undefined;
     }
     const retval = context.data?.personen?.find(p => p.id === `persoon-${aanduiding}`);
     if(!retval) {
-        global.logger.error(`persoon met aanduiding '${aanduiding}' niet gevonden`);
+        globalThis.logger.error(`persoon met aanduiding '${aanduiding}' niet gevonden`);
     }
     return retval;
 }

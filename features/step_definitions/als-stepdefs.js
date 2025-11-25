@@ -90,7 +90,7 @@ async function execSqlStatements(context) {
 
     if(context.data) {
         const sqlStatements = generateSqlStatementsFrom(context.data);
-        global.logger.info('uit te voeren sql statements', sqlStatements);
+        globalThis.logger.info('uit te voeren sql statements', sqlStatements);
 
         if(!context.isStapDocumentatieScenario) {
             await execute(sqlStatements);
@@ -99,7 +99,7 @@ async function execSqlStatements(context) {
         }
     }
     else if(!context.isStapDocumentatieScenario) {
-        await executeSqlStatements(context.sql, context.sqlData, global.pool);
+        await executeSqlStatements(context.sql, context.sqlData, globalThis.pool);
     }
 }
 
@@ -262,7 +262,7 @@ async function handleRequestWithParameters(context, endpoint, parametersDataTabl
 }
 
 When(/^([a-zA-Z-]*) wordt gezocht met de volgende parameters$/, async function (endpoint, dataTable) {
-    global.logger.info(`als ${endpoint} wordt gezocht met de volgende parameters`);
+    globalThis.logger.info(`als ${endpoint} wordt gezocht met de volgende parameters`);
 
     await handleRequestWithParameters(this.context, endpoint, dataTable);
 });

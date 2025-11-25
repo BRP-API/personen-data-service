@@ -15,23 +15,23 @@ function noSqlData(sqlData) {
 }
 
 function mustLog(result) {
-    return (result.rowCount === null || result.rowCount === 0) && global.scenario.tags.some(t => ['@protocollering'].includes(t));
+    return (result.rowCount === null || result.rowCount === 0) && globalThis.scenario.tags.some(t => ['@protocollering'].includes(t));
 }
 
 async function ExecuteAndLogStatement(client, sqlStatement) {
-    global.logger.info('execute', sqlStatement);
+    globalThis.logger.info('execute', sqlStatement);
 
     try {
         const result = await client.query(sqlStatement);
 
         if(mustLog(result)) {
-            global.logger.warn(`${global.scenario.name}. 0 rows affected`, sqlStatement);
+            globalThis.logger.warn(`${globalThis.scenario.name}. 0 rows affected`, sqlStatement);
         }
     
         return result;
     }
     catch(ex) {
-        global.logger.error(`exception in ${global.scenario.name}`, sqlStatement, ex);
+        globalThis.logger.error(`exception in ${globalThis.scenario.name}`, sqlStatement, ex);
         throw ex;
     }
 }
@@ -66,7 +66,7 @@ function setAdresIdForVerblijfplaatsen(sqlDataElement, sqlData) {
 
 async function executeSqlStatements(sqlContext, sqlData, pool) {
     if (pool === undefined || noSqlData(sqlData)) {
-        global.logger.info('geen pool of geen sqlData');
+        globalThis.logger.info('geen pool of geen sqlData');
         return;
     }
 
@@ -83,7 +83,7 @@ async function executeSqlStatements(sqlContext, sqlData, pool) {
         await client.query('COMMIT');
     }
     catch(ex) {
-        global.logger.error(ex);
+        globalThis.logger.error(ex);
         await client.query('ROLLBACK');
     }
     finally {
@@ -92,7 +92,7 @@ async function executeSqlStatements(sqlContext, sqlData, pool) {
 }
 
 async function deleteAllRowsInAllTables(client) {
-    global.logger.debug('delete all rows in all tables');
+    globalThis.logger.debug('delete all rows in all tables');
 
     const aggregateRoots = ['adres'];
 
@@ -110,7 +110,7 @@ async function deleteAllRowsInAllTables(client) {
 }
 
 async function deleteInsertedRows(client, sqlData) {
-    global.logger.debug('delete inserted rows');
+    globalThis.logger.debug('delete inserted rows');
 
     if(sqlData === undefined) {
         return;
@@ -156,7 +156,7 @@ async function rollbackSqlStatements(sqlContext, sqlData, pool) {
         }
     }
     catch(ex) {
-        global.logger.error(ex.stack);
+        globalThis.logger.error(ex.stack);
     }
     finally {
         if(client !== undefined) {
@@ -349,7 +349,7 @@ async function queryRowCount(pool, tableName, filter = undefined) {
     }
 
     const statement = queryRowCountStatement(tableName, filter);
-    global.logger.info('execute', statement);
+    globalThis.logger.info('execute', statement);
 
     const client = await pool.connect();
 
@@ -359,7 +359,7 @@ async function queryRowCount(pool, tableName, filter = undefined) {
         return res.rows[0]['count'];
     }
     catch(ex) {
-        global.logger.error(ex.stack);
+        globalThis.logger.error(ex.stack);
     }
     finally {
         client.release();
@@ -372,7 +372,7 @@ async function queryLastRow(pool, tableName, orderByColumnName, filter = undefin
     }
 
     const statement = queryLastRowStatement(tableName, orderByColumnName, filter);
-    global.logger.info('execute', statement);
+    globalThis.logger.info('execute', statement);
 
     const client = await pool.connect();
 
@@ -382,7 +382,7 @@ async function queryLastRow(pool, tableName, orderByColumnName, filter = undefin
         return res.rows[0];
     }
     catch(ex) {
-        global.logger.error(ex.stack);
+        globalThis.logger.error(ex.stack);
     }
     finally {
         client.release();

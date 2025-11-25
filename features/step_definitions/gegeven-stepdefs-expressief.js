@@ -49,7 +49,7 @@ Given(/^(?:'(.*)' )?is minderjarig/, function (aanduiding) {
         ])
     );
 
-    global.logger.info(`gegeven persoon '${aanduiding}' is minderjarig`, getPersoon(this.context, aanduiding));
+    globalThis.logger.info(`gegeven persoon '${aanduiding}' is minderjarig`, getPersoon(this.context, aanduiding));
 });
 
 Given(/^is een (man|vrouw)/, function (geslacht) {
@@ -62,7 +62,7 @@ Given(/^is een (man|vrouw)/, function (geslacht) {
         ])
     );
 
-    global.logger.info(`gegeven persoon is een ${geslacht}`, getPersoon(this.context, undefined));
+    globalThis.logger.info(`gegeven persoon is een ${geslacht}`, getPersoon(this.context, undefined));
 });
 
 Given(/^is meerderjarig(?:, niet overleden en staat niet onder curatele)?$/, function () {
@@ -75,7 +75,7 @@ Given(/^is meerderjarig(?:, niet overleden en staat niet onder curatele)?$/, fun
         ])
     );
 
-    global.logger.info(`gegeven persoon is meerderjarig`, getPersoon(this.context, undefined));
+    globalThis.logger.info(`gegeven persoon is meerderjarig`, getPersoon(this.context, undefined));
 });
 
 Given(/^(?:'(.*)' )?is overleden$/, function (aanduiding) {
@@ -243,7 +243,7 @@ Given(/^(.*) heeft '(.*)' het ouderschap ontkend$/, function (relatieveDatum, aa
 
     ontkenningOuderschap(plKind, plOuder, relatieveDatum);
 
-    global.logger.info(`Gegeven ${relatieveDatum} heeft '${aanduidingOuder}' het ouderschap ontkend`, getPersoon(this.context, undefined));
+    globalThis.logger.info(`Gegeven ${relatieveDatum} heeft '${aanduidingOuder}' het ouderschap ontkend`, getPersoon(this.context, undefined));
 });
 
 Given('{string} heeft ontkend vader te zijn van {string}', function (aanduidingOuder, aanduidingKind) {
@@ -252,7 +252,7 @@ Given('{string} heeft ontkend vader te zijn van {string}', function (aanduidingO
 
     ontkenningOuderschap(plKind, plOuder, getGeboortedatum(plKind));
 
-    global.logger.info(`gegeven '${aanduidingOuder}' heeft ontkend vader te zijn`, getPersoon(this.context, undefined));
+    globalThis.logger.info(`gegeven '${aanduidingOuder}' heeft ontkend vader te zijn`, getPersoon(this.context, undefined));
 });
 
 function ontkenningOuderschap(plKind, plOuder, datumIngangGeldigheid) {
