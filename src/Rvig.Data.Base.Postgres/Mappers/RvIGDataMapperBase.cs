@@ -100,7 +100,7 @@ public class RvIGDataMapperBase
     private static void MapWoonplaats<T>(lo3_adres? dbAdres, T verblijfplaats) where T : GbaVerblijfplaats
     {
         // Docs: https://github.com/VNG-Realisatie/Haal-Centraal-BRP-bevragen/blob/v1.3.0/features/woonplaats.feature
-        verblijfplaats.Woonplaats = !string.IsNullOrEmpty(dbAdres?.diak_woon_plaats_naam) ? dbAdres?.diak_woon_plaats_naam : dbAdres?.woon_plaats_naam;
+        verblijfplaats.Woonplaats = !string.IsNullOrEmpty(dbAdres?.diak_woon_plaats_naam) ? dbAdres.diak_woon_plaats_naam : dbAdres?.woon_plaats_naam;
     }
 
     private async Task MapVerblijfplaatsLand<T>(lo3_pl_verblijfplaats dbVerblijfplaats, T verblijfplaats) where T : GbaVerblijfplaats
@@ -117,17 +117,17 @@ public class RvIGDataMapperBase
 
     private static void MapNummeraanduidingIdentificatie<T>(lo3_adres? dbAdres, T verblijfplaats) where T : GbaVerblijfplaats
     {
-        if (dbAdres?.nummer_aand_ident_code?.Length == 16 && long.TryParse(dbAdres?.nummer_aand_ident_code, out _))
+        if (dbAdres?.nummer_aand_ident_code?.Length == 16 && long.TryParse(dbAdres.nummer_aand_ident_code, out _))
         {
-            verblijfplaats.NummeraanduidingIdentificatie = dbAdres?.nummer_aand_ident_code;
+            verblijfplaats.NummeraanduidingIdentificatie = dbAdres.nummer_aand_ident_code;
         }
     }
 
     private static void MapAdresseerbaarObjectIdentificatie<T>(lo3_adres? dbAdres, T verblijfplaats) where T : GbaVerblijfplaats
     {
-        if (dbAdres?.verblijf_plaats_ident_code?.Length == 16 && long.TryParse(dbAdres?.verblijf_plaats_ident_code, out _))
+        if (dbAdres?.verblijf_plaats_ident_code?.Length == 16 && long.TryParse(dbAdres.verblijf_plaats_ident_code, out _))
         {
-            verblijfplaats.AdresseerbaarObjectIdentificatie = dbAdres?.verblijf_plaats_ident_code;
+            verblijfplaats.AdresseerbaarObjectIdentificatie = dbAdres.verblijf_plaats_ident_code;
         }
     }
 
