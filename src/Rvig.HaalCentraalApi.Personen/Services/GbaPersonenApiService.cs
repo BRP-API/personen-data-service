@@ -1,5 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
+﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Common;
 using Rvig.HaalCentraalApi.Personen.Fields;
 using Rvig.HaalCentraalApi.Personen.Helpers;
@@ -16,6 +15,8 @@ public interface IGbaPersonenApiService
 
 public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 {
+	const string BSNFIELDNAME = "burgerservicenummer";
+
 	protected IGetAndMapGbaPersonenService _getAndMapPersoonService;
 	private readonly GbaPersonenApiHelper _gbaPersonenApiHelper;
 	private readonly GbaPersonenBeperktApiHelper _gbaPersonenBeperktApiHelper;
@@ -70,7 +71,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 			: field);
 
         List<(GbaPersoon persoon, long pl_id)> result = new List<(GbaPersoon persoon, long pl_id)>();
-        (IEnumerable<(GbaPersoon persoon, long pl_id)>? personenPlIds, int afnemerCode) = await _getAndMapPersoonService.GetPersonenMapByBsns(model.Burgerservicenummer, model.GemeenteVanInschrijving, fieldsToUseForAuthorisations);
+        (IEnumerable<(GbaPersoon persoon, long pl_id)>? personenPlIds, _) = await _getAndMapPersoonService.GetPersonenMapByBsns(model.Burgerservicenummer, model.GemeenteVanInschrijving, fieldsToUseForAuthorisations);
 
 		List<string> bsns = new();
 
@@ -94,10 +95,10 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
                 }
 
                 model.Fields = GbaPersonenApiHelper.OpschortingBijhoudingLogicRaadplegen(model.Fields, x.persoon.OpschortingBijhouding);
-				
-				if (!model.Fields.Contains("burgerservicenummer") && GezagHelper.GezagIsRequested(model.Fields))
+
+				if (!model.Fields.Contains(BSNFIELDNAME) && GezagHelper.GezagIsRequested(model.Fields))
                 {
-					model.Fields.Add("burgerservicenummer");
+					model.Fields.Add(BSNFIELDNAME);
                 }
 
                 GbaPersoon target = _fieldsExpandFilterService.ApplyScope(x.persoon, string.Join(",", model.Fields), _persoonFieldsSettings.GbaFieldsSettings);
@@ -128,7 +129,7 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 			? _persoonBeperktFieldsSettings.GbaFieldsSettings.ShortHandMappings[field]
 			: field);
 
-		(IEnumerable<(T persoon, long pl_id)>? personenPlIds, int afnemerCode) = await _getAndMapPersoonService.GetMapZoekPersonen<T>(model, fieldsToUseForAuthorisations);
+		(IEnumerable<(T persoon, long pl_id)>? personenPlIds, _) = await _getAndMapPersoonService.GetMapZoekPersonen<T>(model, fieldsToUseForAuthorisations);
         List<(T persoon, long pl_id)> result = new List<(T persoon, long pl_id)>();
         List<string> bsns = new();
 
@@ -147,9 +148,9 @@ public class GbaPersonenApiService : BaseApiService, IGbaPersonenApiService
 			{
                 bsns.Add(x.persoon.Burgerservicenummer);
 
-                if (!model.Fields.Contains("burgerservicenummer") && GezagHelper.GezagIsRequested(model.Fields))
+                if (!model.Fields.Contains(BSNFIELDNAME) && GezagHelper.GezagIsRequested(model.Fields))
                 {
-                    model.Fields.Add("burgerservicenummer");
+                    model.Fields.Add(BSNFIELDNAME);
                 }
 
                 x.persoon.Rni = GbaPersonenApiHelperBase.ApplyRniLogic(model.Fields, x.persoon.Rni, _persoonBeperktFieldsSettings.GbaFieldsSettings);

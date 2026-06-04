@@ -1,7 +1,6 @@
 ﻿using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Common;
 using Rvig.HaalCentraalApi.Personen.Fields;
-using Rvig.HaalCentraalApi.Shared.Exceptions;
 using Rvig.HaalCentraalApi.Shared.Fields;
 
 namespace Rvig.HaalCentraalApi.Personen.Helpers;
@@ -13,7 +12,9 @@ namespace Rvig.HaalCentraalApi.Personen.Helpers;
 /// </summary>
 public class GbaPersonenApiHelper : GbaPersonenApiHelperBase
 {
-	private readonly FieldsFilterService _fieldsExpandFilterService;
+    private const string LANDVANWAARINGESCHREVEN = "immigratie.landVanwaarIngeschreven";
+
+    private readonly FieldsFilterService _fieldsExpandFilterService;
 	private readonly PersonenFieldsSettings _fieldsSettings;
 
 	public GbaPersonenApiHelper(FieldsFilterService fieldsExpandFilterService, PersonenFieldsSettings fieldsSettings)
@@ -72,7 +73,7 @@ public class GbaPersonenApiHelper : GbaPersonenApiHelperBase
 		if ((fields.Any(field => field.Contains("datumInschrijvingInGemeente"))
 				|| fields.Any(field => field.Contains("gemeenteVanInschrijving"))
 				|| fields.Any(field => field.Contains("immigratie"))
-				|| fields.Any(field => field.Contains("immigratie.landVanwaarIngeschreven"))
+				|| fields.Any(field => field.Contains(LANDVANWAARINGESCHREVEN))
 				|| fields.Any(field => field.Contains("adressering.adresregel"))
 				|| fields.Any(field => field.Contains("adressering.land"))
 				|| fields.Any(field => field.Contains("adresseringBinnenland.adresregel"))
@@ -98,12 +99,12 @@ public class GbaPersonenApiHelper : GbaPersonenApiHelperBase
 		// HACK because of requirement that vanuitVerblijfplaatsOnbekend and indicatieVestigingVanuitBuitenland must trigger immigratie.landVanwaarIngeschreven if any
 		// Again like above this is because of the Haal Centraal standard.
 		if (fields.Any(field => field.Contains("vanuitVerblijfplaatsOnbekend"))/* || fields.Any(field => field.Contains("indicatieVestigingVanuitBuitenland"))*/
-			&& !fields.Contains("immigratie") && !fields.Contains("immigratie.landVanwaarIngeschreven")
+			&& !fields.Contains("immigratie") && !fields.Contains(LANDVANWAARINGESCHREVEN)
 			&& immigratie.LandVanwaarIngeschreven != null)
 		{
-			fields.Add("immigratie.landVanwaarIngeschreven");
+			fields.Add(LANDVANWAARINGESCHREVEN);
 		}
-		else if (fields.All(field => !field.Contains("immigratie") && !field.Contains("immigratie.landVanwaarIngeschreven")))
+		else if (fields.All(field => !field.Contains("immigratie") && !field.Contains(LANDVANWAARINGESCHREVEN)))
 		{
 			immigratie.LandVanwaarIngeschreven = null;
 		}
@@ -173,20 +174,6 @@ public class GbaPersonenApiHelper : GbaPersonenApiHelperBase
 			gbaPersoon.PersoonInOnderzoek = null;
 		}
 	}
-
-	//private bool IsGezagDefault(AbstractGezagsrelatie gezag)
-	//{
-	//	return gezag switch
-	//	{
-	//		EenhoofdigOuderlijkGezag eenhoofdigOuderlijkGezag => eenhoofdigOuderlijkGezag.Minderjarige == null && eenhoofdigOuderlijkGezag.Ouder == null,
-	//		TweehoofdigOuderlijkGezag tweehoofdigOuderlijkGezag => tweehoofdigOuderlijkGezag.Minderjarige == null && tweehoofdigOuderlijkGezag.Ouders?.Any() == false,
-	//		GezagNietTeBepalen gezagNietTeBepalen => gezagNietTeBepalen != null,
-	//		GezamenlijkGezag gezamenlijkGezag => gezamenlijkGezag.Minderjarige == null && gezamenlijkGezag.Ouder == null && gezamenlijkGezag.Derde == null,
-	//		TijdelijkGeenGezag tijdelijkGeenGezag => tijdelijkGeenGezag != null,
-	//		Voogdij voogdij => voogdij.Minderjarige == null && voogdij.Derden?.Any() == false,
-	//		_ => throw new CustomInvalidOperationException($"Onbekend type gezag: {gezag.GetType().Name}")
-	//	};
-	//}
 
 	private bool IsOuderDefault(GbaOuder ouder)
 	{
