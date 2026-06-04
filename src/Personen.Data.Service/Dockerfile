@@ -34,7 +34,11 @@ RUN dotnet build "./Personen.Data.Service.csproj" -c "$BUILD_CONFIGURATION" -o /
 FROM --platform=$BUILDPLATFORM build AS publish
 ARG BUILD_CONFIGURATION=Release
 ARG TARGETARCH
-RUN dotnet publish "./Personen.Data.Service.csproj" -c "$BUILD_CONFIGURATION" -o /app/publish /p:UseAppHost=false --arch "$TARGETARCH"
+RUN dotnet publish "./Personen.Data.Service.csproj" \
+    -c "$BUILD_CONFIGURATION" \
+    -o /app/publish \
+    /p:UseAppHost=false \
+    --arch "$TARGETARCH"
 
 FROM base AS final
 WORKDIR /app

@@ -23,7 +23,11 @@ RUN dotnet build "./GezagMock.csproj" -c "$BUILD_CONFIGURATION" -o /app/build --
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 ARG TARGETARCH
-RUN dotnet publish "./GezagMock.csproj" -c "$BUILD_CONFIGURATION" -o /app/publish /p:UseAppHost=false --arch "$TARGETARCH"
+RUN dotnet publish "./GezagMock.csproj" \
+    -c "$BUILD_CONFIGURATION" \
+    -o /app/publish \
+    /p:UseAppHost=false \
+    --arch "$TARGETARCH"
 
 FROM base AS final
 WORKDIR /app

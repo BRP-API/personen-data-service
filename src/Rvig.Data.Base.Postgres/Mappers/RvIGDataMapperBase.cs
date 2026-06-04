@@ -17,103 +17,128 @@ public class RvIGDataMapperBase
 	}
 
 	protected async Task<T?> MapVerblijfplaats<T>(lo3_pl_verblijfplaats dbVerblijfplaats, lo3_adres? dbAdres, Waardetabel? gemeenteVanInschrijving, IEnumerable<string>? excludePropNames = null) where T : GbaVerblijfplaats
-	{
-		var verblijfplaats = Activator.CreateInstance<T>();
+    {
+        var verblijfplaats = Activator.CreateInstance<T>();
 
-		var propNames = excludePropNames == null
-							? ObjectHelper.GetPropertyNames<T>()
-							: ObjectHelper.GetPropertyNames<T>(excludePropNames);
-		foreach (var propertyName in propNames)
-		{
-			switch (propertyName)
-			{
-				case nameof(GbaVerblijfplaats.FunctieAdres):
-					verblijfplaats.FunctieAdres = GbaMappingHelper.ParseToSoortAdresEnum(dbVerblijfplaats!.adres_functie);
-					break;
-				case nameof(GbaVerblijfplaats.AdresseerbaarObjectIdentificatie):
-					if (dbAdres?.verblijf_plaats_ident_code?.Length == 16 && long.TryParse(dbAdres?.verblijf_plaats_ident_code, out _))
-					{
-						verblijfplaats.AdresseerbaarObjectIdentificatie = dbAdres?.verblijf_plaats_ident_code;
-					}
-					break;
-				case nameof(GbaVerblijfplaats.NummeraanduidingIdentificatie):
-					if (dbAdres?.nummer_aand_ident_code?.Length == 16 && long.TryParse(dbAdres?.nummer_aand_ident_code, out _))
-					{
-						verblijfplaats.NummeraanduidingIdentificatie = dbAdres?.nummer_aand_ident_code;
-					}
-					break;
-				case nameof(GbaVerblijfplaats.Locatiebeschrijving):
-					verblijfplaats.Locatiebeschrijving = dbAdres?.diak_locatie_beschrijving ?? dbAdres?.locatie_beschrijving;
-					break;
-				case nameof(GbaVerblijfplaats.Straat):
-					verblijfplaats.Straat = dbAdres?.diak_straat_naam ?? dbAdres?.straat_naam;
-					break;
-				case nameof(GbaVerblijfplaats.AanduidingBijHuisnummer):
-					verblijfplaats.AanduidingBijHuisnummer = GbaMappingHelper.ParseToAanduidingBijHuisnummerEnum(dbAdres?.huis_nr_aand);
-					break;
-				case nameof(GbaVerblijfplaats.DatumIngangGeldigheid):
-					verblijfplaats.DatumIngangGeldigheid = GbaMappingHelper.ParseToDatumOnvolledig(dbVerblijfplaats?.geldigheid_start_datum);
-					break;
-				case nameof(GbaVerblijfplaats.DatumAanvangAdreshouding):
-					verblijfplaats.DatumAanvangAdreshouding = GbaMappingHelper.ParseToDatumOnvolledig(dbVerblijfplaats?.adreshouding_start_datum);
-					break;
-				case nameof(GbaVerblijfplaats.InOnderzoek):
-					verblijfplaats.InOnderzoek = MapGbaInOnderzoek(dbVerblijfplaats?.onderzoek_gegevens_aand, dbVerblijfplaats?.onderzoek_start_datum, dbVerblijfplaats?.onderzoek_eind_datum);
-					break;
-				case nameof(GbaVerblijfplaats.DatumAanvangAdresBuitenland):
-					verblijfplaats.DatumAanvangAdresBuitenland = GbaMappingHelper.ParseToDatumOnvolledig(dbVerblijfplaats?.vertrek_datum);
-					break;
-				case nameof(GbaVerblijfplaats.Regel1):
-					verblijfplaats.Regel1 = dbVerblijfplaats?.vertrek_land_adres_1;
-					break;
-				case nameof(GbaVerblijfplaats.Regel2):
-					verblijfplaats.Regel2 = dbVerblijfplaats?.vertrek_land_adres_2;
-					break;
-				case nameof(GbaVerblijfplaats.Regel3):
-					verblijfplaats.Regel3 = dbVerblijfplaats?.vertrek_land_adres_3;
-					break;
-				case nameof(GbaVerblijfplaats.Land):
-                    if (dbVerblijfplaats?.vertrek_land_code != null)
-                    {
-                        verblijfplaats.Land = new Waardetabel
-                        {
-                            Code = (dbVerblijfplaats.vertrek_land_code ?? 0).ToString("0000"),
-                            Omschrijving = dbVerblijfplaats.vertrek_land_naam ?? await _domeinTabellenHelper.GetLandOmschrijving(dbVerblijfplaats.vertrek_land_code)
-                        };
-                    }
+        var propNames = GetPropNames<T>(excludePropNames);
+        foreach (var propertyName in propNames)
+        {
+            switch (propertyName)
+            {
+                case nameof(GbaVerblijfplaats.FunctieAdres):
+                    verblijfplaats.FunctieAdres = GbaMappingHelper.ParseToSoortAdresEnum(dbVerblijfplaats!.adres_functie);
                     break;
-				case nameof(GbaVerblijfplaats.NaamOpenbareRuimte):
-					verblijfplaats.NaamOpenbareRuimte = dbAdres?.diak_open_ruimte_naam ?? dbAdres?.open_ruimte_naam;
-					break;
-				case nameof(GbaVerblijfplaats.Huisnummer):
-					verblijfplaats.Huisnummer = dbAdres?.huis_nr;
-					break;
-				case nameof(GbaVerblijfplaats.Huisletter):
-					verblijfplaats.Huisletter = dbAdres?.huis_letter;
-					break;
-				case nameof(GbaVerblijfplaats.Huisnummertoevoeging):
-					verblijfplaats.Huisnummertoevoeging = dbAdres?.huis_nr_toevoeging;
-					break;
-				case nameof(GbaVerblijfplaats.Postcode):
-					verblijfplaats.Postcode = dbAdres?.postcode;
-					break;
-				case nameof(GbaVerblijfplaats.Woonplaats):
-					// Docs: https://github.com/VNG-Realisatie/Haal-Centraal-BRP-bevragen/blob/v1.3.0/features/woonplaats.feature
-					verblijfplaats.Woonplaats = !string.IsNullOrEmpty(dbAdres?.diak_woon_plaats_naam) ? dbAdres?.diak_woon_plaats_naam : dbAdres?.woon_plaats_naam;
-					break;
-				default:
-					throw new CustomNotImplementedException($"Mapping not implemented for {nameof(GbaVerblijfplaats)} property {propertyName}");
-			}
-		}
+                case nameof(GbaVerblijfplaats.AdresseerbaarObjectIdentificatie):
+                    MapAdresseerbaarObjectIdentificatie(dbAdres, verblijfplaats);
+                    break;
+                case nameof(GbaVerblijfplaats.NummeraanduidingIdentificatie):
+					MapNummeraanduidingIdentificatie(dbAdres, verblijfplaats);
+                    break;
+                case nameof(GbaVerblijfplaats.Locatiebeschrijving):
+                    verblijfplaats.Locatiebeschrijving = dbAdres?.diak_locatie_beschrijving ?? dbAdres?.locatie_beschrijving;
+                    break;
+                case nameof(GbaVerblijfplaats.Straat):
+                    verblijfplaats.Straat = dbAdres?.diak_straat_naam ?? dbAdres?.straat_naam;
+                    break;
+                case nameof(GbaVerblijfplaats.AanduidingBijHuisnummer):
+                    verblijfplaats.AanduidingBijHuisnummer = GbaMappingHelper.ParseToAanduidingBijHuisnummerEnum(dbAdres?.huis_nr_aand);
+                    break;
+                case nameof(GbaVerblijfplaats.DatumIngangGeldigheid):
+                    verblijfplaats.DatumIngangGeldigheid = GbaMappingHelper.ParseToDatumOnvolledig(dbVerblijfplaats?.geldigheid_start_datum);
+                    break;
+                case nameof(GbaVerblijfplaats.DatumAanvangAdreshouding):
+                    verblijfplaats.DatumAanvangAdreshouding = GbaMappingHelper.ParseToDatumOnvolledig(dbVerblijfplaats?.adreshouding_start_datum);
+                    break;
+                case nameof(GbaVerblijfplaats.InOnderzoek):
+                    verblijfplaats.InOnderzoek = MapGbaInOnderzoek(dbVerblijfplaats?.onderzoek_gegevens_aand, dbVerblijfplaats?.onderzoek_start_datum, dbVerblijfplaats?.onderzoek_eind_datum);
+                    break;
+                case nameof(GbaVerblijfplaats.DatumAanvangAdresBuitenland):
+                    verblijfplaats.DatumAanvangAdresBuitenland = GbaMappingHelper.ParseToDatumOnvolledig(dbVerblijfplaats?.vertrek_datum);
+                    break;
+                case nameof(GbaVerblijfplaats.Regel1):
+                    verblijfplaats.Regel1 = dbVerblijfplaats?.vertrek_land_adres_1;
+                    break;
+                case nameof(GbaVerblijfplaats.Regel2):
+                    verblijfplaats.Regel2 = dbVerblijfplaats?.vertrek_land_adres_2;
+                    break;
+                case nameof(GbaVerblijfplaats.Regel3):
+                    verblijfplaats.Regel3 = dbVerblijfplaats?.vertrek_land_adres_3;
+                    break;
+                case nameof(GbaVerblijfplaats.Land):
+                    await MapVerblijfplaatsLand(dbVerblijfplaats, verblijfplaats);
+                    break;
+                case nameof(GbaVerblijfplaats.NaamOpenbareRuimte):
+                    verblijfplaats.NaamOpenbareRuimte = dbAdres?.diak_open_ruimte_naam ?? dbAdres?.open_ruimte_naam;
+                    break;
+                case nameof(GbaVerblijfplaats.Huisnummer):
+                    verblijfplaats.Huisnummer = dbAdres?.huis_nr;
+                    break;
+                case nameof(GbaVerblijfplaats.Huisletter):
+                    verblijfplaats.Huisletter = dbAdres?.huis_letter;
+                    break;
+                case nameof(GbaVerblijfplaats.Huisnummertoevoeging):
+                    verblijfplaats.Huisnummertoevoeging = dbAdres?.huis_nr_toevoeging;
+                    break;
+                case nameof(GbaVerblijfplaats.Postcode):
+                    verblijfplaats.Postcode = dbAdres?.postcode;
+                    break;
+                case nameof(GbaVerblijfplaats.Woonplaats):
+                    MapWoonplaats(dbAdres, verblijfplaats);
+                    break;
+                default:
+                    throw new CustomNotImplementedException($"Mapping not implemented for {nameof(GbaVerblijfplaats)} property {propertyName}");
+            }
+        }
 
-		// Docs: https://github.com/VNG-Realisatie/Haal-Centraal-BRP-bevragen/blob/v1.3.0/features/adres.feature
-		// This feature is not meant for GBA
-		//PersoonMappingHelper.SetAdresRegels(verblijfplaats, gemeenteVanInschrijving)
+        // Docs: https://github.com/VNG-Realisatie/Haal-Centraal-BRP-bevragen/blob/v1.3.0/features/adres.feature
+        // This feature is not meant for GBA
+        //PersoonMappingHelper.SetAdresRegels(verblijfplaats, gemeenteVanInschrijving)
 
-		return ObjectHelper.InstanceOrNullWhenDefault(verblijfplaats);
-	}
+        return ObjectHelper.InstanceOrNullWhenDefault(verblijfplaats);
+    }
 
-	protected async Task<Waardetabel?> GetGemeenteVanInschrijving(lo3_pl_verblijfplaats? verblijfplaats)
+    private static void MapWoonplaats<T>(lo3_adres? dbAdres, T verblijfplaats) where T : GbaVerblijfplaats
+    {
+        // Docs: https://github.com/VNG-Realisatie/Haal-Centraal-BRP-bevragen/blob/v1.3.0/features/woonplaats.feature
+        verblijfplaats.Woonplaats = !string.IsNullOrEmpty(dbAdres?.diak_woon_plaats_naam) ? dbAdres.diak_woon_plaats_naam : dbAdres?.woon_plaats_naam;
+    }
+
+    private async Task MapVerblijfplaatsLand<T>(lo3_pl_verblijfplaats dbVerblijfplaats, T verblijfplaats) where T : GbaVerblijfplaats
+    {
+        if (dbVerblijfplaats?.vertrek_land_code != null)
+        {
+            verblijfplaats.Land = new Waardetabel
+            {
+                Code = (dbVerblijfplaats.vertrek_land_code ?? 0).ToString("0000"),
+                Omschrijving = dbVerblijfplaats.vertrek_land_naam ?? await _domeinTabellenHelper.GetLandOmschrijving(dbVerblijfplaats.vertrek_land_code)
+            };
+        }
+    }
+
+    private static void MapNummeraanduidingIdentificatie<T>(lo3_adres? dbAdres, T verblijfplaats) where T : GbaVerblijfplaats
+    {
+        if (dbAdres?.nummer_aand_ident_code?.Length == 16 && long.TryParse(dbAdres.nummer_aand_ident_code, out _))
+        {
+            verblijfplaats.NummeraanduidingIdentificatie = dbAdres.nummer_aand_ident_code;
+        }
+    }
+
+    private static void MapAdresseerbaarObjectIdentificatie<T>(lo3_adres? dbAdres, T verblijfplaats) where T : GbaVerblijfplaats
+    {
+        if (dbAdres?.verblijf_plaats_ident_code?.Length == 16 && long.TryParse(dbAdres.verblijf_plaats_ident_code, out _))
+        {
+            verblijfplaats.AdresseerbaarObjectIdentificatie = dbAdres.verblijf_plaats_ident_code;
+        }
+    }
+
+    private static IEnumerable<string> GetPropNames<T>(IEnumerable<string>? excludePropNames) where T : GbaVerblijfplaats
+    {
+        return excludePropNames == null
+                                    ? ObjectHelper.GetPropertyNames<T>()
+                                    : ObjectHelper.GetPropertyNames<T>(excludePropNames);
+    }
+
+    protected async Task<Waardetabel?> GetGemeenteVanInschrijving(lo3_pl_verblijfplaats? verblijfplaats)
 	{
 		return verblijfplaats?.inschrijving_gemeente_code != null
 									?
@@ -224,7 +249,7 @@ public class RvIGDataMapperBase
 		return GbaMappingHelper.MapBinnenOfBuitenlandsePlaats(geboorteLandCode, geboortePlaatsCode, plaatsOmschrijving);
 	}
 
-	protected void MapGeboorteBeperkt(lo3_pl_persoon dbPersoon, GeboorteBasis geboorte)
+	protected static void MapGeboorteBeperkt(lo3_pl_persoon dbPersoon, GeboorteBasis geboorte)
 	{
 		foreach (var propertyName in ObjectHelper.GetPropertyNames<GeboorteBasis>())
 		{
@@ -286,9 +311,6 @@ public class RvIGDataMapperBase
 	}
 	protected async Task<T?> MapPartner<T>(lo3_pl_persoon dbPartner, IEnumerable<string>? excludePropNames = null) where T : GbaPartner
 	{
-		// Because of GBA feature, the GBA API must always return an empty GbaPartner object
-		//if (dbPartner == null) return (null, null);
-
 		var partner = Activator.CreateInstance<T>();
 
 		var propNames = excludePropNames == null
@@ -335,12 +357,11 @@ public class RvIGDataMapperBase
 
 		// Because of GBA feature, the GBA API must always return an empty GbaPartner object
 		return partner;
-		//return (ObjectHelper.InstanceOrNullWhenDefault(GbaPartner), partnerHelperModel);
 	}
 
 	// This has to do with incorrect inserts in the database logic. Below is the rule of Haal Centraal written in an partner-gba.feature.
 	// Een partner wordt alleen teruggegeven als minimaal één gegeven in de identificatienummers (groep 01), naam (groep 02), geboorte (groep 03), aangaan (groep 06), ontbinding (groep 07) of 15 (soort verbintenis) van de partner een waarde heeft.
-	private bool IsPartnerNonExistent(GbaPartner partner)
+	private static bool IsPartnerNonExistent(GbaPartner partner)
 	{
 		return string.IsNullOrWhiteSpace(partner.Burgerservicenummer) && partner.Naam == null
 			&& partner.Geboorte == null && partner.Geslacht == null
@@ -387,7 +408,7 @@ public class RvIGDataMapperBase
 		return ObjectHelper.InstanceOrNullWhenDefault(aangaanHuwelijkPartnerschap);
 	}
 
-	protected GbaOntbindingHuwelijkPartnerschap? MapOntbindingHuwelijkPartnerschap(lo3_pl_persoon dbPartner)
+	protected static GbaOntbindingHuwelijkPartnerschap? MapOntbindingHuwelijkPartnerschap(lo3_pl_persoon dbPartner)
 	{
 		var ontbindingHuwelijkPartnerschap = new GbaOntbindingHuwelijkPartnerschap();
 
@@ -456,30 +477,13 @@ public class RvIGDataMapperBase
 				case nameof(GbaNationaliteit.AanduidingBijzonderNederlanderschap):
 					nationaliteit.AanduidingBijzonderNederlanderschap = dbNationaliteit.bijzonder_nl_aand;
 					break;
-				case nameof(GbaNationaliteit.Nationaliteit):
-					nationaliteit.Nationaliteit = dbNationaliteit.nationaliteit_code.HasValue ? new Waardetabel
-					{
-						Code = dbNationaliteit.nationaliteit_code?.ToString().PadLeft(4, '0'),
-						Omschrijving = dbNationaliteit.nationaliteit_oms
-					} : null;
-					break;
-				case nameof(GbaNationaliteit.RedenOpname):
-					nationaliteit.RedenOpname = dbNationaliteit.nl_nat_verkrijg_reden.HasValue ? new Waardetabel
-					{
-						Code = dbNationaliteit.nl_nat_verkrijg_reden.ToString()?.PadLeft(3, '0'),
-						Omschrijving = redenOpname
-					} : null;
-
-					if (nationaliteit.RedenOpname == null)
-					{
-						nationaliteit.RedenOpname = dbNationaliteit.nl_nat_verlies_reden.HasValue ? new Waardetabel
-						{
-							Code = dbNationaliteit.nl_nat_verlies_reden.ToString()?.PadLeft(3, '0'),
-							Omschrijving = redenVerlies
-						} : null;
-					}
-					break;
-				case nameof(GbaNationaliteit.DatumIngangGeldigheid):
+                case nameof(GbaNationaliteit.Nationaliteit):
+                    MapNationaliteit(dbNationaliteit, nationaliteit);
+                    break;
+                case nameof(GbaNationaliteit.RedenOpname):
+                    MapNationaliteitRedenOpname(dbNationaliteit, nationaliteit, redenOpname, redenVerlies);
+                    break;
+                case nameof(GbaNationaliteit.DatumIngangGeldigheid):
 					nationaliteit.DatumIngangGeldigheid = GbaMappingHelper.ParseToDatumOnvolledig(ingangsdatum);
 					break;
 				case nameof(GbaNationaliteit.InOnderzoek):
@@ -497,7 +501,34 @@ public class RvIGDataMapperBase
 		return ObjectHelper.InstanceOrNullWhenDefault(nationaliteit);
 	}
 
-	protected async Task<GbaVerblijfstitel?> MapVerblijfstitel(lo3_pl_verblijfstitel dbVerblijfstitel)
+    private static void MapNationaliteitRedenOpname<T>(lo3_pl_nationaliteit dbNationaliteit, T nationaliteit, string? redenOpname, string? redenVerlies) where T : GbaNationaliteit
+    {
+        nationaliteit.RedenOpname = dbNationaliteit.nl_nat_verkrijg_reden.HasValue ? new Waardetabel
+        {
+            Code = dbNationaliteit.nl_nat_verkrijg_reden.ToString()?.PadLeft(3, '0'),
+            Omschrijving = redenOpname
+        } : null;
+
+        if (nationaliteit.RedenOpname == null)
+        {
+            nationaliteit.RedenOpname = dbNationaliteit.nl_nat_verlies_reden.HasValue ? new Waardetabel
+            {
+                Code = dbNationaliteit.nl_nat_verlies_reden.ToString()?.PadLeft(3, '0'),
+                Omschrijving = redenVerlies
+            } : null;
+        }
+    }
+
+    private static void MapNationaliteit<T>(lo3_pl_nationaliteit dbNationaliteit, T nationaliteit) where T : GbaNationaliteit
+    {
+        nationaliteit.Nationaliteit = dbNationaliteit.nationaliteit_code.HasValue ? new Waardetabel
+        {
+            Code = dbNationaliteit.nationaliteit_code?.ToString().PadLeft(4, '0'),
+            Omschrijving = dbNationaliteit.nationaliteit_oms
+        } : null;
+    }
+
+    protected async Task<GbaVerblijfstitel?> MapVerblijfstitel(lo3_pl_verblijfstitel dbVerblijfstitel)
 	{
 		var verblijfstitel = new GbaVerblijfstitel();
 		if (dbVerblijfstitel == null)
@@ -539,7 +570,7 @@ public class RvIGDataMapperBase
 		return ObjectHelper.InstanceOrNullWhenDefault(verblijfstitel);
 	}
 
-	protected GbaOpschortingBijhouding? MapOpschortingBijhouding(lo3_pl inschrijving)
+	protected static GbaOpschortingBijhouding? MapOpschortingBijhouding(lo3_pl inschrijving)
 	{
 		var opschortingBijhouding = new GbaOpschortingBijhouding();
 		if (inschrijving == null)
@@ -567,7 +598,7 @@ public class RvIGDataMapperBase
 		return ObjectHelper.InstanceOrNullWhenDefault(opschortingBijhouding);
 	}
 
-	private void MapOpschortingBijhoudingBasis(lo3_pl inschrijving, OpschortingBijhoudingBasis opschortingBijhouding)
+	private static void MapOpschortingBijhoudingBasis(lo3_pl inschrijving, OpschortingBijhoudingBasis opschortingBijhouding)
 	{
 		foreach (var propertyName in ObjectHelper.GetPropertyNames<OpschortingBijhoudingBasis>())
 		{
