@@ -41,15 +41,7 @@ namespace Rvig.Data.Base.Gezag.Repositories
 
 			HttpClient httpClient = new();
 
-			HttpResponseMessage? response;
-			try
-			{
-				response = await httpClient.SendAsync(httpRequest);
-			}
-			catch (Exception ex)
-			{
-				throw;
-			}
+			HttpResponseMessage? response = await httpClient.SendAsync(httpRequest);
 
 			if (response.StatusCode == HttpStatusCode.OK)
 			{
