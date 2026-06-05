@@ -3,28 +3,19 @@ using Rvig.Data.Personen.Repositories;
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
 using Rvig.HaalCentraalApi.Personen.Interfaces;
-using Rvig.Data.Base.Postgres.Services;
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Common;
 
 namespace Rvig.Data.Personen.Services;
-public class GetAndMapGbaPersonenService : GetAndMapGbaServiceBase, IGetAndMapGbaPersonenService
+public class GetAndMapGbaPersonenService(IRvigPersoonRepo dbPersoonRepo,
+										 IRvigPersoonBeperktRepo dbPersoonBeperktRepo,
+										 IRvIGDataPersonenMapper persoonMapper)
+	: IGetAndMapGbaPersonenService
 {
-	private readonly IRvigPersoonRepo _dbPersoonRepo;
-	private readonly IRvigPersoonBeperktRepo _dbPersoonBeperktRepo;
-	private readonly IRvIGDataPersonenMapper _persoonMapper;
-
-    public GetAndMapGbaPersonenService(IRvigPersoonRepo dbPersoonRepo, IRvigPersoonBeperktRepo dbPersoonBeperktRepo, IRvIGDataPersonenMapper persoonMapper)
-	{
-		_dbPersoonRepo = dbPersoonRepo;
-		_dbPersoonBeperktRepo = dbPersoonBeperktRepo;
-		_persoonMapper = persoonMapper;
-	}
-
-	public async Task<(IEnumerable<(GbaPersoon persoon, long pl_id)>? personenPlIds, int afnemerCode)> GetPersonenMapByBsns(IEnumerable<string>? burgerservicenummers, string? gemeenteVanInschrijving, List<string> fields)
+    public async Task<(IEnumerable<(GbaPersoon persoon, long pl_id)>? personenPlIds, int afnemerCode)> GetPersonenMapByBsns(IEnumerable<string>? burgerservicenummers, string? gemeenteVanInschrijving, List<string> fields)
 	{
 
 		// It is impossible to have an empty or null array of bsns because the API request models already validate this and reject all non valid values.
-		var dbPersonen = await _dbPersoonRepo.GetPersoonByBsns(burgerservicenummers!, gemeenteVanInschrijving, fields);
+		var dbPersonen = await dbPersoonRepo.GetPersoonByBsns(burgerservicenummers!, gemeenteVanInschrijving, fields);
 		var personenPlIds = (await Task.WhenAll(dbPersonen.Select(async dbPersoon =>
 		{
 			if (dbPersoon == null)
@@ -32,7 +23,7 @@ public class GetAndMapGbaPersonenService : GetAndMapGbaServiceBase, IGetAndMapGb
 				return default;
 			}
 
-            return (gbaPersoon: await _persoonMapper.MapFrom(dbPersoon), dbPersoon.Persoon.pl_id);
+            return (gbaPersoon: await persoonMapper.MapFrom(dbPersoon), dbPersoon.Persoon.pl_id);
         })))
         .Where(x => !x.gbaPersoon.Equals(default));
 
@@ -68,7 +59,7 @@ public class GetAndMapGbaPersonenService : GetAndMapGbaServiceBase, IGetAndMapGb
 	/// <exception cref="AuthorizationException"></exception>
 	private async Task<(IEnumerable<(T persoon, long pl_id)>? personenPlIds, int afnemerCode)> GetMapZoekPersonenBase<T>(PersonenQuery model, List<string> fields) where T : GbaPersoonBeperkt
 	{
-		var dbPersonen = await _dbPersoonBeperktRepo.SearchPersonen(model, fields);
+		var dbPersonen = await dbPersoonBeperktRepo.SearchPersonen(model, fields);
 		var personenPlIds = (await Task.WhenAll(dbPersonen.Select(async dbPersoon =>
 		{
 			if (dbPersoon == null)
@@ -76,7 +67,7 @@ public class GetAndMapGbaPersonenService : GetAndMapGbaServiceBase, IGetAndMapGb
 				return default;
 			}
 
-            return (gbaPersoon: await _persoonMapper.MapGbaPersoonBeperkt<T>(dbPersoon), dbPersoon.Persoon.pl_id);
+            return (gbaPersoon: await persoonMapper.MapGbaPersoonBeperkt<T>(dbPersoon), dbPersoon.Persoon.pl_id);
         })))
 		.Where(x => !x.gbaPersoon.Equals(default));
 

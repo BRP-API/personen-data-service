@@ -26,8 +26,4 @@ var servicesDictionary = new Dictionary<Type, Type>
 	{ typeof(IRepoGezagsrelatie), typeof(RepoGezagsrelatie) }
 };
 
-var validatorList = new List<Type>
-{
-};
-
-RvigBaseApp.Init(servicesDictionary, validatorList, "BRP Personen API");
+RvigBaseApp.Init(servicesDictionary, "BRP Personen API");

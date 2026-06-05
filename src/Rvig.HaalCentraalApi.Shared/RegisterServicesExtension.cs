@@ -10,6 +10,5 @@ public static class RegisterServicesExtension
 	public static void ConfigureRvigApiSharedServices(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.Configure<ProtocolleringAuthorizationOptions>(configuration.GetSection(ProtocolleringAuthorizationOptions.ProtocolleringAuthorization));
-		services.AddSingleton<ILoggingHelper, LoggingHelper>();
 	}
 }

@@ -5,8 +5,6 @@ using Rvig.HaalCentraalApi.Shared.Options;
 using Rvig.Data.Base.Postgres.DatabaseModels;
 using Rvig.Data.Base.Postgres.Repositories;
 using Rvig.Data.Personen.Repositories.Queries.Helper;
-using Rvig.HaalCentraalApi.Shared.Helpers;
-using System.Diagnostics;
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP.Common;
 
 namespace Rvig.Data.Personen.Repositories;
@@ -15,14 +13,10 @@ public interface IRvigPersoonBeperktRepo
 	Task<List<DbPersoonActueelWrapper>> SearchPersonen(PersonenQuery model, List<string> fields);
 }
 
-public class RvigPersoonBeperktRepo : RvigRepoPostgresBase<DbPersoonActueelWrapper>, IRvigPersoonBeperktRepo
+public class RvigPersoonBeperktRepo(IOptions<DatabaseOptions> databaseOptions)
+	: RvigRepoPostgresBase<DbPersoonActueelWrapper>(databaseOptions), IRvigPersoonBeperktRepo
 {
-	public RvigPersoonBeperktRepo(IOptions<DatabaseOptions> databaseOptions, IOptions<HaalcentraalApiOptions> haalcentraalApiOptions, ILoggingHelper loggingHelper)
-		: base(databaseOptions, haalcentraalApiOptions, loggingHelper)
-	{
-	}
-
-	protected override void SetMappings() => CreateMappingsFromWhereMappings();
+    protected override void SetMappings() => CreateMappingsFromWhereMappings();
 	protected override void SetWhereMappings() => WhereMappings = RvIGPersonenWhereMappingsHelper.GetPersoonBeperktMappings();
 
 	public async Task<List<DbPersoonActueelWrapper>> SearchPersonen(PersonenQuery model, List<string> fields)

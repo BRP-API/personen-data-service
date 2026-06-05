@@ -6,9 +6,7 @@ using Rvig.Data.Personen.Repositories.Queries.Helper;
 using Rvig.HaalCentraalApi.Personen.ApiModels.BRP;
 using Rvig.HaalCentraalApi.Shared.ApiModels.Universal;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
-using Rvig.HaalCentraalApi.Shared.Helpers;
 using Rvig.HaalCentraalApi.Shared.Options;
-using static Npgsql.PostgresTypes.PostgresCompositeType;
 
 namespace Rvig.Data.Personen.Repositories;
 
@@ -17,14 +15,10 @@ public interface IRvigPersoonRepo
 	Task<IEnumerable<DbPersoonActueelWrapper?>> GetPersoonByBsns(IEnumerable<string> bsns, string? gemeenteVanInschrijving, List<string> fields);
 }
 
-public class RvigPersoonRepo : RvigRepoPostgresBase<DbPersoonActueelWrapper>, IRvigPersoonRepo
+public class RvigPersoonRepo(IOptions<DatabaseOptions> databaseOptions)
+	: RvigRepoPostgresBase<DbPersoonActueelWrapper>(databaseOptions), IRvigPersoonRepo
 {
-	public RvigPersoonRepo(IOptions<DatabaseOptions> databaseOptions, IOptions<HaalcentraalApiOptions> haalcentraalApiOptions, ILoggingHelper loggingHelper)
-		: base(databaseOptions, haalcentraalApiOptions, loggingHelper)
-	{
-	}
-
-	protected override void SetMappings() => CreateMappingsFromWhereMappings();
+    protected override void SetMappings() => CreateMappingsFromWhereMappings();
 	protected override void SetWhereMappings() => WhereMappings = RvIGPersonenWhereMappingsHelper.GetPersoonMappings();
 
 	public async Task<IEnumerable<DbPersoonActueelWrapper?>> GetPersoonByBsns(IEnumerable<string> bsns, string? gemeenteVanInschrijving, List<string> fields)
