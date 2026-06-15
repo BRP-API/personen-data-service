@@ -21,7 +21,6 @@ on:
         options:
           - ci-only
           - app
-          - gezag-proxy-mock
           - gezag-mock
 
 env:
@@ -165,7 +164,7 @@ jobs:
           driver: docker-container
 
       - name: Build & push personen data service container images naar registry
-        if: always() && (steps.changed-project.outputs.app == 'true' || inputs.publishType == 'app')
+        if: always() && (steps.changed-project.outputs.app == 'true' || inputs.publishType == 'app' || github.ref == 'refs/heads/main')
         uses: docker/build-push-action@v6
         with:
           file: ${{ env.APP_PROJECT_PATH }}/Dockerfile
@@ -177,8 +176,16 @@ jobs:
             ${{ env.APP_CONTAINER_IMAGE }}:${{ steps.app-version.outputs.version }}-latest
             ${{ env.APP_CONTAINER_IMAGE }}:${{ steps.app-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
 
+      - name: Scan ${{ env.APP_CONTAINER_IMAGE }} container image for CVEs
+        if: success() && (steps.changed-project.outputs.app == 'true' || inputs.publishType == 'app' || github.ref == 'refs/heads/main')
+        uses: ./.github/actions/scan-container-image-for-cves
+        with:
+          image: ${{ env.APP_CONTAINER_IMAGE }}:${{ steps.app-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
+          artifact-name: personen-data-service-${{ steps.app-version.outputs.version }}-cve-scan-report
+
+
       - name: Build en push gezag mock container images naar registry
-        if: always() && inputs.publishType == 'gezag-mock'
+        if: always() && (steps.changed-project.outputs.mock == 'true' || inputs.publishType == 'gezag-mock' || github.ref == 'refs/heads/main')
         uses: docker/build-push-action@v6
         with:
           file: src/GezagMock/Dockerfile
@@ -189,3 +196,10 @@ jobs:
             ${{ env.GEZAG_MOCK_CONTAINER_IMAGE }}:latest
             ${{ env.GEZAG_MOCK_CONTAINER_IMAGE }}:${{ steps.mock-version.outputs.version }}-latest
             ${{ env.GEZAG_MOCK_CONTAINER_IMAGE }}:${{ steps.mock-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
+
+      - name: Scan ${{ env.GEZAG_MOCK_CONTAINER_IMAGE }} container image for CVEs
+        if: success() && (steps.changed-project.outputs.mock == 'true' || inputs.publishType == 'gezag-mock' || github.ref == 'refs/heads/main')
+        uses: ./.github/actions/scan-container-image-for-cves
+        with:
+          image: ${{ env.GEZAG_MOCK_CONTAINER_IMAGE }}:${{ steps.mock-version.outputs.version }}-${{ steps.build-run-id.outputs.build-run }}
+          artifact-name: gezag-mock-${{ steps.mock-version.outputs.version }}-cve-scan-report
