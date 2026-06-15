@@ -12,13 +12,11 @@ namespace Rvig.Data.Base.Gezag.Repositories
 	{
 		private readonly IHttpContextAccessor _httpContextAccessor;
 		protected readonly IOptions<WebApiOptions> _webApiOptions;
-		private readonly ILoggingHelper _loggingHelper;
 
-		protected RepoWebApiBase(IHttpContextAccessor httpContextAccessor, IOptions<WebApiOptions> webApiOptions, ILoggingHelper loggingHelper)
+		protected RepoWebApiBase(IHttpContextAccessor httpContextAccessor, IOptions<WebApiOptions> webApiOptions)
 		{
 			_httpContextAccessor = httpContextAccessor;
 			_webApiOptions = webApiOptions;
-			_loggingHelper = loggingHelper;
 		}
 
 		protected async Task<T?> GetResultFromHttpRequest<T>(string endpointUrl, string? parameters, HttpMethod httpMethod, List<(string Name, string Content)>? headers = null, object contentObject = null)
@@ -43,22 +41,9 @@ namespace Rvig.Data.Base.Gezag.Repositories
 
 			HttpClient httpClient = new();
 
-			HttpResponseMessage? response;
-			try
-			{
-				response = await httpClient.SendAsync(httpRequest);
-			}
-			catch (Exception ex)
-			{
-				_loggingHelper.LogError("Unexpected exception during webapi call. Error is: " + ex.Message + ".");
-				throw;
-			}
+			HttpResponseMessage? response = await httpClient.SendAsync(httpRequest);
 
-			if (response.StatusCode != HttpStatusCode.OK)
-			{
-				_loggingHelper.LogError("Webapi call unexpectedly ended in a fault. Error code was: " + response.StatusCode + ". Error body was: " + response.ReasonPhrase + ".");
-			}
-			else
+			if (response.StatusCode == HttpStatusCode.OK)
 			{
 				var jsonResult = await response.Content.ReadAsStringAsync();
 

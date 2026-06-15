@@ -2,19 +2,16 @@
 using Microsoft.Extensions.Options;
 using Rvig.Data.Base.Postgres.DatabaseModels;
 using Rvig.HaalCentraalApi.Shared.Exceptions;
-using Rvig.HaalCentraalApi.Shared.Helpers;
 using Rvig.HaalCentraalApi.Shared.Interfaces;
 using Rvig.HaalCentraalApi.Shared.Options;
 
 namespace Rvig.Data.Base.Postgres.Repositories;
 // lo3_gemeente is not correct
-public class DbDomeinTabellenRepo : PostgresRepoBase, IDomeinTabellenRepo
-{
-	public DbDomeinTabellenRepo(IOptions<DatabaseOptions> databaseOptions, ILoggingHelper loggingHelper) : base(databaseOptions, loggingHelper)
-	{
-	}
 
-	public async Task<IEnumerable<(string? code, string? omschrijving, string? soort)>> GetAllAdellijkeTitelsPredikaten()
+public class DbDomeinTabellenRepo(IOptions<DatabaseOptions> databaseOptions)
+	: PostgresRepoBase(databaseOptions), IDomeinTabellenRepo
+{
+    public async Task<IEnumerable<(string? code, string? omschrijving, string? soort)>> GetAllAdellijkeTitelsPredikaten()
 	{
 		string query = "select titel_predicaat, titel_predicaat_oms, titel_predicaat_soort from lo3_titel_predicaat";
 
@@ -76,9 +73,8 @@ public class DbDomeinTabellenRepo : PostgresRepoBase, IDomeinTabellenRepo
 		{
 			throw new CustomNotImplementedException("No gemeentecode received.");
 		}
-		long.TryParse(gemeenteCode.Value.ToString(), out var gemCode);
 
-		return GetGemeenteNaam(gemCode);
+		return GetGemeenteNaam((long)gemeenteCode.Value);
 	}
 
 	public virtual async Task<string?> GetGemeenteNaam(long gemeenteCode)

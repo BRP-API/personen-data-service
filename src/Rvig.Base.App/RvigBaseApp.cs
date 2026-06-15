@@ -11,11 +11,9 @@ using System.Reflection;
 using static System.Net.Mime.MediaTypeNames;
 using Rvig.Base.App.Middleware;
 using Rvig.Base.App.Services;
-using FluentValidation;
 using Rvig.HaalCentraalApi.Shared;
 using Rvig.Data.Base.WebApi;
 using Serilog;
-using Brp.Shared.Infrastructure.ProblemDetails;
 using Rvig.HaalCentraalApi.Personen.Middleware;
 
 namespace Rvig.Base.App;
@@ -26,9 +24,7 @@ public static class RvigBaseApp
 	/// Init app
 	/// </summary>
 	/// <param name="servicesToConfigure">Services to add as singletons. Key is interface, value is implementation.</param>
-	/// <param name="validatorsToConfigure">Validator types of specific child app. Used for validation of post request objects.</param>
-	/// <param name="controllerAssemblies">Controller resolving in other assemblies. E.g. typeof(EntitiesController).Assembly</param>
-	public static void Init(IDictionary<Type, Type> servicesToConfigure, List<Type> validatorsToConfigure, string apiName, IEnumerable<Assembly>? controllerAssemblies = null)
+	public static void Init(IDictionary<Type, Type> servicesToConfigure, string apiName)
 	{
 		Log.Logger = SerilogHelpers.SetupSerilogBootstrapLogger();
 
@@ -60,10 +56,6 @@ public static class RvigBaseApp
 				builder.Services.AddSingleton(servicePair.Key, servicePair.Value);
 			}
 
-			// Add services to the container.
-			builder.Services.AddRazorPages();
-			builder.Services.AddControllersWithViews();
-
 			builder.Services.AddControllers(options =>
 			{
 				// Removes the POST main body mentioned during required errors.
@@ -71,10 +63,6 @@ public static class RvigBaseApp
 			}).AddNewtonsoftJson();
 
 			builder.Services.Configure<MvcOptions>(options => options.Filters.Add(new ProducesAttribute(Application.Json)));
-			builder.Services.Configure<ApiBehaviorOptions>(options =>
-			{
-				options.InvalidModelStateResponseFactory = context => new BadRequestObjectResult(context.HttpContext.RequestServices.GetService<IErrorResponseService>()?.CreateBadRequestFoutbericht(context));
-			});
 
 			var app = builder.Build();
 
@@ -83,14 +71,6 @@ public static class RvigBaseApp
 
 			app.UseMiddleware<GbaApiVersionRoutingMiddleware>();
 
-            app.UseExceptionHandler(new ExceptionHandlerOptions
-			{
-				AllowStatusCode404Response = true,
-				ExceptionHandlingPath = "/error"
-			});
-			app.UseStatusCodePagesWithReExecute("/error/{0}");
-			app.UseHsts();
-
 			app.UseRouting();
 
 			// So we can grab the POST body to validate for unknown params. See ValidateUnusableQueryParamsAttribute.cs
@@ -98,14 +78,13 @@ public static class RvigBaseApp
 
 			// It is a requirement of the GBA API to default to application/json when Content-Type isn't specified.
 			app.UseMiddleware<ForceAcceptAndContentTypeHeadersWithValueMiddleware>();
-			app.MapRazorPages();
 			app.MapControllers();
 
 			app.Run();
 		}
 		catch(Exception ex)
 		{
-			Log.Fatal(ex, $"{apiName} terminated unexpectedly.");
+			Log.Fatal(ex, "{ApiName} terminated unexpectedly.", apiName);
 		}
 		finally
 		{
@@ -121,7 +100,6 @@ public static class RvigBaseApp
 		AppSettingsManager.Configuration = configurationManager;
 
 		services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-		services.AddSingleton<IErrorResponseService, ErrorResponseService>();
 		services.AddSingleton<IHealthCheckApiService, HealthCheckApiService>();
 	}
 }

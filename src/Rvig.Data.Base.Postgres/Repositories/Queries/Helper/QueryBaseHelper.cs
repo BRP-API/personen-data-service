@@ -9,14 +9,6 @@ namespace Rvig.Data.Base.Postgres.Repositories.Queries
 		{
 		}
 
-		public static string AutorisatieQuery => @"select aut.afnemer_code, aut.geheimhouding_ind, aut.ad_hoc_medium, aut.ad_hoc_rubrieken, aut.adres_vraag_bevoegdheid, aut.bijzondere_betrekking_kind_verstrekken,
-	voorwaarde.voorwaarde_regel
-from lo3_autorisatie aut
-	left join lo3_voorwaarde_regel_aut voorwaarde
-	on aut.autorisatie_id = voorwaarde.autorisatie_id and voorwaarde.voorwaarde_type = '6'
-where afnemer_code = @AFNEMERCODE
-and (tabel_regel_start_datum is null or tabel_regel_start_datum <= @TODAY)
-and (tabel_regel_eind_datum is null or tabel_regel_eind_datum > @TODAY)";
 		public static string PersoonBaseQuery => @"select {0}
 	from lo3_pl_persoon pers
 	left join lo3_pl_verblijfplaats verblfpls

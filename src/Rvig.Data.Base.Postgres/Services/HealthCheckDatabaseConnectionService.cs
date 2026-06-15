@@ -3,18 +3,12 @@ using Rvig.HaalCentraalApi.Shared.Interfaces;
 
 namespace Rvig.Data.Base.Postgres.Services;
 
-public class HealthCheckDatabaseConnectionService : IHealthCheckDatabaseConnectionService
+public class HealthCheckDatabaseConnectionService(IRvigDbHealthCheckRepo rvigDbHealthCheckRepo)
+	: IHealthCheckDatabaseConnectionService
 {
-	private readonly IRvigDbHealthCheckRepo _rvigDbHealthCheckRepo;
-
-	public HealthCheckDatabaseConnectionService(IRvigDbHealthCheckRepo rvigDbHealthCheckRepo)
+    public async Task<int> CheckDatabaseConnection()
 	{
-		_rvigDbHealthCheckRepo = rvigDbHealthCheckRepo;
-	}
-
-	public async Task<int> CheckDatabaseConnection()
-	{
-		var result = await _rvigDbHealthCheckRepo.SendSimpleQuery();
+		var result = await rvigDbHealthCheckRepo.SendSimpleQuery();
 
 		return !string.IsNullOrWhiteSpace(result) ? 0 : 1;
 	}

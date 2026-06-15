@@ -17,7 +17,7 @@ public interface IRepoGezagsrelatie
 }
 public class RepoGezagsrelatie : RepoWebApiBase, IRepoGezagsrelatie
 {
-	public RepoGezagsrelatie(IHttpContextAccessor httpContextAccessor, IOptions<WebApiOptions> webApiOptions, ILoggingHelper loggingHelper) : base(httpContextAccessor, webApiOptions, loggingHelper)
+	public RepoGezagsrelatie(IHttpContextAccessor httpContextAccessor, IOptions<WebApiOptions> webApiOptions) : base(httpContextAccessor, webApiOptions)
 	{
 	}
 

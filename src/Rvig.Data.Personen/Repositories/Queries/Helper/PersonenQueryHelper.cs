@@ -7,27 +7,6 @@ namespace Rvig.Data.Personen.Repositories.Queries.Helper
 {
 	public class PersonenQueryHelper : QueryBaseHelper
 	{
-		public static (string where, IEnumerable<NpgsqlParameter> parameters) CreateBurgerservicenummerGemeenteVanInschrijvingWhere(string bsn, string? gemeenteVanInschrijving)
-		{
-			(string where, List<NpgsqlParameter> parameters) whereClause = ("", new List<NpgsqlParameter>());
-			(string where, NpgsqlParameter pgsqlParam) = CreateBurgerservicenummerWhere(bsn);
-			whereClause.where = where;
-			whereClause.parameters.Add(pgsqlParam);
-			if (string.IsNullOrWhiteSpace(gemeenteVanInschrijving))
-			{
-				return whereClause;
-			}
-
-			var gemCodeWhereParam = CreateGemeenteVanInschrijvingPart(int.Parse(gemeenteVanInschrijving));
-			if (gemCodeWhereParam != default)
-			{
-				whereClause.where += $" and {gemCodeWhereParam.where}";
-				whereClause.parameters.Add(gemCodeWhereParam.pgsqlParam);
-			}
-
-			return whereClause;
-		}
-
 		private static (string where, IEnumerable<NpgsqlParameter> parameters) CreatePersoonSearchBase(List<string?> whereParts, List<NpgsqlParameter> parameters)
 		{
 			whereParts = whereParts.Where(x => x != null).ToList();

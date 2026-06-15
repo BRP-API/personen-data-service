@@ -1,21 +1,16 @@
 ﻿using Microsoft.Extensions.Options;
 using Npgsql;
-using Rvig.HaalCentraalApi.Shared.Helpers;
 using Rvig.HaalCentraalApi.Shared.Options;
-using System.Text.RegularExpressions;
 
 namespace Rvig.Data.Base.Postgres.Repositories;
-public abstract class PostgresSqlQueryRepoBase<T> : PostgresRepoBase where T : class, new()
+public abstract class PostgresSqlQueryRepoBase<T>(IOptions<DatabaseOptions> databaseOptions)
+	: PostgresRepoBase(databaseOptions) where T : class, new()
 {
-	protected PostgresSqlQueryRepoBase(IOptions<DatabaseOptions> databaseOptions, ILoggingHelper loggingHelper)
-		:	base(databaseOptions, loggingHelper)
-	{
-	}
 
-	/// <summary>
-	/// Datasourcename (columnname), propertyname (in csharp class)
-	/// </summary>
-	protected IDictionary<string, string> Mappings { get; set; } = new Dictionary<string, string>();
+    /// <summary>
+    /// Datasourcename (columnname), propertyname (in csharp class)
+    /// </summary>
+    protected IDictionary<string, string> Mappings { get; set; } = new Dictionary<string, string>();
 	protected IDictionary<string, string> WhereMappings { get; set; } = new Dictionary<string, string>();
 
 	/// <summary>
@@ -33,8 +28,6 @@ public abstract class PostgresSqlQueryRepoBase<T> : PostgresRepoBase where T : c
 		command.Parameters.AddRange(whereStringAndParams.parameters.ToArray());
 		return command;
 	}
-
-	protected NpgsqlCommand CreateInsertCommand(string baseQuery, string mappings) => CreateDbCommand(string.Format(baseQuery, mappings));
 
 	protected IDictionary<string, string> CreateMappingsFromWhereMappings(IDictionary<string, string> whereMappings)
 	{
@@ -85,51 +78,20 @@ public abstract class PostgresSqlQueryRepoBase<T> : PostgresRepoBase where T : c
 			records.Add(record);
 		}
 
-		if (_databaseOptions.Value.LogQueryAsMultiLiner)
-		{
-			_loggingHelper.LogDebug("The query that was executed =  \r\n" + command.CommandText);
-		}
-		else
-		{
-			_loggingHelper.LogDebug("The query that was executed = " + Regex.Replace(Regex.Replace(Regex.Replace(command.CommandText, "\r\n", ""), "\n", ""), "\t", " "));
-		}
-
 		return records;
-	}
-
-	protected virtual async Task<int> InsertAsync(NpgsqlCommand command)
-	{
-		using var connection = GetConnection();
-
-		await OpenConnectionAndLog(connection);
-
-		command.Connection = connection;
-
-		var numberOfRowsAffected = await command.ExecuteNonQueryAsync();
-
-		if (_databaseOptions.Value.LogQueryAsMultiLiner)
-		{
-			_loggingHelper.LogDebug("The query that was executed =  \r\n" + command.CommandText + "\r\n Number of rows affected: " + numberOfRowsAffected);
-		}
-		else
-		{
-			_loggingHelper.LogDebug("The query that was executed = " + Regex.Replace(Regex.Replace(Regex.Replace(command.CommandText, "\r\n", ""), "\n", ""), "\t", " ") + " Number of rows affected: " + numberOfRowsAffected);
-		}
-
-		return numberOfRowsAffected;
 	}
 
 	private static void SetValue(string propPath, object? parent, object? value)
 	{
 		if (parent != null)
 		{
-			if (!propPath.Contains("."))
+			if (!propPath.Contains('.'))
 			{
 				parent?.GetType()?.GetProperty(propPath)?.SetValue(parent, value);
 			}
 			else
 			{
-				var propertyParts = propPath.Split(".");
+				var propertyParts = propPath.Split('.');
 				foreach (var part in propertyParts)
 				{
 					if (propertyParts.Last().Equals(part))
