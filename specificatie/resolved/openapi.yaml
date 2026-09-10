@@ -5,7 +5,7 @@ info:
     API voor het bevragen van personen uit de basisregistratie personen (BRP), inclusief de registratie niet-ingezeten (RNI). Met deze API kun je personen zoeken en actuele gegevens over personen, kinderen, partners en ouders raadplegen.
 
     Gegevens die er niet zijn of niet actueel zijn krijg je niet terug. Had een persoon bijvoorbeeld een verblijfstitel die nu niet meer geldig is, dan wordt die verblijfstitel niet opgenomen. In partners wordt alleen de actuele of de laatst ontbonden partner geleverd.
-  version: 2.7.0
+  version: 2.6.0
   contact:
     url: https://github.com/VNG-Realisatie/Haal-Centraal-BRP-bevragen
   license:
@@ -112,31 +112,26 @@ components:
     DatumFilter:
       type: string
       format: date
-      example: '1964-09-24'
     GeslachtsnaamFilter:
       description: |
         De (geslachts)naam waarvan de eventueel aanwezige voorvoegsels zijn afgesplitst. **Gebruik van de wildcard is toegestaan bij invoer van ten minste 3 letters.** **Zoeken met tekstvelden is case-insensitive.**
       type: string
       pattern: ^[a-zA-Z0-9À-ž \.\-\']{1,200}$|^[a-zA-Z0-9À-ž \.\-\']{3,199}\*{1}$
-      example: Vries
     GeslachtFilter:
       description: |
         Geeft aan dat de persoon een man of een vrouw is, of dat het geslacht (nog) onbekend is.
       type: string
       pattern: ^([Mm]|[Vv]|[Oo])$
-      example: V
     VoorvoegselFilter:
       description: |
         Deel van de geslachtsnaam dat vooraf gaat aan de rest van de geslachtsnaam. **Zoeken met tekstvelden is case-insensitive.**
       type: string
       pattern: ^[a-zA-Z \']{1,10}$
-      example: de
     VoornamenOptioneelFilter:
       description: |
         De verzameling namen die, gescheiden door spaties, aan de geslachtsnaam voorafgaat. **Gebruik van de wildcard is toegestaan.** **Zoeken met tekstvelden is case-insensitive.**
       type: string
       pattern: ^[a-zA-Z0-9À-ž \.\-\']{1,199}\*{0,1}$
-      example: Dirk
     ZoekMetGeslachtsnaamEnGeboortedatum:
       required:
         - geslachtsnaam
@@ -164,7 +159,6 @@ components:
         De verzameling namen die, gescheiden door spaties, aan de geslachtsnaam voorafgaat. **Gebruik van de wildcard is toegestaan bij invoer van ten minste 3 letters.** **Zoeken met tekstvelden is case-insensitive.**
       type: string
       pattern: ^[a-zA-Z0-9À-ž \.\-\']{1,200}$|^[a-zA-Z0-9À-ž \.\-\']{3,199}\*{1}$
-      example: Dirk
     ZoekMetNaamEnGemeenteVanInschrijving:
       required:
         - geslachtsnaam
@@ -187,7 +181,6 @@ components:
     Burgerservicenummer:
       type: string
       pattern: ^[0-9]{9}$
-      example: '555555021'
     RaadpleegMetBurgerservicenummer:
       required:
         - burgerservicenummer
@@ -206,26 +199,22 @@ components:
         Een toevoeging aan een huisnummer in de vorm van een letter die door de gemeente aan een adresseerbaar object is gegeven.
       type: string
       pattern: ^[a-zA-Z]{1}$
-      example: a
     Huisnummer:
       description: |
         Een nummer dat door de gemeente aan een adresseerbaar object is gegeven.
       type: integer
       minimum: 1
       maximum: 99999
-      example: 14
     Huisnummertoevoeging:
       description: |
         Een toevoeging aan een huisnummer of een combinatie van huisnummer en huisletter die door de gemeente aan een adresseerbaar object is gegeven.
       type: string
       pattern: ^[a-zA-Z0-9 \-]{1,4}$
-      example: bis
     Postcode:
       description: |
         De door PostNL vastgestelde code die bij een bepaalde combinatie van een straatnaam en een huisnummer hoort.
       type: string
       pattern: ^[1-9]{1}[0-9]{3}[ ]?[A-Za-z]{2}$
-      example: 2341SX
     ZoekMetPostcodeEnHuisnummer:
       required:
         - postcode
@@ -255,7 +244,6 @@ components:
         Een naam die door de gemeente aan een openbare ruimte is gegeven. **Gebruik van de wildcard is toegestaan bij invoer van ten minste 7 letters.** **Zoeken met tekstvelden is case-insensitive.** 
       type: string
       pattern: ^[a-zA-Z0-9À-ž \-\'\.]{1,80}$|^[a-zA-Z0-9À-ž \-\'\.]{7,79}\*{1}$|^\*{1}[a-zA-Z0-9À-ž \-\'\.]{7,79}$
-      example: Tulpstraat
     ZoekMetStraatHuisnummerEnGemeenteVanInschrijving:
       required:
         - straat
@@ -280,7 +268,6 @@ components:
       pattern: ^(?!0{16})[0-9]{16}$
       description: |
         De unieke identificatie van een nummeraanduiding (en het bijbehorende adres) in de BAG.
-      example: '0518200000366054'
     ZoekMetNummeraanduidingIdentificatie:
       required:
         - nummeraanduidingIdentificatie
@@ -297,7 +284,6 @@ components:
       pattern: ^(?!0{16})[0-9]{16}$
       description: |
         De identificatiecode van een adresseerbaar object uitgezonderd de standaardwaarde (0000000000000000)
-      example: '0226010000038820'
     ZoekMetAdresseerbaarObjectIdentificatie:
       required:
         - adresseerbaarObjectIdentificatie
@@ -319,7 +305,6 @@ components:
         Een code die aangeeft in welke gemeente de persoon woont, of de laatste gemeente waar de persoon heeft gewoond, of de gemeente waar de persoon voor het eerst is ingeschreven.
       type: string
       pattern: ^[0-9]{4}$
-      example: '0518'
     Foutbericht:
       type: object
       description: Terugmelding bij een fout. JSON representatie in lijn met [RFC7807](https://tools.ietf.org/html/rfc7807).
@@ -369,7 +354,6 @@ components:
     GbaDatum:
       type: string
       pattern: ^[0-9]{8}$
-      example: '20180700'
     GeboorteBasis:
       type: object
       properties:
@@ -389,17 +373,13 @@ components:
         code:
           type: string
           pattern: ^[a-zA-Z0-9 \.]+$
-          example: '6030'
         omschrijving:
           type: string
           pattern: ^[a-zA-Z0-9À-ž \'\.\-\(\),]{1,200}$
-          example: Nederland
     Geslachtsaanduiding:
       allOf:
         - $ref: '#/components/schemas/Waardetabel'
-        - example:
-            code: M
-            omschrijving: man
+        - type: object
     InOnderzoek:
       type: object
       required:
@@ -409,7 +389,6 @@ components:
         aanduidingGegevensInOnderzoek:
           type: string
           pattern: ^[0-9]{6}$
-          example: '100000'
         datumIngangOnderzoek:
           $ref: '#/components/schemas/GbaDatum'
     Voornamen:
@@ -418,7 +397,6 @@ components:
       type: string
       pattern: ^[a-zA-Z0-9À-ž \.\-\']{1,200}$
       maxLength: 200
-      example: Pieter Jan
     AdellijkeTitelPredicaatSoort:
       type: string
       enum:
@@ -429,24 +407,19 @@ components:
         Wordt gevuld met waarden uit de landelijke tabel 'Adellijke titel/predicaat'. De property soort geeft aan of het een 'predicaat' of een 'titel' is.
       allOf:
         - $ref: '#/components/schemas/Waardetabel'
-        - properties:
+        - type: object
+          properties:
             soort:
               $ref: '#/components/schemas/AdellijkeTitelPredicaatSoort'
-          example:
-            code: JV
-            omschrijving: jonkvrouw
-            soort: predicaat
     Voorvoegsel:
       type: string
       pattern: ^[a-zA-Z \']{1,10}$
       maxLength: 10
-      example: de
     Geslachtsnaam:
       type: string
       pattern: ^[a-zA-Z0-9À-ž \.\-\']{1,200}$
       description: |
         De achternaam van een persoon.
-      example: Vries
     NaamBasis:
       type: object
       properties:
@@ -485,31 +458,26 @@ components:
       title: woonplaats naam
       type: string
       pattern: ^[a-zA-Z0-9À-ž, \(\)\.\-\']{1,80}$
-      example: Duiven
     Locatiebeschrijving:
       type: string
       maxLength: 35
       description: |
         Omschrijving van de ligging van een verblijfsobject, standplaats of ligplaats.
-      example: Naast de derde brug
     Regel1:
       type: string
       maxLength: 40
       description: |
         Het eerste deel van een buitenlands adres. Vaak is dit een combinatie van de straat en huisnummer.
-      example: 1600 Pennsylvania Avenue NW
     Regel2:
       type: string
       maxLength: 50
       description: |
         Het tweede deel van een buitenlands adres. Vaak is dit een combinatie van woonplaats eventueel in combinatie met de postcode.
-      example: Washington, DC 20500
     Regel3:
       type: string
       maxLength: 35
       description: |
         Het derde deel van een buitenlands adres is optioneel. Het gaat om een of meer geografische gebieden van het adres in het buitenland.
-      example: Selangor
     GbaVerblijfplaatsBeperkt:
       type: object
       properties:
@@ -548,7 +516,6 @@ components:
       type: string
       description: Naam van categorie waarop de RNI-deelnemer gegevens heeft aangeleverd
       pattern: ^[a-zA-Z0-9À-ž \.\-\'\/]{1,40}$
-      example: Verblijfplaats
     RniDeelnemer:
       type: object
       description: Gegevens over de RNI-deelnemer die de gegevens in de betrokken categorie heeft aangeleverd.
@@ -629,7 +596,6 @@ components:
       properties:
         uitgeslotenVanKiesrecht:
           type: boolean
-          example: true
     GbaUitsluitingKiesrecht:
       allOf:
         - $ref: '#/components/schemas/UitsluitingKiesrechtBasis'
@@ -695,26 +661,24 @@ components:
     GbaOverlijden:
       allOf:
         - $ref: '#/components/schemas/OverlijdenBasis'
-      type: object
-      properties:
-        datum:
-          description: |
-            datum waarop de persoon is overleden.
-          $ref: '#/components/schemas/GbaDatum'
-        inOnderzoek:
-          $ref: '#/components/schemas/InOnderzoek'
+        - type: object
+          properties:
+            datum:
+              description: |
+                datum waarop de persoon is overleden.
+              $ref: '#/components/schemas/GbaDatum'
+            inOnderzoek:
+              $ref: '#/components/schemas/InOnderzoek'
     AdresseerbaarObjectIdentificatie:
       type: string
       pattern: ^[0-9]{16}$
       description: |
         De identificatiecode van een adresseerbaar object.
-      example: '0226010000038820'
     NummeraanduidingIdentificatie:
       description: |
         Unieke identificatie van een nummeraanduiding (en het bijbehorende adres) in de BAG.
       type: string
       pattern: ^[0-9]{16}$
-      example: '0518200000366054'
     OfficieleStraatnaam:
       description: |
         De officiële naam van een openbare ruimte uit de Basisregistratie Gebouwen en Adressen (BAG).
@@ -758,8 +722,7 @@ components:
       type: boolean
       description: |
         Geeft aan dat de persoon onder curatele is gesteld.
-      example: true
-    Gezagsrelatie:
+    AbstractGezagsrelatie:
       type: object
       required:
         - type
@@ -775,19 +738,12 @@ components:
       discriminator:
         propertyName: type
         mapping:
-          GezamenlijkOuderlijkGezag: '#/components/schemas/GezamenlijkOuderlijkGezag'
+          TweehoofdigOuderlijkGezag: '#/components/schemas/TweehoofdigOuderlijkGezag'
           EenhoofdigOuderlijkGezag: '#/components/schemas/EenhoofdigOuderlijkGezag'
           GezamenlijkGezag: '#/components/schemas/GezamenlijkGezag'
           Voogdij: '#/components/schemas/Voogdij'
           TijdelijkGeenGezag: '#/components/schemas/TijdelijkGeenGezag'
           GezagNietTeBepalen: '#/components/schemas/GezagNietTeBepalen'
-      example:
-        type: GezamenlijkOuderlijkGezag
-        ouders:
-          - burgerservicenummer: '999998870'
-          - burgerservicenummer: '999998882'
-        minderjarige:
-          burgerservicenummer: '999998894'
     GezagOuder:
       type: object
       properties:
@@ -798,10 +754,10 @@ components:
         geslacht:
           $ref: '#/components/schemas/Geslachtsaanduiding'
       required:
-        - naam
-    GezamenlijkOuderlijkGezag:
+        - burgerservicenummer
+    TweehoofdigOuderlijkGezag:
       allOf:
-        - $ref: '#/components/schemas/Gezagsrelatie'
+        - $ref: '#/components/schemas/AbstractGezagsrelatie'
         - type: object
           properties:
             ouders:
@@ -812,13 +768,11 @@ components:
               maxItems: 2
     EenhoofdigOuderlijkGezag:
       allOf:
-        - $ref: '#/components/schemas/Gezagsrelatie'
+        - $ref: '#/components/schemas/AbstractGezagsrelatie'
         - type: object
           properties:
             ouder:
               $ref: '#/components/schemas/GezagOuder'
-      required:
-        - ouder
     Derde:
       type: object
       required:
@@ -845,9 +799,10 @@ components:
     OnbekendeDerde:
       allOf:
         - $ref: '#/components/schemas/Derde'
+        - type: object
     GezamenlijkGezag:
       allOf:
-        - $ref: '#/components/schemas/Gezagsrelatie'
+        - $ref: '#/components/schemas/AbstractGezagsrelatie'
         - type: object
           properties:
             ouder:
@@ -856,7 +811,7 @@ components:
               $ref: '#/components/schemas/Derde'
     Voogdij:
       allOf:
-        - $ref: '#/components/schemas/Gezagsrelatie'
+        - $ref: '#/components/schemas/AbstractGezagsrelatie'
         - type: object
           properties:
             derden:
@@ -870,22 +825,18 @@ components:
       pattern: ^[a-zA-Z0-9À-ž \/\;\:\.\-\?\(\)]{1,400}$
     TijdelijkGeenGezag:
       allOf:
-        - $ref: '#/components/schemas/Gezagsrelatie'
+        - $ref: '#/components/schemas/AbstractGezagsrelatie'
         - type: object
           properties:
             toelichting:
               $ref: '#/components/schemas/Toelichting'
-      required:
-        - toelichting
     GezagNietTeBepalen:
       allOf:
-        - $ref: '#/components/schemas/Gezagsrelatie'
+        - $ref: '#/components/schemas/AbstractGezagsrelatie'
         - type: object
           properties:
             toelichting:
               $ref: '#/components/schemas/Toelichting'
-      required:
-        - toelichting
     Minderjarige:
       type: object
       properties:
@@ -902,7 +853,7 @@ components:
     Gezag:
       type: array
       items:
-        $ref: '#/components/schemas/Gezagsrelatie'
+        $ref: '#/components/schemas/AbstractGezagsrelatie'
       minItems: 0
     VerblijfstitelBasis:
       description: |
@@ -947,7 +898,6 @@ components:
     OuderAanduiding:
       type: string
       pattern: ^[1|2]$
-      example: '1'
     OuderBasis:
       type: object
       properties:
