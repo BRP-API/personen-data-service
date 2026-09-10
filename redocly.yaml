@@ -1,0 +1,9 @@
+extends:
+  - recommended
+
+rules:
+  security-defined:
+    severity: off
+
+  tag-description:
+    severity: off
