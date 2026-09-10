@@ -24,7 +24,7 @@ on:
           - gezag-mock
 
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: '24'
   DOTNET_SOLUTION_FILE_PATH: src/PersonenDataService.sln
   APP_PROJECT_PATH: ./src/Personen.Data.Service
   BASE_PROJECT_PATH: ./src/Rvig.Base.App
@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Genereer build run identifier
         id: build-run-id
@@ -82,7 +82,7 @@ jobs:
           path-solution-file: ${{ env.DOTNET_SOLUTION_FILE_PATH }} 
   
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Install dependencies
@@ -126,7 +126,7 @@ jobs:
 
       - name: Upload test rapportage
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: Reports
           path: |
