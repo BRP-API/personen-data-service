@@ -3,7 +3,6 @@ using System.Net.Http.Headers;
 using System.Net;
 using Microsoft.Extensions.Options;
 using Rvig.Data.Base.WebApi.Options;
-using Rvig.HaalCentraalApi.Shared.Helpers;
 using Microsoft.AspNetCore.Http;
 
 namespace Rvig.Data.Base.Gezag.Repositories
@@ -19,7 +18,7 @@ namespace Rvig.Data.Base.Gezag.Repositories
 			_webApiOptions = webApiOptions;
 		}
 
-		protected async Task<T?> GetResultFromHttpRequest<T>(string endpointUrl, string? parameters, HttpMethod httpMethod, List<(string Name, string Content)>? headers = null, object contentObject = null)
+		protected async Task<T?> GetResultFromHttpRequest<T>(string endpointUrl, string? parameters, HttpMethod httpMethod, List<(string Name, string Content)>? headers = null, object? contentObject = null)
 		{
 			var url = endpointUrl + (string.IsNullOrWhiteSpace(parameters) ? "" : (parameters.StartsWith("/") ? parameters : $"/{parameters}"));
 			var httpRequest = new HttpRequestMessage(httpMethod, url);
