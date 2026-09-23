@@ -3,7 +3,6 @@ using System.Net.Http.Headers;
 using System.Net;
 using Microsoft.Extensions.Options;
 using Rvig.Data.Base.WebApi.Options;
-using Rvig.HaalCentraalApi.Shared.Helpers;
 using Microsoft.AspNetCore.Http;
 
 namespace Rvig.Data.Base.Gezag.Repositories
