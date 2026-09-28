@@ -11,7 +11,7 @@ WORKDIR /app
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 ARG BUILD_CONFIGURATION=Release
 ARG TARGETARCH
-RUN apk add --no-cache icu-libs
+RUN apk update && apk upgrade
 WORKDIR /src
 
 COPY ["Personen.Data.Service/Personen.Data.Service.csproj", "Personen.Data.Service/"]

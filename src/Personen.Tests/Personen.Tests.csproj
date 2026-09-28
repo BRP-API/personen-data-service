@@ -21,7 +21,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <!-- Include transitive dependencies explicitly to prevent high severity vulnerabilities -->
   </ItemGroup>
 
   <ItemGroup>
