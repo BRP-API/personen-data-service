@@ -1,9 +1,22 @@
-@Api_HostAdres = http://localhost:5130
+@Api_HostAdres = http://localhost:5020
 
 POST {{Api_HostAdres}}/api/v1/opvragenBevoegdheidTotGezag
 Accept: application/json
 Content-Type: application/json
 
 {
-    "bsn": "000000024"
+    "burgerservicenummer": ["019350402"]
+}
+
+###
+
+POST http://localhost:8000/haalcentraal/api/brp/v2/personen
+Accept: application/json
+accept-gezag-version: v2
+Content-Type: application/json
+
+{
+  "type": "RaadpleegMetBurgerservicenummer",
+  "burgerservicenummer": ["999970264"],
+  "fields": ["burgerservicenummer", "gezag"]
 }
