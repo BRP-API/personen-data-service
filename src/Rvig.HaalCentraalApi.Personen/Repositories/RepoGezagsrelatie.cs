@@ -1,8 +1,6 @@
-﻿using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Options;
 using Rvig.Data.Base.WebApi.Options;
-using Rvig.HaalCentraalApi.Shared.Helpers;
 using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Tokens;
 using System.Net.Http;
 using Rvig.Data.Base.Gezag.Repositories;
 using Deprecated = Rvig.HaalCentraalApi.Personen.ApiModels.Gezag.Deprecated;
@@ -53,5 +51,10 @@ public class RepoGezagsrelatie : RepoWebApiBase, IRepoGezagsrelatie
 		// http://localhost:8080/api/v1/opvragenBevoegdheidTotGezag
 		var url = _webApiOptions.Value.Url + "/opvragenBevoegdheidTotGezag";
 		return GetResultFromHttpRequest<GezagResponse>(url, null, HttpMethod.Post, requestHeaders, requestBody);
-    }
+  }
+}
+
+public static class IEnumerableExtensions
+{
+  public static bool IsNullOrEmpty<T>(this IEnumerable<T> source) => source == null || !source.Any();
 }
