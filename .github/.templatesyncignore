@@ -9,7 +9,4 @@
 :!src/Serilog.Sinks.PersistentFile/*.*
 :!specificatie/*.*
 :!.docker/scripts/*.*
-:!.docker/db.yml
-:!.docker/db-ci.yml
-:!.docker/Dockerfile
 *
